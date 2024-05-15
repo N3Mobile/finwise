@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 const styles = StyleSheet.create({
     topBarContainer : {
@@ -26,20 +26,31 @@ const styles = StyleSheet.create({
     image : {
         width : "40%",
         height : "40%"
+    },
+    touchable : {
+        width : '100%',
+        height : '100%',
+        alignItems : 'center',
+        justifyContent : 'center'
     }
 });
 
 function TopBar(){
+
     return ( 
         <View style={styles.topBarContainer}> 
             <View style={styles.content2}> 
-                <Image source={require("../../assets/bell.png")} style={styles.image}/>
+                <TouchableOpacity style={styles.touchable}>
+                    <Image source={require("../../assets/bell.png")} style={styles.image}/>
+                </TouchableOpacity>
             </View>
             <View style={styles.content1}>
                 <Text style={styles.text}>Finwise Pro</Text>
             </View>
             <View style={styles.content2}>
-                <Image source={require("../../assets/setting.png")} style={styles.image}/>
+                <TouchableOpacity style={styles.touchable}>
+                    <Image source={require("../../assets/setting.png")} style={styles.image}/>
+                </TouchableOpacity>
             </View>
           </View> 
       ); 
