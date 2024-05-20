@@ -33,7 +33,14 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "n3-z2",
+          "project": "finwise"
+        }
+      ]
     ],
     "extra": {
       "eas": {
