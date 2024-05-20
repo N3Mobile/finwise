@@ -1,14 +1,16 @@
 import React from "react";
 import { StatusBar } from "react-native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NativeStackHeaderProps, createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { MainNavigator } from "./Main";
 import { WelcomeContainer } from "@/Screens/Welcome";
 import { RootScreens } from "@/Screens";
+import { SettingsContainer } from "@/Screens/Settings";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: undefined;
   [RootScreens.WELCOME]: undefined;
+  [RootScreens.SETTINGS]: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -18,7 +20,10 @@ const ApplicationNavigator = () => {
   return (
     <NavigationContainer>
       <StatusBar />
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Navigator screenOptions={{ 
+        headerShown: false,
+        // header: (props: NativeStackHeaderProps) => <NavigationBar {...props} />
+      }}>
         <RootStack.Screen
           name={RootScreens.WELCOME}
           component={WelcomeContainer}
@@ -27,6 +32,10 @@ const ApplicationNavigator = () => {
           name={RootScreens.MAIN}
           component={MainNavigator}
           options={{}}
+        />
+        <RootStack.Screen
+          name={RootScreens.SETTINGS}
+          component={SettingsContainer}
         />
       </RootStack.Navigator>
     </NavigationContainer>
