@@ -51,7 +51,7 @@ export enum Icons{
 	ACCOUNT = "account-circle-outline",
 	PLUS = "plus-circle",
 	LOCATION = "map-marker",
-	WITH_ACCOUNT = "account-multiple",
+	FROM_ACCOUNT = "account-multiple",
 	PENCIL = "pencil",
 	BELL = "bell-outline",
 	IMAGE = "image-area",
