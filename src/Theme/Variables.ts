@@ -54,11 +54,11 @@ export enum Icons{
 	WITH_ACCOUNT = "account-multiple",
 	PENCIL = "pencil",
 	BELL = "bell-outline",
+	IMAGE = "image-area",
 
 	CASH_IN = "bank-transfer-in",
 	CASH_OUT = "bank-transfer-out",
 
-	IMAGE = "image-area",
 	FOOD = "food-fork-drink",
 	SHOPPING = "shopping",
 	TRANSPORTATION = "bus",
