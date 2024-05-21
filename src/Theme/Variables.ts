@@ -48,6 +48,8 @@ export enum Icons{
 	ARROW_RIGHT = "arrow-right",
 	HOME = "home-outline",
 	HISTORY = "calendar-month",
+	WALLET = "wallet-outline",
+	BUDGET = "briefcase-outline",
 	ACCOUNT = "account-circle-outline",
 	PLUS = "plus-circle",
 	LOCATION = "map-marker",
