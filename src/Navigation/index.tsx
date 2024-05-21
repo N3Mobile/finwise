@@ -6,6 +6,7 @@ import { MainNavigator } from "./Main";
 import { WelcomeContainer } from "@/Screens/Welcome";
 import { RootScreens } from "@/Screens";
 import { SettingsContainer } from "@/Screens/Settings";
+import { NavigationBar } from "./NavigationBar";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: undefined;
@@ -21,8 +22,8 @@ const ApplicationNavigator = () => {
     <NavigationContainer>
       <StatusBar />
       <RootStack.Navigator screenOptions={{ 
-        headerShown: false,
-        // header: (props: NativeStackHeaderProps) => <NavigationBar {...props} />
+        header: (props: NativeStackHeaderProps) => <NavigationBar {...props} />,
+        // headerShown: false
       }}>
         <RootStack.Screen
           name={RootScreens.WELCOME}
