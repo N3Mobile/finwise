@@ -22,7 +22,7 @@ export const NavigationBar: FC<NativeStackHeaderProps> = ({ navigation, route, o
                     ? <Appbar.BackAction onPress={navigation.goBack} />
                     : null
                 }
-                <Appbar.Content title={title == RootScreens.MAIN ? "Finwise" : title} />
+                <Appbar.Content title={title} />
             </Appbar.Header>
         )
     }
@@ -33,9 +33,9 @@ export const NavigationBar: FC<NativeStackHeaderProps> = ({ navigation, route, o
                 ? <Appbar.BackAction onPress={navigation.goBack} />
                 : null
             }
-            <Appbar.Content title={title == RootScreens.MAIN ? "Finwise" : title} />
+            <Appbar.Content title="Finwise" />
 
-            <Appbar.Action icon={ i18n.locale == Language.ENGLISH ? "alpha-e-box" : "alpha-v-box" } />
+            <Appbar.Action icon={ i18n.locale === Language.ENGLISH ? "alpha-e-box" : "alpha-v-box" } />
             <Appbar.Action icon="logout" onPress={() => {
                 // TODO: logout (clear user info and disable back action)
                 navigation.navigate(RootScreens.LOGIN);
