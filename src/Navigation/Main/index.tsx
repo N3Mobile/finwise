@@ -25,7 +25,7 @@ export const MainNavigator = () => {
         options={{
           tabBarLabel: i18n.t(LocalizationKey.HOME),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.HOME} size={26}  color={color}/>
+            <Icon source={Icons.HOME} size={26} color={color}/>
           ),
         }}
       />
@@ -35,7 +35,7 @@ export const MainNavigator = () => {
         options={{
           tabBarLabel: i18n.t(LocalizationKey.TRANSACTIONS),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.HISTORY} size={26}  color={color}/>
+            <Icon source={Icons.HISTORY} size={26} color={color}/>
           ),
         }}
       />
@@ -45,7 +45,7 @@ export const MainNavigator = () => {
         options={{
           tabBarLabel: i18n.t(LocalizationKey.ADD),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.PLUS} size={26}  color={color}/>
+            <Icon source={Icons.PLUS} size={26} color={color}/>
           ),
         }}
       />
@@ -55,7 +55,7 @@ export const MainNavigator = () => {
         options={{
           tabBarLabel: i18n.t(LocalizationKey.WALLETS),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.WALLET} size={26}  color={color}/>
+            <Icon source={Icons.WALLET} size={26} color={color}/>
           ),
         }}
       />
@@ -65,7 +65,7 @@ export const MainNavigator = () => {
         options={{
           tabBarLabel: i18n.t(LocalizationKey.BUDGETS),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.BUDGET} size={26}  color={color}/>
+            <Icon source={Icons.BUDGET} size={26} color={color}/>
           ),
         }}
       />
