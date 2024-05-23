@@ -4,4 +4,5 @@ export enum RootScreens {
   SETTINGS = "Settings",
   LOGIN = "Login",
   SIGNUP = "Signup",
+
 }
