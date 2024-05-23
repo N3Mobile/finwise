@@ -18,11 +18,11 @@ const TransactionRecord = ({data} : {data : Transaction}) => {
 
     const formatAmount = (amount : number) =>{
         let strArr = Array.from(String(amount));
-        let l : number = 3;
-        while(l < strArr.length)
+        let l : number = strArr.length - 3;
+        while(l > 0)
         {
             strArr.splice(l, 0, ".");
-            l += 4;
+            l -= 3;
         }
         
         return strArr.join('');
@@ -45,7 +45,7 @@ const TransactionRecord = ({data} : {data : Transaction}) => {
                             <Text style={{fontSize:15}}>Nguồn tiền: Ví {data.wallet_id}</Text>
                     </View>
 
-                    <View style={{flex:4, justifyContent: 'flex-end'}}>
+                    <View style={{flex:7, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: '3%'}}>
                             <Text style={{fontSize:23, fontWeight:'bold'}}>{data.is_pay ? '-' : '+'} {formatAmount(data.amount)} đ</Text>
                     </View>
 
@@ -72,7 +72,7 @@ export const History = () => {
         id: i,
         wallet_id: i,
         category: 'billing',
-        amount: 100000,
+        amount: 10000,
         created_at: '21/05/2024',
         is_pay: true
     });
