@@ -6,6 +6,7 @@ import { AddTransactionContainer } from "@/Screens/AddTransaction";
 import { WalletsContainer } from "@/Screens/Wallets";
 import { BudgetsContainer } from "@/Screens/Budgets";
 import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
+import { History } from "@/Screens/History/History";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -24,8 +25,8 @@ export const MainNavigator = () => {
         }}
       />
       <Tab.Screen 
-        name="Transactions"
-        component={TransactionsContainer}
+        name="History"
+        component={History}
         options={{
 
         }}
