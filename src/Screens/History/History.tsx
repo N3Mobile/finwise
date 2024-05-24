@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
 import { ScrollView } from "native-base";
-
+import { HStack, Spinner, Heading } from "native-base";
+import { i18n, LocalizationKey } from "@/Localization";
 
 let TransactionCategory = {
     Food : 'food',
@@ -71,7 +72,7 @@ export const History = () => {
     for(let i = 0; i < 7; i++) fakedata.push({
         id: i,
         wallet_id: i,
-        category: 'billing',
+        category: 'food',
         amount: 10000,
         created_at: '21/05/2024',
         is_pay: true
@@ -88,6 +89,7 @@ export const History = () => {
     const [markedStartDate, setMarkedStartDate] = useState({selected : {}});
     const [markedEndDate, setMarkedEndDate] = useState({selected : {}});
     const [transactions, setTransaction] = useState(fakedata);
+    const [numTransaction, setNumTransaction] = useState(-1);
 
     const getFormattedDate = (date : Date) => {
         return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
@@ -111,6 +113,7 @@ export const History = () => {
             setRange(0);
             fetchData(startDate, endDate, transactionCategory);
         }
+        setNumTransaction(0);
     }
 
     //events
@@ -234,7 +237,10 @@ export const History = () => {
 
             {/* Transactions */}
             <View style={{flex : 10, alignItems : 'center'}}>
-                <TransactionList data={transactions} />
+                {numTransaction == -1 ? (<HStack space={'2xs'} justifyContent="center" alignItems="center" marginBottom="auto" marginTop="auto">
+                                            <Spinner accessibilityLabel="Loading posts" size={60} color="black" />
+                                        </HStack>) : 
+                <TransactionList data={transactions} />}
             </View>
         </View>
     )
