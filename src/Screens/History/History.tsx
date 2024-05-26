@@ -1,13 +1,11 @@
 import { Transaction } from "@/Services";
 import { Text, Button } from "react-native-paper";
 import { View, Image, StyleSheet, TouchableOpacity, Modal, Alert } from "react-native";
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
 import { ScrollView } from "native-base";
-import { HStack, Spinner, Heading } from "native-base";
-import { i18n, LocalizationKey } from "@/Localization";
-
+import { HStack, Spinner } from "native-base";
 
 const TransactionRecord = ({data} : {data : Transaction}) => {
 
@@ -59,7 +57,7 @@ const TransactionList = ({data} : {data : Transaction[]}) => {
     );
 }
 
-export const History = ({route, navigation}) => {
+export const History = ({route}) => {
 
     const {start, end, category} = route.params;
 
@@ -76,7 +74,9 @@ export const History = ({route, navigation}) => {
     const [transactFood, setTransactFood] = useState<Transaction[]>([]);
     const [transactShopping, setTransactShopping] = useState<Transaction[]>([]);
     const [transactBilling, setTransactBilling] =useState<Transaction[]>([]);
+    const [allTransact, setAllTransact] = useState<Transaction[]>([]);
     const [numTransaction, setNumTransaction] = useState(-1);
+    const MountRef = useRef(false);
 
     const getFormattedDate = (date : Date) => {
         return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
@@ -95,6 +95,13 @@ export const History = ({route, navigation}) => {
         return [billing, shopping, food];
     }
     
+    let setData = () => {
+        if(transactionCategory == 'all')  setTransaction([...allTransact]);
+        else if(transactionCategory == 'billing') setTransaction([...transactBilling]);
+        else if(transactionCategory == 'shopping') setTransaction([...transactShopping]);
+        else setTransaction([...transactFood]);
+
+    }
 
     //fetch data
     const fetchData = (startDate : Date, endDate : Date) => {
@@ -132,19 +139,17 @@ export const History = ({route, navigation}) => {
                 is_pay : false,
             })
             let filtered : Transaction[][] = filter(data);
+            setAllTransact([...data]);
             setTransactBilling(filtered[0]);
             setTransactShopping(filtered[1]);
             setTransactFood(filtered[2]);
             if(transactionCategory == 'all')  setTransaction([...data]);
-            else if(transactionCategory == 'billing') setTransaction([...transactBilling]);
-            else if(transactionCategory == 'shopping') setTransaction([...transactShopping]);
-            else setTransaction([...transactFood]);
+            else if(transactionCategory == 'billing') setTransaction([...filtered[0]]);
+            else if(transactionCategory == 'shopping') setTransaction([...filtered[1]]);
+            else setTransaction([...filtered[2]]);
             setNumTransaction(data.length);
             console.log(transactionCategory);
         }
-
-        
-
     }
 
     const fetchWithCond = () => {
@@ -154,7 +159,7 @@ export const History = ({route, navigation}) => {
         }
         else 
         {
-            setRange(0);
+            setRange(endDate.getDate() - startDate.getDate());
             setNumTransaction(-1);
             fetchData(startDate, endDate);
         }
@@ -174,6 +179,10 @@ export const History = ({route, navigation}) => {
     useEffect(() => {
         changeDefaultRange(3);
     }, []);
+
+    useEffect(() => {
+        if(numTransaction != -1) setTimeout(() => setData(), 100);
+    }, [transactionCategory])
 
     return (   
         <View style={{flex: 1}}>
