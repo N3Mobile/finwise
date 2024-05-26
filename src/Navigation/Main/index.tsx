@@ -9,8 +9,18 @@ import { createMaterialBottomTabNavigator } from "react-native-paper/react-navig
 import { LocalizationKey, i18n } from "@/Localization";
 import { Icon } from "react-native-paper";
 import { Icons } from "@/Theme";
+import { TabScreens } from "@/Screens";
+import { NavigationProp } from "@react-navigation/native";
 
 const Tab = createMaterialBottomTabNavigator();
+export type BottomTabParamList = {
+  [TabScreens.HOME]: undefined,
+  [TabScreens.TRANSACTIONS]: { start: Date, end: Date, category: string },
+  [TabScreens.ADD]: undefined,
+  [TabScreens.WALLETS]: undefined,
+  [TabScreens.BUDGETS]: undefined
+}
+export type TabNavigation = NavigationProp<BottomTabParamList>;
 
 // @refresh reset
 export const MainNavigator = () => {
@@ -20,7 +30,7 @@ export const MainNavigator = () => {
       
     >
       <Tab.Screen
-        name="Home"
+        name={TabScreens.HOME}
         component={HomeContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.HOME),
@@ -30,8 +40,9 @@ export const MainNavigator = () => {
         }}
       />
       <Tab.Screen 
-        name="Transactions"
+        name={TabScreens.TRANSACTIONS}
         component={TransactionsContainer}
+        initialParams={{ start: new Date(), end: Date(), category: "all" }}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.TRANSACTIONS),
           tabBarIcon: ({ color }) => (
@@ -40,7 +51,7 @@ export const MainNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="AddTransaction"
+        name={TabScreens.ADD}
         component={AddTransactionContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.ADD),
@@ -50,7 +61,7 @@ export const MainNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Wallets"
+        name={TabScreens.WALLETS}
         component={WalletsContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.WALLETS),
@@ -60,7 +71,7 @@ export const MainNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Budgets"
+        name={TabScreens.BUDGETS}
         component={BudgetsContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.BUDGETS),

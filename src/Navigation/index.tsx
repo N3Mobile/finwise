@@ -1,7 +1,7 @@
 import React from "react";
 import { StatusBar } from "react-native";
 import { NativeStackHeaderProps, createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { MainNavigator } from "./Main";
 import { WelcomeContainer } from "@/Screens/Welcome";
 import { RootScreens } from "@/Screens";
@@ -17,6 +17,7 @@ export type RootStackParamList = {
   [RootScreens.LOGIN]: undefined;
   [RootScreens.SIGNUP]: undefined;
 };
+export type StackNavigation = NavigationProp<RootStackParamList>;
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 

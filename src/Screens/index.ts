@@ -5,3 +5,11 @@ export enum RootScreens {
   LOGIN = "Login",
   SIGNUP = "Signup",
 }
+
+export enum TabScreens {
+  HOME = "Home",
+  TRANSACTIONS = "Transactions",
+  ADD = "AddTransaction",
+  WALLETS = "Wallets",
+  BUDGETS = "Budgets"
+}
