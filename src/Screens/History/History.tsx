@@ -8,12 +8,6 @@ import { ScrollView } from "native-base";
 import { HStack, Spinner, Heading } from "native-base";
 import { i18n, LocalizationKey } from "@/Localization";
 
-let TransactionCategory = {
-    Food : 'food',
-    Billing : 'billing',
-    Shopping : 'shopping',
-    All : 'all'
-}
 
 const TransactionRecord = ({data} : {data : Transaction}) => {
 
@@ -65,42 +59,92 @@ const TransactionList = ({data} : {data : Transaction[]}) => {
     );
 }
 
-export const History = () => {
+export const History = ({route, navigation}) => {
 
-    //fake data
-    let fakedata : Transaction[] = [];
-    for(let i = 0; i < 7; i++) fakedata.push({
-        id: i,
-        wallet_id: i,
-        category: 'food',
-        amount: 10000,
-        created_at: '21/05/2024',
-        is_pay: true
-    });
-
+    const {start, end, category} = route.params;
 
     //setup
     const [range, setRange] = useState(3);
     const defaultRange : number[] = [3, 5, 7];
-    const [transactionCategory, setTransactionCategory] = useState(TransactionCategory.All);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [transactionCategory, setTransactionCategory] = useState(category);
+    const [startDate, setStartDate] = useState(start == -1 ? new Date() : start);
+    const [endDate, setEndDate] = useState(end == -1 ? new Date() : end);
     const [datePick, setDatePick] = useState(0);
     const [markedStartDate, setMarkedStartDate] = useState({selected : {}});
     const [markedEndDate, setMarkedEndDate] = useState({selected : {}});
-    const [transactions, setTransaction] = useState(fakedata);
+    const [transactions, setTransaction] = useState<Transaction[]>([]);
+    const [transactFood, setTransactFood] = useState<Transaction[]>([]);
+    const [transactShopping, setTransactShopping] = useState<Transaction[]>([]);
+    const [transactBilling, setTransactBilling] =useState<Transaction[]>([]);
     const [numTransaction, setNumTransaction] = useState(-1);
 
     const getFormattedDate = (date : Date) => {
         return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
     }
 
+    const filter = (data : Transaction[]) : Transaction[][] => {
+        let billing : Transaction [] = [];
+        let shopping : Transaction [] = [];
+        let food : Transaction [] = [];
+        for(let i = 0; i < data.length; i++)
+        {
+            if(data[i].category == 'billing') billing.push(data[i]);
+            else if(data[i].category == 'shopping') shopping.push(data[i]);
+            else food.push(data[i]);
+        }
+        return [billing, shopping, food];
+    }
+    
+
     //fetch data
-    const fetchData = (startDate : Date, endDate : Date, category : any) => {
+    const fetchData = (startDate : Date, endDate : Date) => {
         let start : string = getFormattedDate(startDate);
         let end : string = getFormattedDate(endDate);
-        console.log(start, end, category);
+
         //call api here
+        let res : number = 1;
+        if(res == 0) setNumTransaction(0);
+        else
+        {
+            let data : Transaction[] = [];
+            data.push({
+                id : 1,
+                wallet_id : 1,
+                category : 'food',
+                amount : 100000,
+                created_at : '21/05/2023',
+                is_pay : false,
+            });
+            data.push({
+                id : 1,
+                wallet_id : 1,
+                category : 'shopping',
+                amount : 100000,
+                created_at : '21/05/2023',
+                is_pay : false,
+            })
+            data.push({
+                id : 1,
+                wallet_id : 1,
+                category : 'billing',
+                amount : 100000,
+                created_at : '21/05/2023',
+                is_pay : false,
+            })
+            let filtered : Transaction[][] = filter(data);
+            setTransactBilling(filtered[0]);
+            setTransactShopping(filtered[1]);
+            setTransactFood(filtered[2]);
+            if(transactionCategory == 'all')  setTransaction([...data]);
+            else if(transactionCategory == 'billing') setTransaction([...transactBilling]);
+            else if(transactionCategory == 'shopping') setTransaction([...transactShopping]);
+            else setTransaction([...transactFood]);
+            setNumTransaction(data.length);
+            console.log(transactionCategory);
+        }
+
+        
+
     }
 
     const fetchWithCond = () => {
@@ -111,9 +155,9 @@ export const History = () => {
         else 
         {
             setRange(0);
-            fetchData(startDate, endDate, transactionCategory);
+            setNumTransaction(-1);
+            fetchData(startDate, endDate);
         }
-        setNumTransaction(0);
     }
 
     //events
@@ -124,7 +168,7 @@ export const History = () => {
         start.setDate(start.getDate() - r);
         setStartDate(start);
         setEndDate(end);
-        fetchData(start, end, transactionCategory);
+        fetchData(start, end);
     }
 
     useEffect(() => {
@@ -218,10 +262,10 @@ export const History = () => {
                         selectedValue={transactionCategory}
                         onValueChange={(itemValue, itemIndex) => setTransactionCategory(itemValue)
                     }>
-                        <Picker.Item label="Tất cả" value={TransactionCategory.All} />
-                        <Picker.Item label="Hóa đơn" value={TransactionCategory.Billing} />
-                        <Picker.Item label="Ăn uống" value={TransactionCategory.Food} />
-                        <Picker.Item label="Mua sắm" value={TransactionCategory.Shopping} />
+                        <Picker.Item label="Tất cả" value={"all"} />
+                        <Picker.Item label="Hóa đơn" value={'billing'} />
+                        <Picker.Item label="Ăn uống" value={"food"} />
+                        <Picker.Item label="Mua sắm" value={"shopping"} />
                     </Picker>
                 </View>
             </View>

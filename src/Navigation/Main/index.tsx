@@ -42,6 +42,7 @@ export const MainNavigator = () => {
             <Icon source={Icons.HISTORY} size={26} color={color}/>
           ),
         }}
+        initialParams={{start : -1, end: -1, category: 'all'}}
       />
       <Tab.Screen
         name="AddTransaction"
