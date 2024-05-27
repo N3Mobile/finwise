@@ -35,7 +35,7 @@ export const NavigationBar: FC<NativeStackHeaderProps> = ({ navigation, route, o
             }
             <Appbar.Content title="Finwise" />
 
-            <Appbar.Action icon={ i18n.locale === Language.ENGLISH ? "alpha-e-box" : "alpha-v-box" } />
+            <Appbar.Action icon="alpha-t-box" onPress={() => { navigation.navigate(RootScreens.TEST); }} />
             <Appbar.Action icon="logout" onPress={() => {
                 // TODO: logout (clear user info and disable back action)
                 navigation.navigate(RootScreens.LOGIN);
