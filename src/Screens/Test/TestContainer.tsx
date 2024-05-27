@@ -5,7 +5,7 @@ import { Category } from "@/Config/category";
 import { WalletType } from "@/Config/wallet";
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Button, Modal, Portal, Text } from "react-native-paper";
+import { Button, Portal, Text } from "react-native-paper";
 
 export const TestContainer = () => {
     const [walletId, setWalletId] = useState(0);
@@ -24,25 +24,27 @@ export const TestContainer = () => {
             <Button mode="contained" onPress={() => setWalletVisible(true)}>Select Wallet Here</Button>
             <Button mode="contained" onPress={() => setCategoryVisible(true)}>Select Category Here</Button>
             <Button mode="contained" onPress={() => setWalletTypeVisible(true)}>Select Wallet Type Here</Button>
-            <SelectWallet 
-                visible={walletVisible} 
-                setVisible={setWalletVisible} 
-                walletId={walletId}
-                setWalletId={setWalletId} 
-            />
-            <SelectCategory
-                visible={categoryVisible}
-                setVisible={setCategoryVisible}
-                all
-                income
-                expense
-                setCategory={setCategory}
-            />
-            <SelectWalletType
-                visible={walletTypeVisible}
-                setVisible={setWalletTypeVisible}
-                setWalletType={setWalletType}
-            />
+            <Portal>
+                <SelectWallet 
+                    visible={walletVisible} 
+                    setVisible={setWalletVisible} 
+                    walletId={walletId}
+                    setWalletId={setWalletId} 
+                />
+                <SelectCategory
+                    visible={categoryVisible}
+                    setVisible={setCategoryVisible}
+                    all
+                    income
+                    expense
+                    setCategory={setCategory}
+                />
+                <SelectWalletType
+                    visible={walletTypeVisible}
+                    setVisible={setWalletTypeVisible}
+                    setWalletType={setWalletType}
+                />
+            </Portal>
         </View>
     )
 }
