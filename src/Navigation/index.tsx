@@ -9,6 +9,7 @@ import { SettingsContainer } from "@/Screens/Settings";
 import { NavigationBar } from "./NavigationBar";
 import { LoginContainer } from "@/Screens/Login";
 import { SignupContainer } from "@/Screens/Signup";
+import { TestContainer } from "@/Screens/Test";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: undefined;
@@ -16,6 +17,7 @@ export type RootStackParamList = {
   [RootScreens.SETTINGS]: undefined;
   [RootScreens.LOGIN]: undefined;
   [RootScreens.SIGNUP]: undefined;
+  [RootScreens.TEST]: undefined;
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
@@ -50,6 +52,10 @@ const ApplicationNavigator = () => {
         <RootStack.Screen
           name={RootScreens.SIGNUP}
           component={SignupContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.TEST}
+          component={TestContainer}
         />
       </RootStack.Navigator>
     </NavigationContainer>
