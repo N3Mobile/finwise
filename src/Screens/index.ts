@@ -4,6 +4,7 @@ export enum RootScreens {
   SETTINGS = "Settings",
   LOGIN = "Login",
   SIGNUP = "Signup",
+  TEST = "Test" // for UI testing
 }
 
 export enum TabScreens {
