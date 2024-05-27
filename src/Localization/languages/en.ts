@@ -38,6 +38,7 @@ export const en = {
   [LocalizationKey.SELECT_WALLET_TYPE]: "Select wallet type",
   [LocalizationKey.EXPENSE]: "Expense",
   [LocalizationKey.INCOME]: "Income",
+  
   [LocalizationKey.TOTAL_BUDGET]: "Total budgets",
   [LocalizationKey.TOTAL_SPENT]: "Total spent",
   [LocalizationKey.DAY]: "day",

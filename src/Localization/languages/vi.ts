@@ -38,6 +38,7 @@ export const vi = {
   [LocalizationKey.SELECT_WALLET_TYPE]: "Chọn loại ví",
   [LocalizationKey.EXPENSE]: "Khoản chi",
   [LocalizationKey.INCOME]: "Khoản thu",
+  
   [LocalizationKey.TOTAL_BUDGET]: "Tổng ngân sách",
   [LocalizationKey.TOTAL_SPENT]: "Đã chi tiêu",
   [LocalizationKey.DAY]: "ngày",
