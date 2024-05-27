@@ -20,6 +20,7 @@
     "@react-navigation/native-stack": "^6.9.0",
     "@reduxjs/toolkit": "^1.8.5",
     "@sentry/react-native": "~5.22.0",
+    "axios": "^1.7.2",
     "expo": "^51.0.8",
     "expo-camera": "~15.0.9",
     "expo-device": "~6.0.2",

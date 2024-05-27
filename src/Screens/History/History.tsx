@@ -6,6 +6,7 @@ import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
 import { ScrollView } from "native-base";
 import { HStack, Spinner } from "native-base";
+import axios from "axios";
 
 const TransactionRecord = ({data} : {data : Transaction}) => {
 
@@ -24,6 +25,7 @@ const TransactionRecord = ({data} : {data : Transaction}) => {
     return (
                 <TouchableOpacity style={{flex:1, flexDirection: 'row', width: '100%', height: 100, marginBottom:'2%', alignItems:'center'}}>
 
+                        {/* Change icon later */}
                         <Image source={data.category == 'billing' ?
                                     require('assets/billing.png') :
                                     (data.category == 'shopping' ?  
@@ -35,7 +37,6 @@ const TransactionRecord = ({data} : {data : Transaction}) => {
                     <View style={{flex:5}}>
                             <Text style={{fontSize: 18, fontWeight: 'bold'}}>{data.category}</Text>
                             <Text style={{fontSize: 12, fontWeight: 'light', color:'grey'}}>{data.created_at}</Text>
-                            <Text style={{fontSize:15}}>Nguồn tiền: Ví {data.wallet_id}</Text>
                     </View>
 
                     <View style={{flex:7, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: '3%'}}>
@@ -65,8 +66,8 @@ export const History = ({route}) => {
     const [range, setRange] = useState(3);
     const defaultRange : number[] = [3, 5, 7];
     const [transactionCategory, setTransactionCategory] = useState(category);
-    const [startDate, setStartDate] = useState(start == -1 ? new Date() : start);
-    const [endDate, setEndDate] = useState(end == -1 ? new Date() : end);
+    const [startDate, setStartDate] = useState(new Date(start));
+    const [endDate, setEndDate] = useState(new Date(end));
     const [datePick, setDatePick] = useState(0);
     const [markedStartDate, setMarkedStartDate] = useState({selected : {}});
     const [markedEndDate, setMarkedEndDate] = useState({selected : {}});
@@ -76,80 +77,58 @@ export const History = ({route}) => {
     const [transactBilling, setTransactBilling] =useState<Transaction[]>([]);
     const [allTransact, setAllTransact] = useState<Transaction[]>([]);
     const [numTransaction, setNumTransaction] = useState(-1);
-    const MountRef = useRef(false);
 
     const getFormattedDate = (date : Date) => {
-        return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        let day : string = String(date.getDate());
+        let month : string = String(date.getMonth() + 1);
+        let year : string = String(date.getFullYear());
+
+        if(month.length == 1) month = '0' + month;
+        if(day.length == 1) day = '0' + day;
+
+        return day + '/' + month + '/' + year;
     }
 
     const filter = (data : Transaction[]) : Transaction[][] => {
-        let billing : Transaction [] = [];
-        let shopping : Transaction [] = [];
-        let food : Transaction [] = [];
-        for(let i = 0; i < data.length; i++)
-        {
-            if(data[i].category == 'billing') billing.push(data[i]);
-            else if(data[i].category == 'shopping') shopping.push(data[i]);
-            else food.push(data[i]);
-        }
-        return [billing, shopping, food];
+
+        return [[]];
     }
     
     let setData = () => {
-        if(transactionCategory == 'all')  setTransaction([...allTransact]);
-        else if(transactionCategory == 'billing') setTransaction([...transactBilling]);
-        else if(transactionCategory == 'shopping') setTransaction([...transactShopping]);
-        else setTransaction([...transactFood]);
+
 
     }
 
     //fetch data
-    const fetchData = (startDate : Date, endDate : Date) => {
+    const fetchData = async (startDate : Date, endDate : Date) => {
         let start : string = getFormattedDate(startDate);
         let end : string = getFormattedDate(endDate);
 
         //call api here
-        let res : number = 1;
-        if(res == 0) setNumTransaction(0);
-        else
-        {
-            let data : Transaction[] = [];
-            data.push({
-                id : 1,
-                wallet_id : 1,
-                category : 'food',
-                amount : 100000,
-                created_at : '21/05/2023',
-                is_pay : false,
+        try{
+            let requestURL : string = `https://be-mobile-n3.onrender.com/transaction/histories/all`;
+            let res = await axios.get(requestURL, {
+                params : {
+                    user_ID : '66237fef97705968270a6dab',
+                    start_date : start,
+                    end_date : end
+                }
             });
-            data.push({
-                id : 1,
-                wallet_id : 1,
-                category : 'shopping',
-                amount : 100000,
-                created_at : '21/05/2023',
-                is_pay : false,
-            })
-            data.push({
-                id : 1,
-                wallet_id : 1,
-                category : 'billing',
-                amount : 100000,
-                created_at : '21/05/2023',
-                is_pay : false,
-            })
-            let filtered : Transaction[][] = filter(data);
-            setAllTransact([...data]);
-            setTransactBilling(filtered[0]);
-            setTransactShopping(filtered[1]);
-            setTransactFood(filtered[2]);
-            if(transactionCategory == 'all')  setTransaction([...data]);
-            else if(transactionCategory == 'billing') setTransaction([...filtered[0]]);
-            else if(transactionCategory == 'shopping') setTransaction([...filtered[1]]);
-            else setTransaction([...filtered[2]]);
-            setNumTransaction(data.length);
-            console.log(transactionCategory);
+    
+            if(res.data == 0) setNumTransaction(0);
+            else
+            {
+                let data : Transaction[] = res.data;
+                //handle data
+                setNumTransaction(data.length);
+                console.log(data);
+                setAllTransact(data);
+                setTransaction(data);
+            }
+        }catch(e){
+            console.log(e)
         }
+       
     }
 
     const fetchWithCond = () => {
