@@ -15,7 +15,7 @@ import { NavigationProp } from "@react-navigation/native";
 const Tab = createMaterialBottomTabNavigator();
 export type BottomTabParamList = {
   [TabScreens.HOME]: undefined,
-  [TabScreens.TRANSACTIONS]: { start: Date, end: Date, category: string },
+  [TabScreens.TRANSACTIONS]: { start: string, end: string, category: string },
   [TabScreens.ADD]: undefined,
   [TabScreens.WALLETS]: undefined,
   [TabScreens.BUDGETS]: undefined
@@ -42,7 +42,7 @@ export const MainNavigator = () => {
       <Tab.Screen 
         name={TabScreens.TRANSACTIONS}
         component={TransactionsContainer}
-        initialParams={{ start: new Date(), end: Date(), category: "all" }}
+        initialParams={{ start: (new Date(-8640000000000000)).toDateString(), end: new Date().toDateString(), category: "all" }}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.TRANSACTIONS),
           tabBarIcon: ({ color }) => (
