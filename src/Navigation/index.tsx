@@ -1,8 +1,8 @@
 import React from "react";
 import { StatusBar } from "react-native";
 import { NativeStackHeaderProps, createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer, NavigationProp } from "@react-navigation/native";
-import { MainNavigator } from "./Main";
+import { NavigationContainer, NavigationProp, NavigatorScreenParams } from "@react-navigation/native";
+import { BottomTabParamList, MainNavigator } from "./Main";
 import { WelcomeContainer } from "@/Screens/Welcome";
 import { RootScreens } from "@/Screens";
 import { SettingsContainer } from "@/Screens/Settings";
@@ -13,7 +13,7 @@ import { DefaultAppbar } from "./Appbar/DefaultAppbar";
 import { MainAppbar } from "./Appbar/MainAppbar";
 
 export type RootStackParamList = {
-  [RootScreens.MAIN]: undefined;
+  [RootScreens.MAIN]: NavigatorScreenParams<BottomTabParamList>;
   [RootScreens.WELCOME]: undefined;
   [RootScreens.SETTINGS]: undefined;
   [RootScreens.LOGIN]: undefined;
