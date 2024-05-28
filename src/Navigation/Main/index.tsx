@@ -9,8 +9,18 @@ import { createMaterialBottomTabNavigator } from "react-native-paper/react-navig
 import { LocalizationKey, i18n } from "@/Localization";
 import { Icon } from "react-native-paper";
 import { Icons } from "@/Theme";
+import { TabScreens } from "@/Screens";
+import { NavigationProp } from "@react-navigation/native";
 
 const Tab = createMaterialBottomTabNavigator();
+export type BottomTabParamList = {
+  [TabScreens.HOME]: undefined,
+  [TabScreens.TRANSACTIONS]: { start: string, end: string, category: string },
+  [TabScreens.ADD]: undefined,
+  [TabScreens.WALLETS]: undefined,
+  [TabScreens.BUDGETS]: undefined
+}
+export type TabNavigation = NavigationProp<BottomTabParamList>;
 
 // @refresh reset
 export const MainNavigator = () => {
@@ -20,52 +30,53 @@ export const MainNavigator = () => {
       
     >
       <Tab.Screen
-        name="Home"
+        name={TabScreens.HOME}
         component={HomeContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.HOME),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.HOME} size={26}  color={color}/>
+            <Icon source={Icons.HOME} size={26} color={color}/>
           ),
         }}
       />
       <Tab.Screen 
-        name="Transactions"
+        name={TabScreens.TRANSACTIONS}
         component={TransactionsContainer}
+        initialParams={{ start: (new Date(-8640000000000000)).toDateString(), end: new Date().toDateString(), category: "all" }}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.TRANSACTIONS),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.HISTORY} size={26}  color={color}/>
+            <Icon source={Icons.HISTORY} size={26} color={color}/>
           ),
         }}
       />
       <Tab.Screen
-        name="AddTransaction"
+        name={TabScreens.ADD}
         component={AddTransactionContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.ADD),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.PLUS} size={26}  color={color}/>
+            <Icon source={Icons.PLUS} size={26} color={color}/>
           ),
         }}
       />
       <Tab.Screen
-        name="Wallets"
+        name={TabScreens.WALLETS}
         component={WalletsContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.WALLETS),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.WALLET} size={26}  color={color}/>
+            <Icon source={Icons.WALLET} size={26} color={color}/>
           ),
         }}
       />
       <Tab.Screen
-        name="Budgets"
+        name={TabScreens.BUDGETS}
         component={BudgetsContainer}
         options={{
           tabBarLabel: i18n.t(LocalizationKey.BUDGETS),
           tabBarIcon: ({ color }) => (
-            <Icon source={Icons.BUDGET} size={26}  color={color}/>
+            <Icon source={Icons.BUDGET} size={26} color={color}/>
           ),
         }}
       />

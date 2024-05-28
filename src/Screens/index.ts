@@ -7,4 +7,13 @@ export enum RootScreens {
 
   TRANSFER_MONEY = "Transfer money",
   EDIT_WALLET = "Edit Wallet",
+  TEST = "Test" // for UI testing
+}
+
+export enum TabScreens {
+  HOME = "Home",
+  TRANSACTIONS = "Transactions",
+  ADD = "AddTransaction",
+  WALLETS = "Wallets",
+  BUDGETS = "Budgets"
 }
