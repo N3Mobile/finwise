@@ -44,4 +44,20 @@ export enum LocalizationKey {
   EXPENSE = "expense",
   INCOME = "income",
   AMOUNT = "amount",
+  
+  // budget-related
+  TOTAL_BUDGET = "total-budget",
+  TOTAL_SPENT = "total-spent",
+  DAY = "day",
+  DAYS = "days",
+  REMAINING = "remaining",
+  CREATE_BUDGET = "create-budget",
+  LEFT = "left",
+  CATEGORY = "category",
+  SPENT = "spent",
+  WALLET = "wallet",
+  TRANSACTION_LIST = "transaction-list",
+  BUDGET_DETAILS = "budget-details",
+  EDIT_BUDGET = "edit-budget",
+  SAVE = "save",
 }
