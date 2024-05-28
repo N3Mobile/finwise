@@ -1,11 +1,13 @@
+import { Loading } from "@/Components";
 import { InputAmount } from "@/Components/InputAmount";
 import { SelectCategory } from "@/Components/SelectCategory";
 import { SelectWallet } from "@/Components/SelectWallet";
 import { SelectWalletType } from "@/Components/SelectWalletType";
 import { Category } from "@/Config/category";
 import { WalletType } from "@/Config/wallet";
+import { useAddUserMutation, useGetAllUsersQuery, useGetUserByEmailQuery } from "@/Services";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 import { Button, Portal, Text } from "react-native-paper";
 
 export const TestContainer = () => {
@@ -19,8 +21,46 @@ export const TestContainer = () => {
     const [walletTypeVisible, setWalletTypeVisible] = useState(false);
     const [amountVisible, setAmountVisible] = useState(false);
 
+    const {
+        data: users,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetAllUsersQuery();
+
+    // const { data: users, isFetching, isSuccess } = useGetUserByEmailQuery("phuongngovan2003@gmail.com");
+
+    const [addUser] = useAddUserMutation();
+
+    let content;
+
+    if (isLoading) {
+      content = <Loading />;
+    } 
+    else if (isSuccess) {
+      content = users.map(user => <Text key={user.id}>{user.name}</Text>);
+    } 
+    else if (isError) {
+      content = <Text>{error.toString()}</Text>
+    }
+
+    async function onAddUser() {
+        try {
+            await addUser({
+                name: "Phuong",
+                email: "phuong@ngo.van",
+                password: "123"
+            }).unwrap()
+                .then((data) => console.log("fulfilled", data))
+                .catch((error) => console.error("rejected", error));
+        } catch (err) {
+            console.error("Failed: ", err);
+        }
+    }
+
     return (
-        <View>
+        <ScrollView>
             <Text>Hello</Text>
             <Text>Wallet: {walletId}</Text>
             <Text>Category: {category}</Text>
@@ -31,6 +71,10 @@ export const TestContainer = () => {
             <Button mode="contained" onPress={() => setCategoryVisible(true)}>Select Category Here</Button>
             <Button mode="contained" onPress={() => setWalletTypeVisible(true)}>Select Wallet Type Here</Button>
             <Button mode="contained" onPress={() => setAmountVisible(true)}>Input Amount Here</Button>
+
+            <Text>API Test:</Text>
+            {content}
+            <Button mode="contained" onPress={onAddUser}>Add user Phuong</Button>
 
             <Portal>
                 <SelectWallet 
@@ -59,6 +103,6 @@ export const TestContainer = () => {
                     setAmount={setAmount}
                 />
             </Portal>
-        </View>
+        </ScrollView>
     )
 }
