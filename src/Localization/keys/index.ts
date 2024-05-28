@@ -1,8 +1,12 @@
 export enum LocalizationKey {
+  // common
   WELCOME = "welcome",
   HOME = "home",
   START = "start",
   LOADING = "loading",
+  CONFIRM = "confirm",
+  CANCEL = "cancel",
+  CLEAR = "clear",
 
   // nav-related
   TRANSACTIONS = "transactions",
@@ -39,4 +43,5 @@ export enum LocalizationKey {
   SELECT_WALLET_TYPE = "select-wallet-type",
   EXPENSE = "expense",
   INCOME = "income",
+  AMOUNT = "amount",
 }

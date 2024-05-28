@@ -89,3 +89,23 @@ export enum Icons{
 //   REGULAR = regular,
 //   LARGE = large,
 // }
+
+// Phuong Ngo's theme
+// yep I am personally more familiar making UI elements using these colors
+export enum MyTheme {
+    BLACK = "#222222",
+    WHITE = "#FFFFFF",
+    BLUE = "#4B9CFC",
+    YELLOW = "#FFD966",
+    RED = "#F5707A",
+    GREEN = "#4BD396",
+    ORANGE = "#FF9800",
+    PINK = "#F06292",
+    PURPLE = "#CA498C",
+    LAGOON = "#3AC9D6",
+    GOLD = "#D9B563",
+    GRAY = "#CCCCCC",
+    DARKGRAY = "#575A65",
+    LIGHTBLUE = "#A4D9FF",
+    DARKBLUE = "#023E88",
+}
