@@ -5,6 +5,9 @@ export const en = {
   [LocalizationKey.HOME]: "Home",
   [LocalizationKey.START]: "Start",
   [LocalizationKey.LOADING]: "Loading",
+  [LocalizationKey.CONFIRM]: "Confirm",
+  [LocalizationKey.CANCEL]: "Cancel",
+  [LocalizationKey.CLEAR]: "Clear",
 
   [LocalizationKey.TRANSACTIONS]: "Log",
   [LocalizationKey.WALLETS]: "Wallets",
@@ -38,6 +41,7 @@ export const en = {
   [LocalizationKey.SELECT_WALLET_TYPE]: "Select wallet type",
   [LocalizationKey.EXPENSE]: "Expense",
   [LocalizationKey.INCOME]: "Income",
+  [LocalizationKey.AMOUNT]: "Amount",
   
   [LocalizationKey.TOTAL_BUDGET]: "Total budgets",
   [LocalizationKey.TOTAL_SPENT]: "Total spent",

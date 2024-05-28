@@ -5,6 +5,9 @@ export const vi = {
   [LocalizationKey.HOME]: "Trang chủ",
   [LocalizationKey.START]: "Bắt đầu",
   [LocalizationKey.LOADING]: "Đang tải",
+  [LocalizationKey.CONFIRM]: "Xác nhận",
+  [LocalizationKey.CANCEL]: "Hủy bỏ",
+  [LocalizationKey.CLEAR]: "Xóa hết",
 
   [LocalizationKey.TRANSACTIONS]: "Giao dịch",
   [LocalizationKey.WALLETS]: "Ví của tôi",
@@ -38,6 +41,7 @@ export const vi = {
   [LocalizationKey.SELECT_WALLET_TYPE]: "Chọn loại ví",
   [LocalizationKey.EXPENSE]: "Khoản chi",
   [LocalizationKey.INCOME]: "Khoản thu",
+  [LocalizationKey.AMOUNT]: "Số tiền",
   
   [LocalizationKey.TOTAL_BUDGET]: "Tổng ngân sách",
   [LocalizationKey.TOTAL_SPENT]: "Đã chi tiêu",
