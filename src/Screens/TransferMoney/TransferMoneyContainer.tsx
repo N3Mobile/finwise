@@ -14,7 +14,7 @@ type Props = NativeStackScreenProps<RootStackParamList, RootScreens.TRANSFER_MON
 
 export const TransferMoneyContainer: FC<Props> = ({ route }) => {
 
-    const [walletIcon, walletColor] = useWalletIcon('cash');
+    const [walletName, walletIcon, walletColor] = useWalletIcon('cash');
 
     const [amount, setAmount] = useState('0');
     const [pendingAmount, setPendingAmount] = useState(amount);

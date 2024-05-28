@@ -13,6 +13,7 @@ import { DefaultAppbar } from "./Appbar/DefaultAppbar";
 import { MainAppbar } from "./Appbar/MainAppbar";
 import { TransferMoneyContainer } from "@/Screens/TransferMoney";
 import { EditWalletContainer } from "@/Screens/EditWallet";
+import { AddWalletContainer } from "@/Screens/AddWallet";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: NavigatorScreenParams<BottomTabParamList>;
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   [RootScreens.LOGIN]: undefined;
   [RootScreens.SIGNUP]: undefined;
   [RootScreens.TRANSFER_MONEY]: { wallet_id: number };
+  [RootScreens.ADD_WALLET]: undefined;
   [RootScreens.EDIT_WALLET]: { wallet_id: number };
   [RootScreens.TEST]: undefined;
 };
@@ -66,6 +68,10 @@ const ApplicationNavigator = () => {
         <RootStack.Screen 
           name={RootScreens.TRANSFER_MONEY}
           component={TransferMoneyContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.ADD_WALLET}
+          component={AddWalletContainer}
         />
         <RootStack.Screen
           name={RootScreens.EDIT_WALLET}

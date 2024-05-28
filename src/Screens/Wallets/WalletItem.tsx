@@ -3,7 +3,7 @@ import { Wallet } from "@/Services/wallets";
 import { Colors, Icons } from "@/Theme";
 import { useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon, IconButton, Menu, Text } from "react-native-paper";
 import { RootScreens } from "..";
 import { StackNavigation } from "@/Navigation";
@@ -20,7 +20,7 @@ export const WalletItem: FC<Props> = ({ wallet, setDeleteId, setDeteteVisible })
     const [menuVisible, setMenuVisible] = useState(false);
     const navigation = useNavigation<StackNavigation>();
 
-    const [icon, color] = useWalletIcon(wallet.type);
+    const [name, icon, color] = useWalletIcon(wallet.type);
 
     function onTransferMoney() {
         navigation.navigate(RootScreens.TRANSFER_MONEY, { wallet_id: wallet.id });
@@ -39,14 +39,14 @@ export const WalletItem: FC<Props> = ({ wallet, setDeleteId, setDeteteVisible })
     }
     
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={onEdit}>
             <View style={styles.icon}>
                 <Icon source={icon} size={40} color={color} />
             </View>
 
             <View style={styles.content}>
                 <Text style={styles.name}>{wallet.name}</Text>
-                <Text style={styles.amount}>{wallet.amount} ₫</Text>
+                <Text style={styles.amount}>{wallet.amount.toLocaleString('en')}</Text>
             </View>
 
             <Menu
@@ -65,7 +65,7 @@ export const WalletItem: FC<Props> = ({ wallet, setDeleteId, setDeteteVisible })
                 <Menu.Item onPress={onEdit} title={i18n.t(LocalizationKey.EDIT)} />
                 <Menu.Item onPress={onDelete} title={i18n.t(LocalizationKey.DELETE)} />
             </Menu>
-        </View>
+        </TouchableOpacity>
     )
 }
 

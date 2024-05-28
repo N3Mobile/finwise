@@ -2,10 +2,12 @@ import React, { FC, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { WalletItem } from "./WalletItem";
 import { Wallet } from "@/Services/wallets";
-import { Button, Dialog, Divider, IconButton, Modal, Portal, Text } from "react-native-paper";
+import { Button, Dialog, Divider, IconButton, List, Modal, Portal, Text } from "react-native-paper";
 import { LocalizationKey, i18n } from "@/Localization";
 import { Colors } from "@/Theme";
-import { AddWallet } from "./AddWallet";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigation } from "@/Navigation";
+import { RootScreens } from "..";
 
 interface Props {
     initialWallets: Wallet[]
@@ -13,6 +15,7 @@ interface Props {
 
 export const Wallets: FC<Props> = ({ initialWallets }) => {
 
+    const navigation = useNavigation<StackNavigation>();
     const init: Array<Wallet> = [
         {
             id: 1,
@@ -73,18 +76,17 @@ export const Wallets: FC<Props> = ({ initialWallets }) => {
     ]
 
     const [wallets, setWallets] = useState(init);
-    const [addVisible, setAddVisible] = useState(false);
     const [pendingId, setPendingId] = useState<number | null>(null)
     const [deleteVisible, setDeleteVisible] = useState(false);
 
-    function addWallet(name: string, type: string, amount: number) {
-
+    function addWallet() {
+        navigation.navigate(RootScreens.ADD_WALLET);
     }
 
     function deleteWallet(id: number) {
         setDeleteVisible(false);
         setPendingId(null);
-        setWallets(wallets.filter(wallet => wallet.id === id));
+        setWallets(wallets.filter(wallet => wallet.id !== id));
         // ...
     }
 
@@ -103,34 +105,17 @@ export const Wallets: FC<Props> = ({ initialWallets }) => {
                 ItemSeparatorComponent={Divider}
             />
             <Divider />
-            <TouchableOpacity 
-                style={{
-                    alignSelf: 'flex-end',
-                    padding: 10
-                }}
-                onPress={() => setAddVisible(true)}
-            >
-                <IconButton 
-                    mode="contained" 
-                    icon="plus" 
-                    iconColor={Colors.WHITE}
-                    containerColor={Colors.SUFACE_TINT_COLOR}
-                    size={50}
-                />
-            </TouchableOpacity>
+            <IconButton 
+                mode="contained" 
+                icon="plus" 
+                iconColor={Colors.WHITE}
+                containerColor={Colors.SUFACE_TINT_COLOR}
+                size={50}
+                style={{ alignSelf: 'flex-end', margin: 15 }}
+                onPress={addWallet}
+            />
 
             <Portal>
-                <Modal
-                    visible={addVisible}
-                    dismissable={false}
-                    contentContainerStyle={{
-                        backgroundColor: "white"
-                    }}
-                >
-                    <AddWallet setAddVisible={setAddVisible}/>
-                </Modal>
-            </Portal>
-            <Portal>    
                 <Dialog visible={deleteVisible} onDismiss={() => setDeleteVisible(false)}>
                     <Dialog.Title>Delete!</Dialog.Title>
                     <Dialog.Content>
