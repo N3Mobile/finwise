@@ -1,6 +1,6 @@
 import React from "react";
 import { StatusBar } from "react-native";
-import { NativeStackHeaderProps, createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, NavigationProp, NavigatorScreenParams } from "@react-navigation/native";
 import { BottomTabParamList, MainNavigator } from "./Main";
 import { WelcomeContainer } from "@/Screens/Welcome";
@@ -11,6 +11,9 @@ import { SignupContainer } from "@/Screens/Signup";
 import { TestContainer } from "@/Screens/Test";
 import { DefaultAppbar } from "./Appbar/DefaultAppbar";
 import { MainAppbar } from "./Appbar/MainAppbar";
+import { BudgetDetailsContainer } from "@/Screens/BudgetDetails";
+import { AddBudgetContainer } from "@/Screens/AddBudget";
+import { EditBudgetContainer } from "@/Screens/EditBudget";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: NavigatorScreenParams<BottomTabParamList>;
@@ -19,6 +22,9 @@ export type RootStackParamList = {
   [RootScreens.LOGIN]: undefined;
   [RootScreens.SIGNUP]: undefined;
   [RootScreens.TEST]: undefined;
+  [RootScreens.BUDGET_DETAILS]: { budgetId: number };
+  [RootScreens.ADD_BUDGET]: undefined;
+  [RootScreens.EDIT_BUDGET]: { budgetId: number };
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
@@ -61,6 +67,18 @@ const ApplicationNavigator = () => {
         <RootStack.Screen
           name={RootScreens.TEST}
           component={TestContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.BUDGET_DETAILS}
+          component={BudgetDetailsContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.ADD_BUDGET}
+          component={AddBudgetContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.EDIT_BUDGET}
+          component={EditBudgetContainer}
         />
       </RootStack.Navigator>
     </NavigationContainer>
