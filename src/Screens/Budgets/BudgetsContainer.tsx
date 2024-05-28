@@ -87,9 +87,8 @@ export const BudgetsContainer = () => {
                 <Dashboard
                     totalAmount={budgets.reduce((total, bud) => total + bud.initial_amount, 0)}
                     totalSpent={budgets.reduce((total, bud) => total + bud.initial_amount - bud.amount, 0)}
-                    timeRange="month"
-                    timeLeft={20}
                     period={period}
+                    setPeriod={setPeriod}
                     wallet={sampleWallet}
                     setWalletId={setWalletId}
                     addBudget={() => navigation.navigate(RootScreens.ADD_BUDGET)}
