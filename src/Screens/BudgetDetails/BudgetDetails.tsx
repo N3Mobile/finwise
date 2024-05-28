@@ -7,17 +7,14 @@ import { View } from "react-native";
 import { Button, List, ProgressBar, Text } from "react-native-paper";
 
 interface Props {
-    budget: Budget
+    budget: Budget,
+    onShowTransactions: () => void
 }
 
-export const BudgetDetails: FC<Props> = ({ budget }) => {
+export const BudgetDetails: FC<Props> = ({ budget, onShowTransactions }) => {
     const [catname, caticon, catcolor] = useCategoryIcon(budget.category);
     const [walletName, walletIcon, walletColor] = ['CASH CASH', 'cash', Colors.PRIMARY70];
     // const [walname, walicon, walcolor] = useWalletIcon(budget.wallet_id);
-
-    function onShowTransactions() {
-        
-    }
 
     return (
         <View>
