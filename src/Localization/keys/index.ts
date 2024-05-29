@@ -1,8 +1,12 @@
 export enum LocalizationKey {
+  // common
   WELCOME = "welcome",
   HOME = "home",
   START = "start",
   LOADING = "loading",
+  CONFIRM = "confirm",
+  CANCEL = "cancel",
+  CLEAR = "clear",
 
   // nav-related
   TRANSACTIONS = "transactions",
@@ -37,6 +41,29 @@ export enum LocalizationKey {
   SELECT_WALLET = "select-wallet",
   SELECT_CATEGORY = "select-category",
   SELECT_WALLET_TYPE = "select-wallet-type",
+  SELECT_PERIOD = "select-period",
   EXPENSE = "expense",
   INCOME = "income",
+  AMOUNT = "amount",
+  
+  // budget-related
+  TOTAL_BUDGET = "total-budget",
+  TOTAL_SPENT = "total-spent",
+  DAY = "day",
+  DAYS = "days",
+  REMAINING = "remaining",
+  CREATE_BUDGET = "create-budget",
+  LEFT = "left",
+  CATEGORY = "category",
+  SPENT = "spent",
+  WALLET = "wallet",
+  TIME = "time",
+  THIS_WEEK = "this-week",
+  THIS_MONTH = "this-month",
+  THIS_YEAR = "this-year",
+  TRANSACTION_LIST = "transaction-list",
+  BUDGET_DETAILS = "budget-details",
+  EDIT_BUDGET = "edit-budget",
+  SAVE = "save",
+  CAN_SPEND = "can-spend",
 }
