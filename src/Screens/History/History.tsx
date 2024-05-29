@@ -1,12 +1,15 @@
 import { Transaction } from "@/Services";
 import { Text, Button } from "react-native-paper";
 import { View, Image, StyleSheet, TouchableOpacity, Modal, Alert } from "react-native";
-import { useRef, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
 import { ScrollView } from "native-base";
 import { HStack, Spinner } from "native-base";
 import axios from "axios";
+import { Category } from "@/Config/category";
+import { useCategoryIcon } from "@/Hooks/icon";
+import { Icon } from "react-native-paper";
 
 const TransactionRecord = ({data} : {data : Transaction}) => {
 
@@ -22,27 +25,21 @@ const TransactionRecord = ({data} : {data : Transaction}) => {
         return strArr.join('');
     }
 
+    let icon : string [] = useCategoryIcon(data.category);
+
     return (
-                <TouchableOpacity style={{flex:1, flexDirection: 'row', width: '100%', height: 100, marginBottom:'2%', alignItems:'center'}}>
-
-                        {/* Change icon later */}
-                        <Image source={data.category == 'billing' ?
-                                    require('assets/billing.png') :
-                                    (data.category == 'shopping' ?  
-                                    require('assets/shopping.png') :
-                                    require('assets/food.png')
-                                    )} 
-                        style={{aspectRatio:1, resizeMode:'center'}}/>
-
-                    <View style={{flex:5}}>
-                            <Text style={{fontSize: 18, fontWeight: 'bold'}}>{data.category}</Text>
+                <TouchableOpacity style={{flex:1, flexDirection: 'row', width: '100%', height: 100, alignItems:'center'}}>
+                    <View style={{flex : 3, justifyContent:'center', alignItems: 'center'}}>
+                        <Icon source={icon[1]} size={50} color={icon[2]}/>   
+                    </View>
+                    <View style={{flex:6}}>
+                            <Text style={{fontSize: 18, fontWeight: 'bold'}}>{icon[0]}</Text>
                             <Text style={{fontSize: 12, fontWeight: 'light', color:'grey'}}>{data.created_at}</Text>
                     </View>
 
                     <View style={{flex:7, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: '3%'}}>
                             <Text style={{fontSize:23, fontWeight:'bold'}}>{data.is_pay ? '-' : '+'} {formatAmount(data.amount)} đ</Text>
                     </View>
-
                 </TouchableOpacity>
     );
 }
@@ -58,7 +55,7 @@ const TransactionList = ({data} : {data : Transaction[]}) => {
     );
 }
 
-export const History = ({route}) => {
+export const History = ({route} : {route : any}) => {
 
     const {start, end, category} = route.params;
 
@@ -69,12 +66,7 @@ export const History = ({route}) => {
     const [startDate, setStartDate] = useState(new Date(start));
     const [endDate, setEndDate] = useState(new Date(end));
     const [datePick, setDatePick] = useState(0);
-    const [markedStartDate, setMarkedStartDate] = useState({selected : {}});
-    const [markedEndDate, setMarkedEndDate] = useState({selected : {}});
     const [transactions, setTransaction] = useState<Transaction[]>([]);
-    const [transactFood, setTransactFood] = useState<Transaction[]>([]);
-    const [transactShopping, setTransactShopping] = useState<Transaction[]>([]);
-    const [transactBilling, setTransactBilling] =useState<Transaction[]>([]);
     const [allTransact, setAllTransact] = useState<Transaction[]>([]);
     const [numTransaction, setNumTransaction] = useState(-1);
 
@@ -88,21 +80,33 @@ export const History = ({route}) => {
 
         return day + '/' + month + '/' + year;
     }
-
-    const filter = (data : Transaction[]) : Transaction[][] => {
-
-        return [[]];
-    }
     
-    let setData = () => {
+    const getmarkedDate = (date : Date) => {
+        let day : string = String(date.getDate());
+        let month : string = String(date.getMonth() + 1);
+        let year : string = String(date.getFullYear());
 
+        if(month.length == 1) month = '0' + month;
+        if(day.length == 1) day = '0' + day;
 
+        return year + '-' + month + '-' + day;
+    }
+
+    let setData = (d : Transaction[]) => {
+        if(transactionCategory == 'all') setTransaction([...d]);
+        else{
+            let data : Transaction[] = [];
+            for(let i = 0; i < allTransact.length; i++) if(allTransact[i].category == transactionCategory) data.push(allTransact[i]);
+            setTransaction(data);
+        }
     }
 
     //fetch data
     const fetchData = async (startDate : Date, endDate : Date) => {
         let start : string = getFormattedDate(startDate);
         let end : string = getFormattedDate(endDate);
+
+        setNumTransaction(-1);
 
         //call api here
         try{
@@ -114,17 +118,14 @@ export const History = ({route}) => {
                     end_date : end
                 }
             });
-    
-            if(res.data == 0) setNumTransaction(0);
-            else
-            {
-                let data : Transaction[] = res.data;
-                //handle data
-                setNumTransaction(data.length);
-                console.log(data);
-                setAllTransact(data);
-                setTransaction(data);
-            }
+            console.log(res.data);
+            let data : Transaction[] = res.data;
+
+            //handle data
+            setAllTransact(data);
+            setNumTransaction(data.length);
+            
+            
         }catch(e){
             console.log(e)
         }
@@ -139,7 +140,6 @@ export const History = ({route}) => {
         else 
         {
             setRange(endDate.getDate() - startDate.getDate());
-            setNumTransaction(-1);
             fetchData(startDate, endDate);
         }
     }
@@ -160,8 +160,9 @@ export const History = ({route}) => {
     }, []);
 
     useEffect(() => {
-        if(numTransaction != -1) setTimeout(() => setData(), 100);
-    }, [transactionCategory])
+        setData(allTransact);
+    }, [transactionCategory, allTransact]);
+
 
     return (   
         <View style={{flex: 1}}>
@@ -219,20 +220,18 @@ export const History = ({route}) => {
                     theme={{
                         todayBackgroundColor : 'cyan',
                     }}
-                    markedDates={markedStartDate.selected}
+                    markedDates={{[getmarkedDate(startDate)] : {"selected": true, "selectedColor": "#466A8F"}}}
                     onDayPress={day => {
                         setStartDate(new Date(day.dateString));
-                        setMarkedStartDate({selected:{[day.dateString]:{selected: true, selectedColor: '#466A8F'}}})
                         setDatePick(0);
                     }}
                     /> : (datePick == 2 ? <Calendar style={styles.calendar} 
                         theme={{
                             todayBackgroundColor : 'cyan',
                         }}
-                        markedDates={markedEndDate.selected}
+                        markedDates={{[getmarkedDate(endDate)] : {"selected": true, "selectedColor": "#466A8F"}}}
                         onDayPress={day => {
                             setEndDate(new Date(day.dateString));
-                            setMarkedEndDate({selected:{[day.dateString]:{selected: true, selectedColor: '#466A8F'}}})
                             setDatePick(0);
                         }}
                       /> : "")} 
@@ -250,10 +249,9 @@ export const History = ({route}) => {
                         selectedValue={transactionCategory}
                         onValueChange={(itemValue, itemIndex) => setTransactionCategory(itemValue)
                     }>
-                        <Picker.Item label="Tất cả" value={"all"} />
-                        <Picker.Item label="Hóa đơn" value={'billing'} />
-                        <Picker.Item label="Ăn uống" value={"food"} />
-                        <Picker.Item label="Mua sắm" value={"shopping"} />
+                        {Object.values(Category).reverse().map((value, index)=>{
+                            return (<Picker.Item label={useCategoryIcon(value)[0]} value={value} key={value}/>)
+                        })}
                     </Picker>
                 </View>
             </View>
