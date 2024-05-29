@@ -1,5 +1,4 @@
 import { Loading, ScreenWrapper } from "@/Components";
-import { Error } from "@/Components/Error";
 import { InputAmount } from "@/Components/InputAmount";
 import { SelectCategory } from "@/Components/SelectCategory";
 import { SelectWallet } from "@/Components/SelectWallet";
@@ -69,6 +68,7 @@ export const TestContainer = () => {
     return (
         <ScreenWrapper
             isLoading={isLoading}
+            isSuccess={isSuccess}
             isError={isError}
             error={error}
             backToHome={() => navigation.navigate(RootScreens.MAIN, { screen: TabScreens.HOME })}
@@ -119,16 +119,6 @@ export const TestContainer = () => {
                         setVisible={setAmountVisible}
                         amount={amount}
                         setAmount={setAmount}
-                    />
-                    <Loading
-                        visible={loadingVisible}
-                        setVisible={setLoadingVisible}
-                    />
-                    <Error 
-                        visible={errorVisible} 
-                        setVisible={setErrorVisible}
-                        message="Test error message"
-                        backToHome={() => navigation.navigate(RootScreens.MAIN, {screen: TabScreens.HOME})}
                     />
                 </Portal>
             </ScrollView>
