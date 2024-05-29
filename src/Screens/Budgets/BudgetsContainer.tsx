@@ -6,7 +6,7 @@ export const BudgetsContainer = () => {
     // TODO
     return (
         <View>
-            <Loading />
+
         </View>
     )
 }

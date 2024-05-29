@@ -18,6 +18,9 @@ export type RootStackParamList = {
   [RootScreens.SETTINGS]: undefined;
   [RootScreens.LOGIN]: undefined;
   [RootScreens.SIGNUP]: undefined;
+  [RootScreens.TRANSFER_MONEY]: { wallet_id: string };
+  [RootScreens.ADD_WALLET]: undefined;
+  [RootScreens.EDIT_WALLET]: { wallet_id: string };
   [RootScreens.TEST]: undefined;
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
