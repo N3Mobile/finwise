@@ -1,14 +1,13 @@
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import { Loading } from "./Loading";
-import { View } from "react-native";
-import { Error } from "./Error";
-import { Portal } from "react-native-paper";
+import { ErrorScreen } from "./ErrorScreen";
 
 interface IScreenWrapperProps {
     children: ReactNode,
     isLoading: boolean,
+    isSuccess: boolean,
     isError: boolean,
     error: FetchBaseQueryError | SerializedError | undefined,
     backToHome: () => void
@@ -17,27 +16,22 @@ interface IScreenWrapperProps {
 export const ScreenWrapper: FC<IScreenWrapperProps> = ({
     children,
     isLoading,
+    isSuccess,
     isError,
     error,
     backToHome
 }) => {
-    const [errorVisible, setErrorVisible] = useState(isError);
+    let content;
 
-    return (
-        <View>
-            {children}
-            <Portal>
-                <Loading 
-                    visible={isLoading} 
-                    setVisible={() => {}} // be patient, don't go back
-                />
-                <Error 
-                    visible={errorVisible} 
-                    setVisible={setErrorVisible}
-                    message={error ? error.toString() : "No error messages"} 
-                    backToHome={backToHome} 
-                />
-            </Portal>
-        </View>
-    );
+    if (true) {
+        content = <Loading />
+    } else if (isSuccess) {
+        content = children;
+    } else if (isError) {
+        content = <ErrorScreen message={error?.toString()} backToHome={backToHome}  />
+    } else {
+        throw new Error("Invalid screen state");
+    }
+    
+    return content;
 }
