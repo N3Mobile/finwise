@@ -1,16 +1,21 @@
-import { Loading } from "@/Components";
+import { Loading, ScreenWrapper } from "@/Components";
+import { Error } from "@/Components/Error";
 import { InputAmount } from "@/Components/InputAmount";
 import { SelectCategory } from "@/Components/SelectCategory";
 import { SelectWallet } from "@/Components/SelectWallet";
 import { SelectWalletType } from "@/Components/SelectWalletType";
 import { Category } from "@/Config/category";
 import { WalletType } from "@/Config/wallet";
+import { StackNavigation } from "@/Navigation";
 import { useAddUserMutation, useGetAllUsersQuery, useGetUserByEmailQuery } from "@/Services";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { ScrollView } from "react-native";
 import { Button, Portal, Text } from "react-native-paper";
+import { RootScreens, TabScreens } from "..";
 
 export const TestContainer = () => {
+    const navigation = useNavigation<StackNavigation>();
     const [walletId, setWalletId] = useState(0);
     const [category, setCategory] = useState(Category.ALL);
     const [walletType, setWalletType] = useState(WalletType.CASH);
@@ -20,6 +25,8 @@ export const TestContainer = () => {
     const [categoryVisible, setCategoryVisible] = useState(false);
     const [walletTypeVisible, setWalletTypeVisible] = useState(false);
     const [amountVisible, setAmountVisible] = useState(false);
+    const [loadingVisible, setLoadingVisible] = useState(false);
+    const [errorVisible, setErrorVisible] = useState(false);
 
     const {
         data: users,
@@ -33,17 +40,17 @@ export const TestContainer = () => {
 
     const [addUser] = useAddUserMutation();
 
-    let content;
+    // let content;
 
-    if (isLoading) {
-      content = <Loading />;
-    } 
-    else if (isSuccess) {
-      content = users.map(user => <Text key={user.id}>{user.name}</Text>);
-    } 
-    else if (isError) {
-      content = <Text>{error.toString()}</Text>
-    }
+    // if (isLoading) {
+    //   content = <Text>Loading...</Text>;
+    // } 
+    // else if (isSuccess) {
+    //   content = users.map(user => <Text key={user.id}>{user.name}</Text>);
+    // } 
+    // else if (isError) {
+    //   content = <Text>{error.toString()}</Text>
+    // }
 
     async function onAddUser() {
         try {
@@ -60,49 +67,71 @@ export const TestContainer = () => {
     }
 
     return (
-        <ScrollView>
-            <Text>Hello</Text>
-            <Text>Wallet: {walletId}</Text>
-            <Text>Category: {category}</Text>
-            <Text>Wallet Type: {walletType}</Text>
-            <Text>Amount: {parseFloat(amount.replace(/[^0-9.]/g, '')).toLocaleString('en')}</Text>
+        <ScreenWrapper
+            isLoading={isLoading}
+            isError={isError}
+            error={error}
+            backToHome={() => navigation.navigate(RootScreens.MAIN, { screen: TabScreens.HOME })}
+        >
+            <ScrollView>
+                <Text>Hello</Text>
+                <Text>Wallet: {walletId}</Text>
+                <Text>Category: {category}</Text>
+                <Text>Wallet Type: {walletType}</Text>
+                <Text>Amount: {parseFloat(amount.replace(/[^0-9.]/g, '')).toLocaleString('en')}</Text>
 
-            <Button mode="contained" onPress={() => setWalletVisible(true)}>Select Wallet Here</Button>
-            <Button mode="contained" onPress={() => setCategoryVisible(true)}>Select Category Here</Button>
-            <Button mode="contained" onPress={() => setWalletTypeVisible(true)}>Select Wallet Type Here</Button>
-            <Button mode="contained" onPress={() => setAmountVisible(true)}>Input Amount Here</Button>
+                <Button mode="contained" onPress={() => setWalletVisible(true)}>Select Wallet Here</Button>
+                <Button mode="contained" onPress={() => setCategoryVisible(true)}>Select Category Here</Button>
+                <Button mode="contained" onPress={() => setWalletTypeVisible(true)}>Select Wallet Type Here</Button>
+                <Button mode="contained" onPress={() => setAmountVisible(true)}>Input Amount Here</Button>
+                <Button mode="contained" onPress={() => setLoadingVisible(true)}>Show Loading</Button>
+                <Button mode="contained" onPress={() => setErrorVisible(true)}>Show Error</Button>
+                
+                <Text>API Test:</Text>
+                { isSuccess ?
+                    users.map(user => <Text key={user.id}>{user.name}</Text>)
+                : null}
 
-            <Text>API Test:</Text>
-            {content}
-            <Button mode="contained" onPress={onAddUser}>Add user Phuong</Button>
+                <Button mode="contained" onPress={onAddUser}>Add user Phuong</Button>
 
-            <Portal>
-                <SelectWallet 
-                    visible={walletVisible} 
-                    setVisible={setWalletVisible} 
-                    walletId={walletId}
-                    setWalletId={setWalletId} 
-                />
-                <SelectCategory
-                    visible={categoryVisible}
-                    setVisible={setCategoryVisible}
-                    all
-                    income
-                    expense
-                    setCategory={setCategory}
-                />
-                <SelectWalletType
-                    visible={walletTypeVisible}
-                    setVisible={setWalletTypeVisible}
-                    setWalletType={setWalletType}
-                />
-                <InputAmount 
-                    visible={amountVisible}
-                    setVisible={setAmountVisible}
-                    amount={amount}
-                    setAmount={setAmount}
-                />
-            </Portal>
-        </ScrollView>
+                <Portal>
+                    <SelectWallet 
+                        visible={walletVisible} 
+                        setVisible={setWalletVisible} 
+                        walletId={walletId}
+                        setWalletId={setWalletId} 
+                    />
+                    <SelectCategory
+                        visible={categoryVisible}
+                        setVisible={setCategoryVisible}
+                        all
+                        income
+                        expense
+                        setCategory={setCategory}
+                    />
+                    <SelectWalletType
+                        visible={walletTypeVisible}
+                        setVisible={setWalletTypeVisible}
+                        setWalletType={setWalletType}
+                    />
+                    <InputAmount 
+                        visible={amountVisible}
+                        setVisible={setAmountVisible}
+                        amount={amount}
+                        setAmount={setAmount}
+                    />
+                    <Loading
+                        visible={loadingVisible}
+                        setVisible={setLoadingVisible}
+                    />
+                    <Error 
+                        visible={errorVisible} 
+                        setVisible={setErrorVisible}
+                        message="Test error message"
+                        backToHome={() => navigation.navigate(RootScreens.MAIN, {screen: TabScreens.HOME})}
+                    />
+                </Portal>
+            </ScrollView>
+        </ScreenWrapper>
     )
 }
