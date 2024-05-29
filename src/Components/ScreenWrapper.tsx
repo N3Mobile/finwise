@@ -29,8 +29,6 @@ export const ScreenWrapper: FC<IScreenWrapperProps> = ({
         content = children;
     } else if (isError) {
         content = <ErrorScreen message={error?.toString()} backToHome={backToHome}  />
-    } else {
-        throw new Error("Invalid screen state");
     }
     
     return content;
