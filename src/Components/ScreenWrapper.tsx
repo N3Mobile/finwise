@@ -23,7 +23,7 @@ export const ScreenWrapper: FC<IScreenWrapperProps> = ({
 }) => {
     let content;
 
-    if (true) {
+    if (isLoading) {
         content = <Loading />
     } else if (isSuccess) {
         content = children;
