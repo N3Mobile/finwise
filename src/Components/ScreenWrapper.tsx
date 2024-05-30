@@ -8,7 +8,7 @@ import { View } from "react-native";
 interface IScreenWrapperProps {
     children: ReactNode,
     loading: boolean,
-    error: any,
+    error: string,
     backToHome: () => void
 }
 

@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { Colors } from "@/Theme";
 
 interface IErrorProps {
-    message: string | undefined,
+    message: string,
     backToHome: () => void
 }
 
