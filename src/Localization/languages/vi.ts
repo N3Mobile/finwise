@@ -63,4 +63,5 @@ export const vi = {
   [LocalizationKey.EDIT_BUDGET]: "Chỉnh sửa ngân sách",
   [LocalizationKey.SAVE]: "Lưu",
   [LocalizationKey.CAN_SPEND]: "Số tiền bạn có thể chi",
+  [LocalizationKey.OVERSPENT]: "bội chi",
 };

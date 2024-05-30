@@ -63,4 +63,5 @@ export const en = {
   [LocalizationKey.EDIT_BUDGET]: "Edit budget",
   [LocalizationKey.SAVE]: "Save",
   [LocalizationKey.CAN_SPEND]: "Amount you can spend",
+  [LocalizationKey.OVERSPENT]: "overspent",
 };

@@ -66,4 +66,5 @@ export enum LocalizationKey {
   EDIT_BUDGET = "edit-budget",
   SAVE = "save",
   CAN_SPEND = "can-spend",
+  OVERSPENT = "overspent"
 }
