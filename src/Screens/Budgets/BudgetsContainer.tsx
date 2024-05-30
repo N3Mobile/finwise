@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ScreenWrapper } from "@/Components";
 import { TabNavigation } from "@/Navigation/Main";
-import { TabScreens } from "..";
+import { RootScreens, TabScreens } from "..";
 import { Budgets } from "./Budgets";
 import { DEFAULT_WALLET, Wallet } from "@/Services/wallets";
 import { View } from "react-native";
@@ -12,9 +12,12 @@ import { http } from "@/Hooks/api";
 import { Colors } from "@/Theme";
 import { EmptyIllustration } from "@/Components/EmptyIllustration";
 import { Language, LocalizationKey, i18n } from "@/Localization";
+import { StackNavigation } from "@/Navigation";
 
 export const BudgetsContainer = () => {
     const navigation = useNavigation<TabNavigation>();
+    const stackNavigation = useNavigation<StackNavigation>();
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -68,14 +71,24 @@ export const BudgetsContainer = () => {
                 <Text>Hãy chọn ví để tiếp tục</Text>
             </View> 
             }
-            <Button 
-                mode="contained" 
-                buttonColor={Colors.PRIMARY70} 
-                onPress={() => setSelectVisible(true)}
-                style={{ paddingVertical: 10, width: 200 }}
-            >
-                {i18n.t(LocalizationKey.SELECT_WALLET)}
-            </Button>
+            <View style={{ alignItems: 'center', gap: 10 }}>
+                <Button 
+                    mode="contained" 
+                    buttonColor={Colors.PRIMARY70} 
+                    onPress={() => setSelectVisible(true)}
+                    style={{ paddingVertical: 10, width: 250 }}
+                >
+                    {i18n.t(LocalizationKey.SELECT_WALLET)}
+                </Button>
+                <Button
+                    mode="contained"
+                    buttonColor={Colors.TERTIARY}
+                    onPress={() => { stackNavigation.navigate(RootScreens.FINISHED_BUDGET); }}
+                    style={{ paddingVertical: 10, width: 250 }}
+                >
+                    {i18n.t(LocalizationKey.VIEW_FINISHED_BUDGETS)}
+                </Button>
+            </View>
             <Portal>
                 <SelectWallet
                     visible={selectVisible}

@@ -66,5 +66,7 @@ export enum LocalizationKey {
   EDIT_BUDGET = "edit-budget",
   SAVE = "save",
   CAN_SPEND = "can-spend",
-  OVERSPENT = "overspent"
+  OVERSPENT = "overspent",
+  VIEW_FINISHED_BUDGETS = "view-finished-budgets",
+  VIEW_RUNNING_BUDGETS = "view-running-budgets",
 }

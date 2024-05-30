@@ -64,4 +64,6 @@ export const en = {
   [LocalizationKey.SAVE]: "Save",
   [LocalizationKey.CAN_SPEND]: "Amount you can spend",
   [LocalizationKey.OVERSPENT]: "overspent",
+  [LocalizationKey.VIEW_FINISHED_BUDGETS]: "View finished budgets",
+  [LocalizationKey.VIEW_RUNNING_BUDGETS]: "View running budgets",
 };
