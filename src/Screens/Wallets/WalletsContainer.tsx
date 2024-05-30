@@ -1,28 +1,45 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Wallets } from "./Wallets";
-import { Wallet, useGetAllWalletsQuery } from "@/Services/wallets";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { http } from "@/Hooks/api";
+import { Wallet } from "@/Services/wallets";
+import { ScreenWrapper } from "@/Components";
+import { TabNavigation } from "@/Navigation/Main";
+import { TabScreens } from "..";
 
 export const WalletsContainer = () => {
     
-    const {
-        data: wallets,
-        isLoading,
-        isSuccess,
-        isError,
-        error
-    } = useGetAllWalletsQuery();
+    const navigation = useNavigation<TabNavigation>();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [wallets, setWallets] = useState<Wallet[]>([]);
 
-    let content;
+    useFocusEffect(
+        useCallback(() => {
+            setError("");
+            http.get("wallets/byUsersId", { user_ID: "66237fef97705968270a6dab" })
+                .then(data => {
+                    setWallets(data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setError(error.toString());                
+                });
+        }, [])
+    );
 
-    if (isLoading) {
-        content = <></>;
-    } else if (isSuccess) {
-        content = <Wallets  initialWallets={wallets}/>;
-    } else if (isError) {
-        content = <></>;
-    }
-
-    const testWallets: Wallet[] = [];
-
-    return  <Wallets initialWallets={testWallets} />;
+    return (
+        <ScreenWrapper
+            loading={loading}
+            error={error}
+            backToHome={() => { navigation.navigate(TabScreens.HOME); }}
+        >
+            <Wallets 
+                wallets={wallets} 
+                setWallets={setWallets} 
+                setLoading={setLoading}
+                setError={setError}
+            />
+        </ScreenWrapper>
+    );
 }

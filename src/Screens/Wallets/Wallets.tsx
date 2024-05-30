@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { WalletItem } from "./WalletItem";
 import { Wallet } from "@/Services/wallets";
@@ -8,86 +8,41 @@ import { Colors } from "@/Theme";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigation } from "@/Navigation";
 import { RootScreens } from "..";
+import { http } from "@/Hooks/api";
 
 interface Props {
-    initialWallets: Wallet[]
+    wallets: Wallet[],
+    setWallets: Dispatch<SetStateAction<Wallet[]>>,
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    setError: Dispatch<SetStateAction<any>>
 }
 
-export const Wallets: FC<Props> = ({ initialWallets }) => {
+export const Wallets: FC<Props> = ({ wallets, setWallets, setLoading, setError }) => {
 
     const navigation = useNavigation<StackNavigation>();
-    const init: Array<Wallet> = [
-        {
-            id: 1,
-            user_id: 1,
-            type: "cash",
-            name: "Cash 1",
-            amount: 1000
-        },
-        {
-            id: 2,
-            user_id: 1,
-            type: "cash",
-            name: "Cash 2",
-            amount: 2000
-        },
-        {
-            id: 3,
-            user_id: 1,
-            type: "card",
-            name: "A card",
-            amount: 3000
-        },
-        {
-            id: 4,
-            user_id: 1,
-            type: "card",
-            name: "A card",
-            amount: 3000
-        },
-        {
-            id: 5,
-            user_id: 1,
-            type: "card",
-            name: "A card",
-            amount: 3000
-        },
-        {
-            id: 6,
-            user_id: 1,
-            type: "card",
-            name: "A card",
-            amount: 3000
-        },
-        {
-            id: 7,
-            user_id: 1,
-            type: "card",
-            name: "A card",
-            amount: 3000
-        },
-        {
-            id: 8,
-            user_id: 1,
-            type: "card",
-            name: "A card",
-            amount: 3000
-        }
-    ]
-
-    const [wallets, setWallets] = useState(init);
-    const [pendingId, setPendingId] = useState<number | null>(null)
+    const [pendingId, setPendingId] = useState<string>("");
     const [deleteVisible, setDeleteVisible] = useState(false);
 
     function addWallet() {
         navigation.navigate(RootScreens.ADD_WALLET);
     }
 
-    function deleteWallet(id: number) {
-        setDeleteVisible(false);
-        setPendingId(null);
-        setWallets(wallets.filter(wallet => wallet.id !== id));
-        // ...
+    function deleteWallet(id: string) {
+
+        if (id === "") {
+            throw new Error("Failed to delete wallet: id is not specified");
+        }
+
+        setLoading(true);
+        http.delete('wallets', { _id: id }, null)
+            .then(data => {
+                console.log("fulfilled", data);
+                setDeleteVisible(false);
+                setPendingId("");
+                setWallets(wallets.filter(wallet => wallet.id !== id));
+                setLoading(false);
+            })
+            .catch(error => setError(error.toString()));
     }
 
     return (
@@ -125,7 +80,7 @@ export const Wallets: FC<Props> = ({ initialWallets }) => {
                         <Button onPress={() => setDeleteVisible(false)}>
                             {i18n.t(LocalizationKey.CANCEL)}
                         </Button>
-                        <Button onPress={() => pendingId ? deleteWallet(pendingId): setDeleteVisible(false)}>
+                        <Button onPress={() => deleteWallet(pendingId)}>
                             {i18n.t(LocalizationKey.CONFIRM)}
                         </Button>
                     </Dialog.Actions>

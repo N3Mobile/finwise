@@ -1,16 +1,24 @@
 import { InputAmount } from "@/Components/InputAmount";
 import { SelectWalletType } from "@/Components/SelectWalletType";
 import { WalletType } from "@/Config/wallet";
+import { http } from "@/Hooks/api";
 import { useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
-import { Wallet } from "@/Services/wallets";
+import { StackNavigation } from "@/Navigation";
 import { Colors } from "@/Theme";
-import React, { FC, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Icon, List, Portal, Text, TextInput } from "react-native-paper";
 
-export const AddWallet = () => {
+interface Props {
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    setError: Dispatch<SetStateAction<any>>
+}
 
+export const AddWallet: FC<Props> = ({ setLoading, setError }) => {
+
+    const navigation = useNavigation<StackNavigation>();
     const [name, setName] = useState('');
     const [type, setType] = useState(WalletType.CASH);
     const [balance, setBalance] = useState('0');
@@ -19,8 +27,22 @@ export const AddWallet = () => {
 
     const [walname, walicon, walcolor] = useWalletIcon(type);
 
-    function onConfirm() {
+    function onSave() {
+        const amount = parseFloat(balance.replace(/[^0-9.]/g, ''));
 
+        setLoading(true);
+        http.post('wallets', {}, {
+            user_ID: "66237fef97705968270a6dab",
+            name: name,
+            type: type,
+            amount: amount
+        })
+            .then(data => {
+                console.log("fulfilled", data);
+                setLoading(false);
+                navigation.goBack();
+            })
+            .catch(error => setError(error.toString()));
     }
 
     return (
@@ -67,11 +89,11 @@ export const AddWallet = () => {
             </List.Section>
             <Button 
                 mode="contained"
-                onPress={onConfirm}
+                onPress={onSave}
                 buttonColor={Colors.PRIMARY}
                 style={{ width: 120, paddingVertical: 10, marginHorizontal: 'auto', marginTop: 20 }}
             >
-                {i18n.t(LocalizationKey.CONFIRM)}
+                {i18n.t(LocalizationKey.SAVE)}
             </Button>
             <Portal>
                 <SelectWalletType

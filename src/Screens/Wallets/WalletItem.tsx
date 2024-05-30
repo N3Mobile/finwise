@@ -11,7 +11,7 @@ import { useWalletIcon } from "@/Hooks/icon";
 
 interface Props {
     wallet: Wallet,
-    setDeleteId: Dispatch<SetStateAction<number | null>>,
+    setDeleteId: Dispatch<SetStateAction<string>>,
     setDeteteVisible: Dispatch<SetStateAction<boolean>>
 }
 

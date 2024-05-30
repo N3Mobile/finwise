@@ -1,29 +1,80 @@
 import { InputAmount } from "@/Components/InputAmount";
 import { SelectWalletType } from "@/Components/SelectWalletType";
+import { Category } from "@/Config/category";
+import { http } from "@/Hooks/api";
 import { useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
-import { Wallet } from "@/Services/wallets";
+import { StackNavigation } from "@/Navigation";
+import { DEFAULT_WALLET, Wallet } from "@/Services/wallets";
 import { Colors } from "@/Theme";
-import React, { FC, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, HelperText, Icon, List, Portal, Text, TextInput } from "react-native-paper";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, HelperText, Icon, List, Portal, TextInput } from "react-native-paper";
 
 interface Props {
-    wallet: Wallet
+    walletId: string,
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    setError: Dispatch<SetStateAction<string>>
 }
 
-export const EditWallet: FC<Props> = ({ wallet }) => {
+export const EditWallet: FC<Props> = ({ walletId, setLoading, setError }) => {
 
-    const [name, setName] = useState(wallet.name);
-    const [type, setType] = useState(wallet.type);
-    const [balance, setBalance] = useState(wallet.amount.toString());
+    const navigation = useNavigation<StackNavigation>();
+    
+    const [previousAmount, setPreviousAmount] = useState(0);
+    const [name, setName] = useState("");
+    const [type, setType] = useState("");
+    const [balance, setBalance] = useState("0");
     const [selectWalletType, setSelectWalletType] = useState(false);
     const [inputAmount, setInputAmount] = useState(false);
-
     const [walname, walicon, walcolor] = useWalletIcon(type);
 
-    function onConfirm() {
+    useFocusEffect(
+        useCallback(() => {
+            http.get('wallets/byWalletsId', { _id: walletId })
+                .then(data => {
+                    setPreviousAmount(data.amount);
+                    setName(data.name);
+                    setType(data.type);
+                    setBalance(data.amount.toString());
+                    setLoading(false);
+                })
+                .catch(error => setError(error.toString()));
+        }, [])
+    );
 
+    function onSave() {
+        setLoading(true);
+        http.patch("wallets", {
+            _id: walletId,
+            name: name,
+            type: type
+        }, null)
+            .then(data => {
+                console.log("fulfilled", data);
+                const amount = parseFloat(balance.replace(/[^0-9.]/g, ''));
+
+                if (amount !== previousAmount) {
+                    http.post("transaction", {}, {
+                        wallet_id: walletId,
+                        category: amount < previousAmount ? Category.OUTGOING_TRANSFER : Category.INCOMING_TRANSFER,
+                        amount: Math.abs(previousAmount - amount),
+                        is_pay: amount < previousAmount,
+                        note_info: "Adjust wallet amount"
+                    })
+                        .then(data => {
+                            console.log("fulfilled", data);
+                            setLoading(false);
+                            navigation.goBack();
+                        })
+                        .catch(error => setError(error.toString()));
+                } else {
+                    setLoading(false);
+                    navigation.goBack();
+                }
+            })
+            .catch(error => setError(error.toString()));
     }
 
     return (
@@ -70,11 +121,11 @@ export const EditWallet: FC<Props> = ({ wallet }) => {
             </List.Section>
             <Button 
                 mode="contained"
-                onPress={onConfirm}
+                onPress={onSave}
                 buttonColor={Colors.PRIMARY}
                 style={{ width: 120, paddingVertical: 10, marginHorizontal: 'auto', marginTop: 20 }}
             >
-                {i18n.t(LocalizationKey.CONFIRM)}
+                {i18n.t(LocalizationKey.SAVE)}
             </Button>
             <Portal>
                 <SelectWalletType

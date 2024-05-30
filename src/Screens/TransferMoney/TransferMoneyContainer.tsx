@@ -1,24 +1,52 @@
-import { RootStackParamList } from "@/Navigation";
+import { RootStackParamList, StackNavigation } from "@/Navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { FC } from "react"
-import { RootScreens } from "..";
+import React, { FC, useCallback, useState } from "react"
+import { RootScreens, TabScreens } from "..";
 import { TransferMoney } from "./TransferMoney";
+import { ScreenWrapper } from "@/Components";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { http } from "@/Hooks/api";
+import { Wallet } from "@/Services/wallets";
 
 type Props = NativeStackScreenProps<RootStackParamList, RootScreens.TRANSFER_MONEY>;
 
 export const TransferMoneyContainer: FC<Props> = ({ route }) => {
 
-    const walletId = route.params.wallet_id;
-
-    const sampleWallet = {
-        id: 7,
-        user_id: 1,
-        type: "card",
-        name: "A card",
-        amount: 3000
+    const logerror = console.error;
+    console.error = (...args: any) => {
+        if (/defaultProps/.test(args[0])) return;
+        logerror(...args);
     };
 
+    const navigation = useNavigation<StackNavigation>();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const [wallets, setWallets] = useState<Wallet[]>([]);
+
+    useFocusEffect(
+        useCallback(() => {
+            http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" })
+                .then(data => {
+                    setWallets(data);
+                    setLoading(false);
+                })
+                .catch(error => setError(error.toString()));
+        }, [])
+    );
+
     return (
-        <TransferMoney wallet={sampleWallet} />
+        <ScreenWrapper
+            loading={loading}
+            error={error}
+            backToHome={() => { navigation.navigate(RootScreens.MAIN, { screen: TabScreens.HOME }) }}
+        >
+            <TransferMoney 
+                wallets={wallets}
+                walletId={route.params.wallet_id} 
+                setLoading={setLoading}
+                setError={setError}
+            />
+        </ScreenWrapper>
     )
 }
