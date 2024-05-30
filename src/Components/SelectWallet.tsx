@@ -12,12 +12,10 @@ interface Props {
     setVisible: Dispatch<SetStateAction<boolean>>,
     wallets: Wallet[],
     walletId: string,
-    setWalletId: Dispatch<SetStateAction<string>>,
-    setLoading: Dispatch<SetStateAction<boolean>>,
-    setError: Dispatch<SetStateAction<string>>
+    setWalletId: Dispatch<SetStateAction<string>>
 }
 
-export const SelectWallet: FC<Props> = ({ visible, setVisible, wallets, walletId, setWalletId, setLoading, setError }) => {
+export const SelectWallet: FC<Props> = ({ visible, setVisible, wallets, walletId, setWalletId }) => {
 
     const [selected, setSelected] = useState(walletId);
 
