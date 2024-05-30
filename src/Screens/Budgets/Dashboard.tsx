@@ -3,33 +3,53 @@ import { SelectWallet } from "@/Components/SelectWallet";
 import { usePeriod } from "@/Hooks/date";
 import { useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
+import { StackNavigation } from "@/Navigation";
 import { Wallet } from "@/Services/wallets";
 import { Colors, MyTheme } from "@/Theme";
+import { useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Button, IconButton, List, Portal, Text } from "react-native-paper";
+import { RootScreens } from "..";
 
 interface Props {
     totalAmount: number,
     totalSpent: number,
     period: string,
     setPeriod: Dispatch<SetStateAction<string>>,
+    wallets: Wallet[]
     wallet: Wallet,
-    setWalletId: Dispatch<SetStateAction<number>>,
+    setWalletId: Dispatch<SetStateAction<string>>,
     addBudget: () => void
 }
 
-export const Dashboard: FC<Props> = ({ totalAmount, totalSpent, period, setPeriod, wallet, setWalletId, addBudget }) => {
+export const Dashboard: FC<Props> = ({ totalAmount, totalSpent, period, setPeriod, wallets, wallet, setWalletId, addBudget }) => {
+
+    const navigation = useNavigation<StackNavigation>();
+
+    const [selectWallet, setSelectWallet] = useState(false);
+    const [selectPeriod, setSelectPeriod] = useState(false);
+
+    if (!wallet) {
+        setSelectWallet(true);
+        return (
+            <SelectWallet
+                visible={selectWallet}
+                setVisible={setSelectWallet}
+                wallets={wallets}
+                walletId=""
+                setWalletId={setWalletId}
+            />
+        )
+    }
 
     let formatter = Intl.NumberFormat('en', { notation: 'compact' });
     const overspent = totalSpent > totalAmount;
 
     const [walname, walicon, walcolor] = useWalletIcon(wallet.type);
-    const [selectWallet, setSelectWallet] = useState(false);
-
     const [periodTitle, start, end, left] = usePeriod(period);
-    const [selectPeriod, setSelectPeriod] = useState(false);
+    
 
     return (
         <View style={styles.container}>
@@ -77,13 +97,13 @@ export const Dashboard: FC<Props> = ({ totalAmount, totalSpent, period, setPerio
                 <IconButton
                     icon="notebook-outline"
                     size={50}
-                    onPress={() => {}}
+                    onPress={() => { navigation.navigate(RootScreens.FINISHED_BUDGET); }}
                     iconColor="white"
                     containerColor={MyTheme.ORANGE}
                 />
                 {/* <TouchableOpacity > */}
                     <List.Item
-                        title={walname}
+                        title={wallet.name}
                         left={(props) => <List.Icon {...props} icon={walicon} color={walcolor} />}
                         onPress={() => setSelectWallet(true)}
                         titleStyle={{ color: "white" }}
@@ -102,6 +122,7 @@ export const Dashboard: FC<Props> = ({ totalAmount, totalSpent, period, setPerio
                 <SelectWallet
                     visible={selectWallet}
                     setVisible={setSelectWallet}
+                    wallets={wallets}
                     walletId={wallet.id}
                     setWalletId={setWalletId}
                 />

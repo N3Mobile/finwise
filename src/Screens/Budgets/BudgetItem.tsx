@@ -8,7 +8,7 @@ import { Icon, ProgressBar, Text } from "react-native-paper";
 
 interface Props {
     budget: Budget,
-    showDetails: (budgetId: number) => void
+    showDetails: (budgetId: string) => void
 }
 
 export const BudgetItem: FC<Props> = ({ budget, showDetails }) => {
@@ -24,7 +24,12 @@ export const BudgetItem: FC<Props> = ({ budget, showDetails }) => {
                 </View>
                 <View style={styles.amount}>
                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{budget.initial_amount.toLocaleString('en')}</Text>
-                    <Text>{i18n.t(LocalizationKey.LEFT) + " " + budget.amount.toLocaleString('en')}</Text>
+                    <Text>
+                        { overspent 
+                        ? i18n.t(LocalizationKey.OVERSPENT) + " " + (-budget.amount).toLocaleString('en')
+                        : i18n.t(LocalizationKey.LEFT) + " " + budget.amount.toLocaleString('en')
+                        }
+                    </Text>
                 </View>
             </View>
             <ProgressBar progress={(budget.initial_amount - budget.amount) / budget.initial_amount} color={overspent ? MyTheme.RED : Colors.PRIMARY70}/>

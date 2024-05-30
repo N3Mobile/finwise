@@ -1,20 +1,50 @@
-import React from "react";
+import React, { FC, useCallback, useState } from "react";
 import { EditBudget } from "./EditBudget";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@/Navigation";
+import { RootScreens, TabScreens } from "..";
+import { ScreenWrapper } from "@/Components";
+import { useFocusEffect } from "@react-navigation/native";
+import { http } from "@/Hooks/api";
+import { DEFAULT_BUDGET } from "@/Services/budgets";
+import { Wallet } from "@/Services/wallets";
 
-export const EditBudgetContainer = () => {
+type Props = NativeStackScreenProps<RootStackParamList, RootScreens.EDIT_BUDGET>;
 
-    const fakeBudget = {
-        id: 3,
-        name: "Entertainment",
-        wallet_id: 1,
-        category: "bill",
-        initial_amount: 2000000,
-        amount: 4000,
-        start_date: '27/05/2024',
-        end_date: '02/06/2024'
-    };
+export const EditBudgetContainer: FC<Props> = ({ navigation, route }) => {
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const [budget, setBudget] = useState(DEFAULT_BUDGET);
+    const [wallets, setWallets] = useState<Wallet[]>([]);
+    useFocusEffect(
+        useCallback(() => {
+            setError("");
+
+            Promise.all([
+                http.get('budgets/ids', { _id: route.params.budgetId }),
+                http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" })
+            ]).then(([bud, wals]) => {
+                setBudget(bud);
+                setWallets(wals);
+                setLoading(false);
+            }).catch(error => setError(error.toString()));
+        }, [])
+    );
 
     return (
-        <EditBudget budget={fakeBudget} />
+        <ScreenWrapper
+            loading={loading}
+            error={error}
+            backToHome={() => { navigation.navigate(RootScreens.MAIN, { screen: TabScreens.HOME }) }}
+        >
+            <EditBudget
+                budget={budget}
+                wallets={wallets}
+                setLoading={setLoading}
+                setError={setError}
+            />
+        </ScreenWrapper>
     )
 }

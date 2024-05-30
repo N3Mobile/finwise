@@ -12,6 +12,7 @@ export enum RootScreens {
   BUDGET_DETAILS = "Budget Details",
   ADD_BUDGET = "Add Budget",
   EDIT_BUDGET = "Edit Budget",
+  FINISHED_BUDGET = "Finished Budgets",
   TEST = "Test" // for UI testing
 }
 

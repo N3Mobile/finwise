@@ -1,129 +1,107 @@
-import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, StyleSheet, View } from "react-native";
-import { Dashboard } from "./Dashboard";
-import { BudgetItem } from "./BudgetItem";
-import { RootScreens } from "..";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigation } from "@/Navigation";
-import { parseDate } from "@/Hooks/date";
-import { PeriodType } from "@/Config/period";
+import React, { useCallback, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { ScreenWrapper } from "@/Components";
+import { TabNavigation } from "@/Navigation/Main";
+import { TabScreens } from "..";
+import { Budgets } from "./Budgets";
+import { DEFAULT_WALLET, Wallet } from "@/Services/wallets";
+import { View } from "react-native";
+import { Button, Portal, Text } from "react-native-paper";
+import { SelectWallet } from "@/Components/SelectWallet";
+import { http } from "@/Hooks/api";
+import { Colors } from "@/Theme";
+import { EmptyIllustration } from "@/Components/EmptyIllustration";
+import { Language, LocalizationKey, i18n } from "@/Localization";
 
 export const BudgetsContainer = () => {
-    const navigation = useNavigation<StackNavigation>();
-    const budgets = [
-        {
-        id: 1,
-        name: "Entertainment",
-        wallet_id: 1,
-        category: "entertainment",
-        initial_amount: 1000000,
-        amount: 50000,
-        start_date: "27/05/2024",
-        end_date: "02/06/2024",
-    },
-    {
-        id: 2,
-        name: "Entertainment",
-        wallet_id: 1,
-        category: "bill",
-        initial_amount: 2000000,
-        amount: 1000000,
-        start_date: "27/05/2024",
-        end_date: "02/06/2024",
-    },
-    {
-        id: 3,
-        name: "Entertainment",
-        wallet_id: 1,
-        category: "bill",
-        initial_amount: 2000000,
-        amount: 4000,
-        start_date: "27/05/2024",
-        end_date: "02/06/2024",
-    },
-    {
-        id: 4,
-        name: "Entertainment",
-        wallet_id: 1,
-        category: "bill",
-        initial_amount: 2000000,
-        amount: 3,
-        start_date: "27/05/2024",
-        end_date: "02/06/2024",
-    },
-  ];
+    const navigation = useNavigation<TabNavigation>();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-  const [walletId, setWalletId] = useState(1);
-  const [period, setPeriod] = useState(PeriodType.MONTH);
-  
-//   useEffect(() => {
-//     // TODO: get wallet
-//   }, [walletId]);
+    const [wallets, setWallets] = useState<Wallet[]>([]);
+    const [selectVisible, setSelectVisible] = useState(false);
+    const [selectedWalletId, setSelectedWalletId] = useState("");
 
-    const sampleWallet = {
-        id: 1,
-        user_id: 1,
-        type: "ewallet",
-        name: "test",
-        amount: 1000000
-    }
+    useFocusEffect(
+        useCallback(() => {
+            setError("");
+            http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" })
+                .then(data => {
+                    setWallets(data);
+                })
+                .catch(error => setError(error.toString()));
+        }, [])
+    );
+
+    const [wallet, setWallet] = useState(DEFAULT_WALLET);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (selectedWalletId) {
+                http.get('wallets/byWalletsId', { _id: selectedWalletId })
+                    .then(data => {
+                        setWallet(data);
+                    })
+                    .catch(error => setError(error.toString()));
+            } else {
+                console.log("Where wallet id?");
+                
+            }
+        }, [selectedWalletId])
+    );
+
+    const content = selectedWalletId === "" ? 
+        <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 30,
+            height: '100%'
+        }}>
+            <EmptyIllustration />
+            { i18n.locale === Language.ENGLISH ?
+            <View style={{ alignItems: 'center' }}>
+                <Text>No wallet selected</Text>
+                <Text>Please select one to proceed</Text>
+            </View> :
+            <View style={{ alignItems: 'center' }}>
+                <Text>Bạn chưa chọn ví</Text>
+                <Text>Hãy chọn ví để tiếp tục</Text>
+            </View> 
+            }
+            <Button 
+                mode="contained" 
+                buttonColor={Colors.PRIMARY70} 
+                onPress={() => setSelectVisible(true)}
+                style={{ paddingVertical: 10, width: 200 }}
+            >
+                {i18n.t(LocalizationKey.SELECT_WALLET)}
+            </Button>
+            <Portal>
+                <SelectWallet
+                    visible={selectVisible}
+                    setVisible={setSelectVisible}
+                    wallets={wallets}
+                    walletId={selectedWalletId}
+                    setWalletId={setSelectedWalletId}
+                />
+            </Portal>
+        </View> :
+        <Budgets
+            selectedWalletId={selectedWalletId}
+            setSelectedWalletId={setSelectedWalletId}
+            wallet={wallet}
+            allWallets={wallets}
+            setLoading={setLoading}
+            setError={setError}
+        />;
 
     return (
-        <FlatList
-            data={budgets.filter(bud => {
-                const today = (new Date()).getTime();
-                const start = parseDate(bud.start_date).getTime();
-                const end = parseDate(bud.end_date).getTime();
-                return today >= start && today <= end;
-            })}
-            renderItem={({ item }) =>
-                <BudgetItem
-                    budget={item}
-                    showDetails={() => navigation.navigate(RootScreens.BUDGET_DETAILS, { budgetId: item.id })}
-                />
-            }
-            keyExtractor={item => item.id.toString()}
-            ListHeaderComponent={
-                <Dashboard
-                    totalAmount={budgets.reduce((total, bud) => total + bud.initial_amount, 0)}
-                    totalSpent={budgets.reduce((total, bud) => total + bud.initial_amount - bud.amount, 0)}
-                    period={period}
-                    setPeriod={setPeriod}
-                    wallet={sampleWallet}
-                    setWalletId={setWalletId}
-                    addBudget={() => navigation.navigate(RootScreens.ADD_BUDGET)}
-                />
-            }
-        />
-    // <View style={{ flex: 1 }}>
-    //     <Dashboard
-    //         totalAmount={2000000}
-    //         totalSpent={1000000}
-    //         timeRange="month"
-    //         timeLeft={20}
-    //         addBudget={() => navigation.navigate(RootScreens.ADD_BUDGET)}
-    //     />
-    //     <ScrollView nestedScrollEnabled={true}>
-    //         {
-    //             budgets.map(budget => 
-    //                 <BudgetItem
-    //                     key={budget.id.toString()}
-    //                     budget={budget}
-    //                     showDetails={() => navigation.navigate(RootScreens.BUDGET_DETAILS, { budgetId: budget.id })}
-    //                 />
-    //             )
-    //         }
-    //     </ScrollView>
-    // </View>
-    );
+        <ScreenWrapper
+            loading={loading}
+            error={error}
+            backToHome={() => { navigation.navigate(TabScreens.HOME); }}
+        >
+            {content}
+        </ScreenWrapper>
+    )
 };
-
-const styles = StyleSheet.create({
-  modal: {
-    backgroundColor: "white",
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    justifyContent: "flex-start",
-  },
-});

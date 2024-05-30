@@ -2,36 +2,58 @@ import { InputAmount } from "@/Components/InputAmount";
 import { SelectCategory } from "@/Components/SelectCategory";
 import { SelectPeriod } from "@/Components/SelectPeriod";
 import { SelectWallet } from "@/Components/SelectWallet";
-import { getPeriodType, parseDate, usePeriod } from "@/Hooks/date";
+import { http } from "@/Hooks/api";
+import { getPeriodType, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
 import { useCategoryIcon, useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
+import { StackNavigation } from "@/Navigation";
 import { Budget } from "@/Services/budgets";
+import { DEFAULT_WALLET, Wallet } from "@/Services/wallets";
 import { Colors } from "@/Theme";
-import React, { FC, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import { View } from "react-native";
 import { Appbar, Button, List, Portal } from "react-native-paper";
 
 interface Props {
-    budget: Budget
+    budget: Budget,
+    wallets: Wallet[],
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    setError: Dispatch<SetStateAction<string>>
 }
 
-export const EditBudget: FC<Props> = ({ budget }) => {
+export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError }) => {
+
+    const navigation = useNavigation<StackNavigation>();
 
     const [category, setCategory] = useState(budget.category);
     const [amount, setAmount] = useState(budget.initial_amount.toLocaleString('en'));
     const [walletId, setWalletId] = useState(budget.wallet_id);
+    const [wallet, setWallet] = useState(DEFAULT_WALLET);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (walletId) {
+                http.get('wallets/byWalletsId', { _id: walletId })
+                    .then(data => {
+                        setWallet(data);
+                    })
+                    .catch(error => setError(error.toString()));
+            } else {
+                console.log("Where wallet id?");
+            }
+        }, [walletId])
+    );
     
     const [catname, caticon, catcolor] = useCategoryIcon(category);
-    const [walname, walicon, walcolor] = useWalletIcon("cash");
+    const [walname, walicon, walcolor] = useWalletIcon(wallet.type);
 
-    const start = parseDate(budget.start_date);
-    const end = parseDate(budget.end_date);
-    const currentPeriod = getPeriodType(start, end);
+    const currentPeriod = getPeriodType(parseDate(budget.start_date), parseDate(budget.end_date));
     if (!currentPeriod) {
-        throw new Error(`A custom period is used: ${start} - ${end}`);
+        throw new Error("A custom period is used");
     }
     const [period, setPeriod] = useState(currentPeriod);
-    const [periodTitle, s, e, periodLeft] = usePeriod(period);
+    const [periodTitle, start, end, periodLeft] = usePeriod(period);
 
     const [selectCategory, setSelectCategory] = useState(false);
     const [selectWallet, setSelectWallet] = useState(false);
@@ -39,8 +61,19 @@ export const EditBudget: FC<Props> = ({ budget }) => {
     const [selectPeriod, setSelectPeriod] = useState(false);
 
     function onSave() {
-        // TODO
-        
+        http.patch('budgets', {
+            _id: budget.id,
+            wallet_id: walletId,
+            amount: parseFloat(amount.replace(/[^0-9.]/g, '')),
+            category: category,
+            start_date: useFormattedDate(start),
+            end_date: useFormattedDate(end)
+        }, null)
+            .then(data => {
+                console.log("updated");
+                navigation.goBack();
+            })
+            .catch(error => setError(error.toString()));
     }
 
     return (
@@ -74,7 +107,7 @@ export const EditBudget: FC<Props> = ({ budget }) => {
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.WALLET)}</List.Subheader>
                 <List.Item
-                    title={walname}
+                    title={wallet.name}
                     left={(props) => <List.Icon {...props} icon={walicon} color={walcolor} />}
                     onPress={() => setSelectWallet(true)}
                 />
@@ -99,6 +132,7 @@ export const EditBudget: FC<Props> = ({ budget }) => {
                 <SelectWallet
                     visible={selectWallet}
                     setVisible={setSelectWallet}
+                    wallets={wallets}
                     walletId={walletId}
                     setWalletId={setWalletId}
                 />
