@@ -179,8 +179,6 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                     wallets={wallets}
                     walletId={fromWalletId}
                     setWalletId={setFromWalletId}
-                    setLoading={setLoading}
-                    setError={setError}
                 />
                 <SelectWallet
                     visible={selectToVisible}
@@ -188,8 +186,6 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                     wallets={wallets}
                     walletId={toWalletId}
                     setWalletId={setToWalletId}
-                    setLoading={setLoading}
-                    setError={setError}
                 />
                 <DateTimePickerModal
                     isVisible={selectDateVisible}
