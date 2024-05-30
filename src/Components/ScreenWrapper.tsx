@@ -3,33 +3,34 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import React, { FC, ReactNode } from "react";
 import { Loading } from "./Loading";
 import { ErrorScreen } from "./ErrorScreen";
+import { View } from "react-native";
 
 interface IScreenWrapperProps {
     children: ReactNode,
-    isLoading: boolean,
-    isSuccess: boolean,
-    isError: boolean,
-    error: FetchBaseQueryError | SerializedError | undefined,
+    loading: boolean,
+    error: any,
     backToHome: () => void
 }
 
 export const ScreenWrapper: FC<IScreenWrapperProps> = ({
     children,
-    isLoading,
-    isSuccess,
-    isError,
+    loading,
     error,
     backToHome
 }) => {
     let content;
 
-    if (isLoading) {
-        content = <Loading />
-    } else if (isSuccess) {
+    if (error) {
+        content = (<ErrorScreen message={error} backToHome={backToHome}  />);
+    } else if (loading) {
+        content = (<Loading />);
+    } else {
         content = children;
-    } else if (isError) {
-        content = <ErrorScreen message={error?.toString()} backToHome={backToHome}  />
     }
     
-    return content;
+    return (
+        <View>
+            {content}
+        </View>
+    );
 }
