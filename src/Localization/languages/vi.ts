@@ -66,4 +66,8 @@ export const vi = {
   [LocalizationKey.OVERSPENT]: "bội chi",
   [LocalizationKey.VIEW_FINISHED_BUDGETS]: "Xem ngân sách đã kết thúc",
   [LocalizationKey.VIEW_RUNNING_BUDGETS]: "Xem ngân sách đang áp dụng",
+  [LocalizationKey.CATEGORY_UNSELECTED]: "Hãy chọn một nhóm",
+  [LocalizationKey.ZERO_AMOUNT]: "Hãy nhập một giá trị dương",
+  [LocalizationKey.NOT_ENOUGH_MONEY]: "Không đủ tiền trong ví",
+  [LocalizationKey.DELETE_CONFIRMATION]: "Bạn có chắc chắn muốn xóa mục này không?",
 };
