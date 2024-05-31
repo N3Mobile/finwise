@@ -9,6 +9,7 @@ import { List } from "react-native-paper";
 import { BudgetItem } from "../Budgets/BudgetItem";
 import { StackNavigation } from "@/Navigation";
 import { RootScreens } from "..";
+import { compareDate, parseDate } from "@/Hooks/date";
 
 interface Props {
     walletId: string,
@@ -35,7 +36,12 @@ export const FinishedBudgets: FC<Props> = ({ walletId, setSelectVisible, setLoad
         }, [])
     );
 
-    const periods = [...new Set(budgets.map(bud => {
+    const periods = [...new Set(budgets
+        .filter(bud => {
+            const today = new Date();
+            return compareDate(parseDate(bud.end_date), today) < 0;
+        })
+        .map(bud => {
         return JSON.stringify({
             start: bud.start_date,
             end: bud.end_date

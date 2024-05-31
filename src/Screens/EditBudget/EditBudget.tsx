@@ -13,7 +13,7 @@ import { Colors } from "@/Theme";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Button, List, Portal } from "react-native-paper";
+import { Appbar, Button, HelperText, List, Portal } from "react-native-paper";
 
 interface Props {
     budget: Budget,
@@ -30,20 +30,28 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
     const [amount, setAmount] = useState(budget.initial_amount.toLocaleString('en'));
     const [walletId, setWalletId] = useState(budget.wallet_id);
     const [wallet, setWallet] = useState(DEFAULT_WALLET);
+    const [totalBudget, setTotalBudget] = useState(0);
 
     useFocusEffect(
         useCallback(() => {
             if (walletId) {
-                http.get('wallets/byWalletsId', { _id: walletId })
-                    .then(data => {
-                        setWallet(data);
-                    })
-                    .catch(error => setError(error.toString()));
+                Promise.all([
+                    http.get('wallets/byWalletsId', { _id: walletId }),
+                    http.get('budgets/ranges', { wallet_id: walletId })
+                ]).then(([wal, buds]) => {
+                    setWallet(wal);
+                    const total = buds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
+                    setTotalBudget(total);
+                }).catch(error => setError(error.toString()));
             } else {
                 console.log("Where wallet id?");
             }
         }, [walletId])
     );
+
+    const invalidAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) === 0;
+    const notEnough = parseFloat(amount.replace(/[^0-9.]/g, '')) + totalBudget > wallet.amount;
+    const invalid = invalidAmount || notEnough;
     
     const [catname, caticon, catcolor] = useCategoryIcon(category);
     const [walname, walicon, walcolor] = useWalletIcon(wallet.type);
@@ -94,6 +102,12 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                     onPress={() => setInputAmount(true)}
                     titleStyle={{ fontSize: 25 }}
                 />
+                <HelperText type="error" visible={true} style={{ display: invalid ? 'flex' : 'none' }}>
+                    { invalidAmount
+                    ? i18n.t(LocalizationKey.ZERO_AMOUNT)
+                    : i18n.t(LocalizationKey.NOT_ENOUGH_MONEY)
+                    }
+                </HelperText>
             </List.Section>
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.TIME)}</List.Subheader>
@@ -116,6 +130,7 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                 mode="contained"
                 buttonColor={Colors.PRIMARY70}
                 onPress={onSave}
+                disabled={invalid}
                 style={{ width: 120, marginHorizontal: 'auto', paddingVertical: 10, marginBottom: 20 }}
             >
                 {i18n.t(LocalizationKey.SAVE)}

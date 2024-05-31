@@ -1,15 +1,17 @@
-import React, { useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { AddBudget } from "./AddBudget";
 import { ScreenWrapper } from "@/Components";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { StackNavigation } from "@/Navigation";
+import { RootStackParamList, StackNavigation } from "@/Navigation";
 import { RootScreens, TabScreens } from "..";
 import { Wallet } from "@/Services/wallets";
 import { http } from "@/Hooks/api";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export const AddBudgetContainer = () => {
+type Props = NativeStackScreenProps<RootStackParamList, RootScreens.ADD_BUDGET>;
 
-    const navigation = useNavigation<StackNavigation>();
+export const AddBudgetContainer: FC<Props> = ({ navigation, route }) => {
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -34,6 +36,7 @@ export const AddBudgetContainer = () => {
             backToHome={() => { navigation.navigate(RootScreens.MAIN, { screen: TabScreens.HOME }) }}
         >
             <AddBudget
+                initialWalletId={route.params.walletId}
                 wallets={wallets}
                 setLoading={setLoading}
                 setError={setError}

@@ -72,7 +72,7 @@ export const BudgetDetailsContainer: FC<Props> = ({ navigation, route }) => {
             <Portal>
                 <Dialog visible={deleteVisible} onDismiss={() => setDeleteVisible(false)}>
                     <Dialog.Content>
-                        <Text>Are u sure?</Text>
+                        <Text>{i18n.t(LocalizationKey.DELETE_CONFIRMATION)}</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => setDeleteVisible(false)}>

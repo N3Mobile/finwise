@@ -15,23 +15,25 @@ import { Colors } from "@/Theme";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Button, List, Portal } from "react-native-paper";
+import { Appbar, Button, HelperText, List, Portal } from "react-native-paper";
 
 interface Props {
+    initialWalletId: string,
     wallets: Wallet[],
     setLoading: Dispatch<SetStateAction<boolean>>,
     setError: Dispatch<SetStateAction<string>>
 }
 
-export const AddBudget: FC<Props> = ({ wallets, setLoading, setError }) => {
+export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, setError }) => {
 
     const navigation = useNavigation<StackNavigation>();
 
     const [category, setCategory] = useState("");
     const [amount, setAmount] = useState('0');
     const [period, setPeriod] = useState(PeriodType.MONTH);
-    const [walletId, setWalletId] = useState("");
+    const [walletId, setWalletId] = useState(initialWalletId);
     const [wallet, setWallet] = useState(DEFAULT_WALLET);
+    const [totalBudget, setTotalBudget] = useState(0);
     
     const [catname, caticon, catcolor] = useCategoryIcon(category);
     const [walname, walicon, walcolor] = useWalletIcon(wallet.type);
@@ -45,23 +47,31 @@ export const AddBudget: FC<Props> = ({ wallets, setLoading, setError }) => {
     useFocusEffect(
         useCallback(() => {
             if (walletId) {
-                http.get('wallets/byWalletsId', { _id: walletId })
-                    .then(data => {
-                        setWallet(data);
-                    })
-                    .catch(error => setError(error.toString()));
+                Promise.all([
+                    http.get('wallets/byWalletsId', { _id: walletId }),
+                    http.get('budgets/ranges', { wallet_id: walletId })
+                ]).then(([wal, buds]) => {
+                    setWallet(wal);
+                    const total = buds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
+                    setTotalBudget(total);
+                }).catch(error => setError(error.toString()));
             } else {
                 console.log("Where wallet id?");
             }
         }, [walletId])
     );
 
+    const invalidCategory = !category;
+    const invalidAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) === 0;
+    const notEnough = parseFloat(amount.replace(/[^0-9.]/g, '')) + totalBudget > wallet.amount;
+    const invalid = invalidCategory || invalidAmount || notEnough;
+
     function onSave() {
         http.post('budgets', {}, {
             name: "",
             wallet_id: walletId,
             category: category,
-            amount: amount,
+            amount: parseFloat(amount.replace(/[^0-9.]/g, '')),
             start_date: useFormattedDate(start),
             end_date: useFormattedDate(end)
         }).then(data => {
@@ -79,6 +89,9 @@ export const AddBudget: FC<Props> = ({ wallets, setLoading, setError }) => {
                     left={(props) => <List.Icon {...props} icon={caticon} color={catcolor} />}
                     onPress={() => setSelectCategory(true)}
                 />
+                <HelperText type="error" visible={true} style={{ display: invalidCategory ? 'flex' : 'none' }}>
+                    {i18n.t(LocalizationKey.CATEGORY_UNSELECTED)}
+                </HelperText>
             </List.Section>
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.TOTAL_BUDGET)}</List.Subheader>
@@ -88,6 +101,12 @@ export const AddBudget: FC<Props> = ({ wallets, setLoading, setError }) => {
                     onPress={() => setInputAmount(true)}
                     titleStyle={{ fontSize: 25 }}
                 />
+                <HelperText type="error" visible={true} style={{ display: (invalidAmount || notEnough) ? 'flex' : 'none' }}>
+                    { invalidAmount 
+                    ? i18n.t(LocalizationKey.ZERO_AMOUNT)
+                    : i18n.t(LocalizationKey.NOT_ENOUGH_MONEY)
+                    }
+                </HelperText>
             </List.Section>
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.TIME)}</List.Subheader>
@@ -110,6 +129,7 @@ export const AddBudget: FC<Props> = ({ wallets, setLoading, setError }) => {
                 mode="contained"
                 buttonColor={Colors.PRIMARY70}
                 onPress={onSave}
+                disabled={invalid}
                 style={{ width: 120, marginHorizontal: 'auto', paddingVertical: 10, marginBottom: 20 }}
             >
                 {i18n.t(LocalizationKey.SAVE)}

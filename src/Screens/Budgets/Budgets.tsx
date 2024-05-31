@@ -4,7 +4,7 @@ import { Dashboard } from "./Dashboard";
 import { BudgetItem } from "./BudgetItem";
 import { RootScreens } from "..";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
+import { compareDate, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
 import { PeriodType } from "@/Config/period";
 import { http } from "@/Hooks/api";
 import { Wallet } from "@/Services/wallets";
@@ -35,6 +35,7 @@ export const Budgets: FC<Props> = ({ selectedWalletId, setSelectedWalletId, wall
                 start_date: useFormattedDate(start),
                 end_date: useFormattedDate(end)
             }).then(data => {
+                console.log(data);
                 setBudgets(data);
             }).catch(error => setError(error.toString()));
         }, [selectedWalletId, period])
@@ -43,10 +44,8 @@ export const Budgets: FC<Props> = ({ selectedWalletId, setSelectedWalletId, wall
     return (
         <FlatList
             data={budgets.filter(bud => {
-                const today = (new Date()).getTime();
-                const start = parseDate(bud.start_date).getTime();
-                const end = parseDate(bud.end_date).getTime();
-                return today >= start && today <= end;
+                const today = new Date();
+                return compareDate(today, start) >= 0 && compareDate(today, end) <= 0;
             })}
             renderItem={({ item }) =>
                 <BudgetItem
@@ -64,7 +63,7 @@ export const Budgets: FC<Props> = ({ selectedWalletId, setSelectedWalletId, wall
                     wallets={allWallets}
                     wallet={wallet}
                     setWalletId={setSelectedWalletId}
-                    addBudget={() => navigation.navigate(RootScreens.ADD_BUDGET)}
+                    addBudget={() => navigation.navigate(RootScreens.ADD_BUDGET, { walletId: wallet.id })}
                 />
             }
         />
