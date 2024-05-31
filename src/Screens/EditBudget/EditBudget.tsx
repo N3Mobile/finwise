@@ -40,7 +40,7 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                     http.get('budgets/ranges', { wallet_id: walletId })
                 ]).then(([wal, buds]) => {
                     setWallet(wal);
-                    const total = buds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
+                    const total = buds.filter((bud: Budget) => bud.id !== budget.id).reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
                     setTotalBudget(total);
                 }).catch(error => setError(error.toString()));
             } else {
