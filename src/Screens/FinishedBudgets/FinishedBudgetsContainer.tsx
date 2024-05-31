@@ -48,8 +48,7 @@ export const FinishedBudgetsContainer: FC<Props> = ({ navigation }) => {
                     })
                     .catch(error => setError(error.toString()));
             } else {
-                console.log("Where wallet id?");
-                
+                console.log("Where wallet id?"); 
             }
         }, [selectedWalletId])
     );
@@ -75,23 +74,23 @@ export const FinishedBudgetsContainer: FC<Props> = ({ navigation }) => {
         </View> 
         }
         <View style={{ alignItems: 'center', gap: 10 }}>
-                <Button 
-                    mode="contained" 
-                    buttonColor={Colors.PRIMARY70} 
-                    onPress={() => setSelectVisible(true)}
-                    style={{ paddingVertical: 10, width: 250 }}
-                >
-                    {i18n.t(LocalizationKey.SELECT_WALLET)}
-                </Button>
-                <Button
-                    mode="contained"
-                    buttonColor={Colors.TERTIARY}
-                    onPress={() => { navigation.navigate(RootScreens.MAIN, { screen: TabScreens.BUDGETS }); }}
-                    style={{ paddingVertical: 10, width: 250 }}
-                >
-                    {i18n.t(LocalizationKey.VIEW_RUNNING_BUDGETS)}
-                </Button>
-            </View>
+            <Button 
+                mode="contained" 
+                buttonColor={Colors.PRIMARY70} 
+                onPress={() => setSelectVisible(true)}
+                style={{ paddingVertical: 10, width: 250 }}
+            >
+                {i18n.t(LocalizationKey.SELECT_WALLET)}
+            </Button>
+            <Button
+                mode="contained"
+                buttonColor={Colors.TERTIARY}
+                onPress={() => { navigation.navigate(RootScreens.MAIN, { screen: TabScreens.BUDGETS }); }}
+                style={{ paddingVertical: 10, width: 250 }}
+            >
+                {i18n.t(LocalizationKey.VIEW_RUNNING_BUDGETS)}
+            </Button>
+        </View>
     </View> :
     <View>
         <List.Section>
@@ -111,6 +110,7 @@ export const FinishedBudgetsContainer: FC<Props> = ({ navigation }) => {
         </List.Section>
         <FinishedBudgets
             walletId={selectedWalletId}
+            setSelectVisible={setSelectVisible}
             setLoading={setLoading}
             setError={setError}
         />

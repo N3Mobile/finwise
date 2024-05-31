@@ -12,11 +12,12 @@ import { RootScreens } from "..";
 
 interface Props {
     walletId: string,
+    setSelectVisible: Dispatch<SetStateAction<boolean>>,
     setLoading: Dispatch<SetStateAction<boolean>>,
     setError: Dispatch<SetStateAction<string>>
 }
 
-export const FinishedBudgets: FC<Props> = ({ walletId, setLoading, setError }) => {
+export const FinishedBudgets: FC<Props> = ({ walletId, setSelectVisible, setLoading, setError }) => {
 
     const navigation = useNavigation<StackNavigation>();
 
@@ -24,6 +25,7 @@ export const FinishedBudgets: FC<Props> = ({ walletId, setLoading, setError }) =
 
     useFocusEffect(
         useCallback(() => {
+            setSelectVisible(false);
             http.get('budgets/ranges', { wallet_id: walletId})
                 .then(data => {
                     console.log(data);
