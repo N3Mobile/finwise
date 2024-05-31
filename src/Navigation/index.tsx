@@ -14,10 +14,6 @@ import { MainAppbar } from "./Appbar/MainAppbar";
 import { TransferMoneyContainer } from "@/Screens/TransferMoney";
 import { EditWalletContainer } from "@/Screens/EditWallet";
 import { AddWalletContainer } from "@/Screens/AddWallet";
-import { BudgetDetailsContainer } from "@/Screens/BudgetDetails";
-import { AddBudgetContainer } from "@/Screens/AddBudget";
-import { EditBudgetContainer } from "@/Screens/EditBudget";
-import { FinishedBudgetsContainer } from "@/Screens/FinishedBudgets";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: NavigatorScreenParams<BottomTabParamList>;
@@ -30,9 +26,9 @@ export type RootStackParamList = {
   [RootScreens.EDIT_WALLET]: { wallet_id: string };
   [RootScreens.TEST]: undefined;
   [RootScreens.BUDGET_DETAILS]: { budgetId: string };
-  [RootScreens.ADD_BUDGET]: undefined;
+  [RootScreens.ADD_BUDGET]: { walletId: string };
   [RootScreens.EDIT_BUDGET]: { budgetId: string },
-  [RootScreens.FINISHED_BUDGET]: undefined
+  [RootScreens.FINISHED_BUDGET]: { walletId: string };
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 

@@ -63,6 +63,13 @@ export const en = {
   [LocalizationKey.EDIT_BUDGET]: "Edit budget",
   [LocalizationKey.SAVE]: "Save",
   [LocalizationKey.CAN_SPEND]: "Amount you can spend",
+  [LocalizationKey.OVERSPENT]: "overspent",
+  [LocalizationKey.VIEW_FINISHED_BUDGETS]: "View finished budgets",
+  [LocalizationKey.VIEW_RUNNING_BUDGETS]: "View running budgets",
+  [LocalizationKey.CATEGORY_UNSELECTED]: "Please select a category",
+  [LocalizationKey.ZERO_AMOUNT]: "Please enter a non-zero amount",
+  [LocalizationKey.NOT_ENOUGH_MONEY]: "Not enough money. Please check your wallet.",
+  [LocalizationKey.DELETE_CONFIRMATION]: "Are you sure you want to delete this item?",
   [LocalizationKey.EDIT]: "Edit",
   [LocalizationKey.DELETE]: "Delete",
   

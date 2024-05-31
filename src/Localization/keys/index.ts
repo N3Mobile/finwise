@@ -66,6 +66,14 @@ export enum LocalizationKey {
   EDIT_BUDGET = "edit-budget",
   SAVE = "save",
   CAN_SPEND = "can-spend",
+  OVERSPENT = "overspent",
+  VIEW_FINISHED_BUDGETS = "view-finished-budgets",
+  VIEW_RUNNING_BUDGETS = "view-running-budgets",
+
+  CATEGORY_UNSELECTED = "category-unselected",
+  ZERO_AMOUNT = "zero-amount",
+  NOT_ENOUGH_MONEY = "not-enough-money",
+  DELETE_CONFIRMATION = "delete-confirmation",
   EDIT = "edit",
   DELETE = "delete",
 
