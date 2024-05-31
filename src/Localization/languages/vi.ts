@@ -70,4 +70,13 @@ export const vi = {
   [LocalizationKey.ZERO_AMOUNT]: "Hãy nhập một giá trị dương",
   [LocalizationKey.NOT_ENOUGH_MONEY]: "Không đủ tiền trong ví",
   [LocalizationKey.DELETE_CONFIRMATION]: "Bạn có chắc chắn muốn xóa mục này không?",
+
+  [LocalizationKey.CURRENT_BALANCE]: "Số dư hiện tại",
+  [LocalizationKey.TOTAL_INCOME]: "Thu",
+  [LocalizationKey.TOTAL_EXPENSE]: "Chi",
+  [LocalizationKey.WEEK_EXPENSE]: "Tổng chi tuần này",
+  [LocalizationKey.MONTH_EXPENSE]: "Tổng chi tháng này",
+  [LocalizationKey.TOP_EXPENSE]: "Chi tiêu nhiều nhất",
+  [LocalizationKey.SPENDING_REPORT]: "Báo cáo chi tiêu",
+  [LocalizationKey.RECENT_TRANSACTIONS]: "Giao dịch gần đây",
 };

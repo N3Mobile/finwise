@@ -70,4 +70,13 @@ export const en = {
   [LocalizationKey.ZERO_AMOUNT]: "Please enter a non-zero amount",
   [LocalizationKey.NOT_ENOUGH_MONEY]: "Not enough money. Please check your wallet.",
   [LocalizationKey.DELETE_CONFIRMATION]: "Are you sure you want to delete this item?",
+
+  [LocalizationKey.CURRENT_BALANCE]: "Total Balance",
+  [LocalizationKey.TOTAL_INCOME]: "Income",
+  [LocalizationKey.TOTAL_EXPENSE]: "Expense",
+  [LocalizationKey.WEEK_EXPENSE]: "Total spent this week",
+  [LocalizationKey.MONTH_EXPENSE]: "Total spent this month",
+  [LocalizationKey.TOP_EXPENSE]: "Top spending",
+  [LocalizationKey.SPENDING_REPORT]: "Spending Report",
+  [LocalizationKey.RECENT_TRANSACTIONS]: "Recent Transactions",
 };
