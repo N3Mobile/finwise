@@ -18,14 +18,14 @@ import { useWalletIcon } from "@/Hooks/icon";
 
 type Props = NativeStackScreenProps<RootStackParamList, RootScreens.FINISHED_BUDGET>;
 
-export const FinishedBudgetsContainer: FC<Props> = ({ navigation }) => {
+export const FinishedBudgetsContainer: FC<Props> = ({ navigation, route }) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
     const [wallets, setWallets] = useState<Wallet[]>([]);
     const [selectVisible, setSelectVisible] = useState(false);
-    const [selectedWalletId, setSelectedWalletId] = useState("");
+    const [selectedWalletId, setSelectedWalletId] = useState(route.params.walletId);
     const [wallet, setWallet] = useState(DEFAULT_WALLET);
 
     useFocusEffect(

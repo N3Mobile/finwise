@@ -97,7 +97,7 @@ export const Dashboard: FC<Props> = ({ totalAmount, totalSpent, period, setPerio
                 <IconButton
                     icon="notebook-outline"
                     size={50}
-                    onPress={() => { navigation.navigate(RootScreens.FINISHED_BUDGET); }}
+                    onPress={() => { navigation.navigate(RootScreens.FINISHED_BUDGET, { walletId: wallet.id }); }}
                     iconColor="white"
                     containerColor={MyTheme.ORANGE}
                 />

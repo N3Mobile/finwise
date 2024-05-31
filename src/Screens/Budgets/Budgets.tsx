@@ -35,7 +35,6 @@ export const Budgets: FC<Props> = ({ selectedWalletId, setSelectedWalletId, wall
                 start_date: useFormattedDate(start),
                 end_date: useFormattedDate(end)
             }).then(data => {
-                console.log(data);
                 setBudgets(data);
             }).catch(error => setError(error.toString()));
         }, [selectedWalletId, period])

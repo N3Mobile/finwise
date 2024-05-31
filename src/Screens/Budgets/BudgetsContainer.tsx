@@ -83,7 +83,7 @@ export const BudgetsContainer = () => {
                 <Button
                     mode="contained"
                     buttonColor={Colors.TERTIARY}
-                    onPress={() => { stackNavigation.navigate(RootScreens.FINISHED_BUDGET); }}
+                    onPress={() => { stackNavigation.navigate(RootScreens.FINISHED_BUDGET, { walletId: "" }); }}
                     style={{ paddingVertical: 10, width: 250 }}
                 >
                     {i18n.t(LocalizationKey.VIEW_FINISHED_BUDGETS)}

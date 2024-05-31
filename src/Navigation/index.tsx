@@ -29,7 +29,7 @@ export type RootStackParamList = {
   [RootScreens.BUDGET_DETAILS]: { budgetId: string };
   [RootScreens.ADD_BUDGET]: undefined;
   [RootScreens.EDIT_BUDGET]: { budgetId: string },
-  [RootScreens.FINISHED_BUDGET]: undefined
+  [RootScreens.FINISHED_BUDGET]: { walletId: string };
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
