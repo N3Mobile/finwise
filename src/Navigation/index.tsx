@@ -11,6 +11,10 @@ import { SignupContainer } from "@/Screens/Signup";
 import { TestContainer } from "@/Screens/Test";
 import { DefaultAppbar } from "./Appbar/DefaultAppbar";
 import { MainAppbar } from "./Appbar/MainAppbar";
+import { AddBudgetContainer } from "@/Screens/AddBudget";
+import { BudgetDetailsContainer } from "@/Screens/BudgetDetails";
+import { EditBudgetContainer } from "@/Screens/EditBudget";
+import { FinishedBudgetsContainer } from "@/Screens/FinishedBudgets";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: NavigatorScreenParams<BottomTabParamList>;
@@ -64,6 +68,22 @@ const ApplicationNavigator = () => {
         <RootStack.Screen
           name={RootScreens.SIGNUP}
           component={SignupContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.BUDGET_DETAILS}
+          component={BudgetDetailsContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.ADD_BUDGET}
+          component={AddBudgetContainer}
+        />
+        <RootStack.Screen 
+          name={RootScreens.EDIT_BUDGET}
+          component={EditBudgetContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.FINISHED_BUDGET}
+          component={FinishedBudgetsContainer}
         />
         <RootStack.Screen
           name={RootScreens.TEST}
