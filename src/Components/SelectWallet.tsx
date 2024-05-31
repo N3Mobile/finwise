@@ -1,37 +1,25 @@
 import { LocalizationKey, i18n } from "@/Localization";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Appbar, List } from "react-native-paper";
 import { ModalLayout } from "./ModalLayout";
 import { WalletType } from "@/Config/wallet";
 import { useWalletIcon } from "@/Hooks/icon";
+import { Wallet } from "@/Services/wallets";
 
 interface Props {
     visible: boolean,
     setVisible: Dispatch<SetStateAction<boolean>>,
-    walletId: number,
-    setWalletId: Dispatch<SetStateAction<number>>
+    wallets: Wallet[],
+    walletId: string,
+    setWalletId: Dispatch<SetStateAction<string>>
 }
 
-export const SelectWallet: FC<Props> = ({ visible, setVisible, walletId, setWalletId }) => {
-
-    const sampleWallets = [...Array(9).keys()].map(index => 
-        {
-            return {
-                id: index,
-                user_id: 1,
-                type: index < 3 ? "cash" : (
-                    index > 6 ? "ewallet" : "card"
-                ),
-                name: "test",
-                amount: 1000000
-            }
-        }
-    );
+export const SelectWallet: FC<Props> = ({ visible, setVisible, wallets, walletId, setWalletId }) => {
 
     const [selected, setSelected] = useState(walletId);
 
-    function onSelect(id: number) {
+    function onSelect(id: string) {
         setSelected(id);
         setWalletId(id);
     }
@@ -46,7 +34,7 @@ export const SelectWallet: FC<Props> = ({ visible, setVisible, walletId, setWall
                 <List.Section>
                     <List.Subheader>{i18n.t(LocalizationKey.CASH)}</List.Subheader>
                     {
-                        sampleWallets.filter(wallet => wallet.type === WalletType.CASH).map(wallet => {
+                        wallets.filter(wallet => wallet.type === WalletType.CASH).map(wallet => {
 
                             const [name, icon, color] = useWalletIcon(wallet.type);
                             return (
@@ -66,7 +54,7 @@ export const SelectWallet: FC<Props> = ({ visible, setVisible, walletId, setWall
                 <List.Section>
                     <List.Subheader>{i18n.t(LocalizationKey.CARD)}</List.Subheader>
                     {
-                        sampleWallets.filter(wallet => wallet.type === WalletType.CARD).map(wallet => {
+                        wallets.filter(wallet => wallet.type === WalletType.CARD).map(wallet => {
 
                             const [name, icon, color] = useWalletIcon(wallet.type);
                             return (
@@ -86,7 +74,7 @@ export const SelectWallet: FC<Props> = ({ visible, setVisible, walletId, setWall
                 <List.Section>
                     <List.Subheader>{i18n.t(LocalizationKey.EWALLET)}</List.Subheader>
                     {
-                        sampleWallets.filter(wallet => wallet.type === WalletType.EWALLET).map(wallet => {
+                        wallets.filter(wallet => wallet.type === WalletType.EWALLET).map(wallet => {
 
                             const [name, icon, color] = useWalletIcon(wallet.type);
                             return (
