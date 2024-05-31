@@ -75,17 +75,17 @@ export const Dashboard: FC<Props> = ({ totalAmount, totalSpent, period, setPerio
                             <Text style={{ color: "white" }}>{periodTitle}</Text>
                         </Button>
                         <Text style={{ fontSize: 20, color: 'gray', marginTop: 10 }}>{i18n.t(LocalizationKey.CAN_SPEND)}</Text>
-                        <Text style={{ fontSize: 30 }}>{(totalAmount - totalSpent).toLocaleString('en')}</Text>
+                        <Text style={{ fontSize: 30 }}>{(totalAmount - totalSpent).toLocaleString('en') + " ₫"}</Text>
                     </View>
                 }
             </AnimatedCircularProgress>
             <View style={styles.stat}>
                 <View style={styles.statItem}>
-                    <Text style={styles.number}>{formatter.format(totalAmount)}</Text>
+                    <Text style={styles.number}>{formatter.format(totalAmount) + " ₫"}</Text>
                     <Text style={styles.desc}>{i18n.t(LocalizationKey.TOTAL_BUDGET)}</Text>
                 </View>
                 <View style={styles.statItemX}>
-                    <Text style={styles.number}>{formatter.format(totalSpent)}</Text>
+                    <Text style={styles.number}>{formatter.format(totalSpent) + " ₫"}</Text>
                     <Text style={styles.desc}>{i18n.t(LocalizationKey.TOTAL_SPENT)}</Text>
                 </View>
                 <View style={styles.statItemX}>
