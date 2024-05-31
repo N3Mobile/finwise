@@ -32,6 +32,19 @@ export const parseDate = (str: string) => {
     return date;
 }
 
+export const compareDate = (d1: Date, d2: Date) => {
+    const sd1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+    const sd2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+
+    if (sd1.getTime() > sd2.getTime()) {
+        return 1;
+    } else if (sd1.getTime() < sd2.getTime()) {
+        return -1;
+    }   
+
+    return 0;
+}
+
 export const usePeriod = (type: string) => {
 
     let title: string = "Unknown";

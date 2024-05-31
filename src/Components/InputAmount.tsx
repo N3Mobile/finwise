@@ -25,7 +25,11 @@ export const InputAmount: FC<Props> = ({ visible, setVisible, amount, setAmount 
                 value={pendingAmount ? parseFloat(pendingAmount.replace(/[^0-9.]/g, '')).toLocaleString('en') : ''}
                 error={!pendingAmount}
                 onChangeText={(text) => {
-                    setPendingAmount(text);
+                    if (isNaN(parseFloat(pendingAmount.replace(/[^0-9.]/g, '')))) {
+                        setPendingAmount('0');
+                    } else {
+                        setPendingAmount(text);
+                    }
                 }}
                 left={<TextInput.Affix text="VND  "/>}
                 outlineColor={Colors.PRIMARY}
@@ -68,6 +72,7 @@ export const InputAmount: FC<Props> = ({ visible, setVisible, amount, setAmount 
                     <IconButton
                         icon="check"
                         iconColor={MyTheme.WHITE}
+                        disabled={pendingAmount === ""}
                         onPress={() => {
                             setAmount(pendingAmount);
                             setVisible(false);

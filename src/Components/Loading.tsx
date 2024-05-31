@@ -1,5 +1,5 @@
 import { View } from "native-base";
-import React from "react";
+import React, { FC } from "react";
 import { StyleSheet } from "react-native";
 import { Logo } from "./Logo";
 import { Brand } from "./Brand";
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     container: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        paddingTop: 120,
         gap: 20,
         backgroundColor: Colors.NEUTRAL99,
         height: '100%'
@@ -53,6 +53,6 @@ const styles = StyleSheet.create({
         gap: 20,
         position: 'absolute',
         bottom: 0,
-        marginBottom: 20   
+        marginBottom: 100   
     }
 })
