@@ -8,7 +8,7 @@ import { Colors } from "@/Theme";
 import { Wallet } from "@/Services/wallets";
 import { SelectWallet } from "@/Components/SelectWallet";
 import { InputAmount } from "@/Components/InputAmount";
-import { useFormattedDate } from "@/Hooks/date";
+import { compareDate, useFormattedDate } from "@/Hooks/date";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { http } from "@/Hooks/api";
 import { Category } from "@/Config/category";
@@ -29,12 +29,13 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
     const [amount, setAmount] = useState('0');
     const [fromWalletId, setFromWalletId] = useState(walletId);
     const [toWalletId, setToWalletId] = useState("");
-    const [date, setDate] = useState(today);
+    // const [date, setDate] = useState(today);
 
     const [fromName, setFromName] = useState("");
     const [toName, setToName] = useState("");
     const [fromType, setFromType] = useState("");
     const [toType, setToType] = useState("");
+    const [fromAmount, setFromAmount] = useState(0);
 
     const [inputAmountVisible, setInputAmountVisible] = useState(false);
     const [selectFromVisible, setSelectFromVisible] = useState(false);
@@ -47,6 +48,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                 .then(data => {
                     setFromName(data.name);
                     setFromType(data.type);
+                    setFromAmount(data.amount);
                 })
                 .catch(error => setError(error.toString()));
         }, [fromWalletId])
@@ -64,6 +66,11 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
             }
         }, [toWalletId])
     );
+
+    const zeroAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) === 0;
+    const notEnough = parseFloat(amount.replace(/[^0-9.]/g, '')) > fromAmount;
+    const invalidToWallet = toWalletId === "";
+    const invalid = zeroAmount || notEnough || invalidToWallet;
 
     function changeFromWallet() {
         setSelectFromVisible(true);
@@ -84,7 +91,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
             http.post('transaction', {}, {
                 wallet_id: fromWalletId,
                 category: Category.OUTGOING_TRANSFER,
-                amount: amount,
+                amount: parseFloat(amount.replace(/[^0-9.]/g, '')),
                 is_pay: true,
                 note_info: `Transfer money to ${toName}`
             }),
@@ -119,7 +126,12 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                         {amount ? parseFloat(amount).toLocaleString('en') : '...'}
                     </Text>
                 </TouchableOpacity>
-                
+                <HelperText type="error" visible style={{ display: zeroAmount || notEnough ? 'flex' : 'none' }}>
+                { zeroAmount
+                ? i18n.t(LocalizationKey.ZERO_AMOUNT)
+                : i18n.t(LocalizationKey.NOT_ENOUGH_MONEY)
+                }
+                </HelperText>
             </View>
             <Divider />
             <List.Section>
@@ -144,8 +156,11 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                     title={toName ? toName : i18n.t(LocalizationKey.SELECT_WALLET)}
                     onPress={changeToWallet}
                 />
+                <HelperText type="error" visible style={{ display: invalidToWallet ? 'flex' : 'none' }}>
+                    {i18n.t(LocalizationKey.WALLET_UNSELECTED)}
+                </HelperText>
             </List.Section>
-            <Divider />
+            {/* <Divider />
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.OPTIONS)}</List.Subheader>
                 <List.Item
@@ -156,11 +171,12 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                     }
                     onPress={changeDate}
                 />
-            </List.Section>
+            </List.Section> */}
             <Button 
                 mode="contained" 
                 buttonColor={Colors.PRIMARY}
                 onPress={onConfirm}
+                disabled={invalid}
                 style={{ width: 120, paddingVertical: 10, marginHorizontal: 'auto' }}
             >
                 {i18n.t(LocalizationKey.CONFIRM)}
@@ -187,7 +203,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                     walletId={toWalletId}
                     setWalletId={setToWalletId}
                 />
-                <DateTimePickerModal
+                {/* <DateTimePickerModal
                     isVisible={selectDateVisible}
                     mode="date"
                     onConfirm={(date) => {
@@ -195,7 +211,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                         setSelectDateVisible(false);
                     }}
                     onCancel={() => setSelectDateVisible(false)}
-                />
+                /> */}
             </Portal>
         </View>
     )

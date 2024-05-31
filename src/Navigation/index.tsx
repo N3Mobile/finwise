@@ -85,22 +85,6 @@ const ApplicationNavigator = () => {
           name={RootScreens.TEST}
           component={TestContainer}
         />
-        <RootStack.Screen
-          name={RootScreens.BUDGET_DETAILS}
-          component={BudgetDetailsContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.ADD_BUDGET}
-          component={AddBudgetContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.EDIT_BUDGET}
-          component={EditBudgetContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.FINISHED_BUDGET}
-          component={FinishedBudgetsContainer}
-        />
       </RootStack.Navigator>
     </NavigationContainer>
   );

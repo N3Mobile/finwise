@@ -5,7 +5,6 @@ import { http } from "@/Hooks/api";
 import { useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
 import { StackNavigation } from "@/Navigation";
-import { DEFAULT_WALLET, Wallet } from "@/Services/wallets";
 import { Colors } from "@/Theme";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
@@ -29,6 +28,8 @@ export const EditWallet: FC<Props> = ({ walletId, setLoading, setError }) => {
     const [selectWalletType, setSelectWalletType] = useState(false);
     const [inputAmount, setInputAmount] = useState(false);
     const [walname, walicon, walcolor] = useWalletIcon(type);
+
+    const invalidAmount = parseFloat(balance.replace(/[^0-9.]/g, '')) === 0;
 
     useFocusEffect(
         useCallback(() => {
@@ -118,6 +119,9 @@ export const EditWallet: FC<Props> = ({ walletId, setLoading, setError }) => {
                     style={{ paddingLeft: 10 }}
                     titleStyle={{ fontSize: 30 }}
                 />
+                <HelperText type="error" visible style={{ display: invalidAmount ? 'flex' : 'none' }}>
+                    {i18n.t(LocalizationKey.ZERO_AMOUNT)}
+                </HelperText>
             </List.Section>
             <Button 
                 mode="contained"

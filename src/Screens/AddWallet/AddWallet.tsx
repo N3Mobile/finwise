@@ -9,7 +9,7 @@ import { Colors } from "@/Theme";
 import { useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, HelperText, Icon, List, Portal, Text, TextInput } from "react-native-paper";
+import { Button, HelperText, Icon, List, Portal, TextInput } from "react-native-paper";
 
 interface Props {
     setLoading: Dispatch<SetStateAction<boolean>>,
@@ -24,8 +24,9 @@ export const AddWallet: FC<Props> = ({ setLoading, setError }) => {
     const [balance, setBalance] = useState('0');
     const [selectWalletType, setSelectWalletType] = useState(false);
     const [inputAmount, setInputAmount] = useState(false);
-
     const [walname, walicon, walcolor] = useWalletIcon(type);
+
+    const invalidAmount = parseFloat(balance.replace(/[^0-9.]/g, '')) === 0;
 
     function onSave() {
         const amount = parseFloat(balance.replace(/[^0-9.]/g, ''));
@@ -51,6 +52,7 @@ export const AddWallet: FC<Props> = ({ setLoading, setError }) => {
                 <List.Subheader>{i18n.t(LocalizationKey.NAME)}</List.Subheader>
                 <View>
                 <TextInput 
+                    maxLength={20}
                     label={i18n.t(LocalizationKey.NAME)}
                     value={name}
                     error={!name}
@@ -86,6 +88,9 @@ export const AddWallet: FC<Props> = ({ setLoading, setError }) => {
                     style={{ paddingLeft: 10 }}
                     titleStyle={{ fontSize: 30 }}
                 />
+                <HelperText type="error" visible={true} style={{ display: invalidAmount ? 'flex' : 'none' }}>
+                    {i18n.t(LocalizationKey.ZERO_AMOUNT)}
+                </HelperText>
             </List.Section>
             <Button 
                 mode="contained"

@@ -70,6 +70,7 @@ export enum LocalizationKey {
   VIEW_FINISHED_BUDGETS = "view-finished-budgets",
   VIEW_RUNNING_BUDGETS = "view-running-budgets",
 
+  WALLET_UNSELECTED = "wallet-unselected",
   CATEGORY_UNSELECTED = "category-unselected",
   ZERO_AMOUNT = "zero-amount",
   NOT_ENOUGH_MONEY = "not-enough-money",
