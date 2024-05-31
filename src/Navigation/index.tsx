@@ -22,6 +22,10 @@ export type RootStackParamList = {
   [RootScreens.ADD_WALLET]: undefined;
   [RootScreens.EDIT_WALLET]: { wallet_id: string };
   [RootScreens.TEST]: undefined;
+  [RootScreens.BUDGET_DETAILS]: { budgetId: string };
+  [RootScreens.ADD_BUDGET]: { walletId: string };
+  [RootScreens.EDIT_BUDGET]: { budgetId: string },
+  [RootScreens.FINISHED_BUDGET]: { walletId: string };
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
