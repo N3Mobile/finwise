@@ -76,7 +76,7 @@ export const vi = {
   [LocalizationKey.TOTAL_EXPENSE]: "Chi",
   [LocalizationKey.WEEK_EXPENSE]: "Tổng chi tuần này",
   [LocalizationKey.MONTH_EXPENSE]: "Tổng chi tháng này",
-  [LocalizationKey.TOP_EXPENSE]: "Chi tiêu nhiều nhất",
+  [LocalizationKey.TOP_EXPENSE]: "Chi tiêu theo nhóm",
   [LocalizationKey.SPENDING_REPORT]: "Báo cáo chi tiêu",
   [LocalizationKey.RECENT_TRANSACTIONS]: "Giao dịch gần đây",
 };

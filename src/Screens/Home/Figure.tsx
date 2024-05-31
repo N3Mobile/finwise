@@ -20,7 +20,7 @@ export const Figure = ({ balance, income, expense }: IFigureProps) => {
         <View style={styles.container}>
             <View style={styles.upper}>
                 <Text style={{ fontSize: 20 }}>{i18n.t(LocalizationKey.CURRENT_BALANCE)}</Text>
-                <Text style={styles.balance}>{balance.toLocaleString('en')}</Text>
+                <Text style={styles.balance}>{balance.toLocaleString('en') + " ₫"}</Text>
             </View>
             <View style={styles.lower}>
                 <View style={styles.expense}>

@@ -11,7 +11,7 @@ import { Transaction } from "@/Services/transactions";
 export const HomeContainer = () => {
   
 	const navigation = useNavigation<TabNavigation>();
-  	const [loading, setLoading] = useState(false);
+  	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
   
 	const [wallets, setWallets] = useState<Wallet[]>([]);
@@ -19,7 +19,7 @@ export const HomeContainer = () => {
 	
   	useFocusEffect(
 		useCallback(() => {
-			setLoading(true);
+			setError("");
 			Promise.all([
 				http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" }),
 				http.get('transaction/histories/all', { user_ID: "66237fef97705968270a6dab" })

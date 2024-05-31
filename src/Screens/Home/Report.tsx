@@ -66,7 +66,7 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.WEEK_EXPENSE)}</List.Subheader>
                 <List.Item
-                    title={totalSpent.toLocaleString('en')}
+                    title={totalSpent.toLocaleString('en') + " ₫"}
                     titleStyle={{ fontSize: 30 }}
                 />
                 <LineChart
@@ -75,6 +75,7 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
                     height={220}
                     bezier
                     formatYLabel={(label) => formatter.format(parseFloat(label))}
+                    yAxisSuffix=" ₫"
                     chartConfig={{
                         // backgroundColor: '#e26a00',
                         // backgroundGradientFrom: '#fb8c00',
@@ -103,7 +104,7 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
                             <List.Item
                                 key={item.category}
                                 title={name}
-                                description={item.total.toLocaleString('en')}
+                                description={item.total.toLocaleString('en') + " ₫"}
                                 left={(props) => <List.Icon {...props} icon={icon} color={color} />}
                                 right={(props) => <Text {...props}>{`${Math.round(item.total / totalSpent * 100)}%`}</Text>}
                             />

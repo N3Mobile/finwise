@@ -76,7 +76,7 @@ export const en = {
   [LocalizationKey.TOTAL_EXPENSE]: "Expense",
   [LocalizationKey.WEEK_EXPENSE]: "Total spent this week",
   [LocalizationKey.MONTH_EXPENSE]: "Total spent this month",
-  [LocalizationKey.TOP_EXPENSE]: "Top spending",
+  [LocalizationKey.TOP_EXPENSE]: "Top spending by category",
   [LocalizationKey.SPENDING_REPORT]: "Spending Report",
   [LocalizationKey.RECENT_TRANSACTIONS]: "Recent Transactions",
 };
