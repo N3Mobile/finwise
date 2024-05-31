@@ -11,45 +11,35 @@ import { StackNavigation } from "@/Navigation";
 import { RootScreens } from "..";
 
 interface Props {
+    walletId: string,
     setLoading: Dispatch<SetStateAction<boolean>>,
     setError: Dispatch<SetStateAction<string>>
 }
 
-export const FinishedBudgets: FC<Props> = ({ setLoading, setError }) => {
+export const FinishedBudgets: FC<Props> = ({ walletId, setLoading, setError }) => {
 
     const navigation = useNavigation<StackNavigation>();
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         http.get('budgets/ranges', {
-    //             wallet_id: 
-    //             start_date: 
-    //             end_date: 
-    //         }).then(data => {
-    //             console.log(data);
+    const [budgets, setBudgets] = useState<Budget[]>([]);
 
-    //         }).catch(error => setError(error.toString()));
-    //     }, [])
-    // );
-    const fakeBudgets: Budget[] = [...Array(9).keys()].map(index => { return {
-        id: index.toString(),
-        name: "buddy",
-        wallet_id: "1",
-        category: "shopping",
-        initial_amount: 500000,
-        amount: 50000,
-        start_date: "27/05/2024",
-        end_date: "02/06/2024"
-    }})
+    useFocusEffect(
+        useCallback(() => {
+            http.get('budgets/ranges', { wallet_id: walletId})
+                .then(data => {
+                    console.log(data);
+                    setBudgets(data);
+                })
+                .catch(error => setError(error.toString()));
+        }, [])
+    );
 
-    const periods = [...new Set(fakeBudgets.map(bud => {
+    const periods = [...new Set(budgets.map(bud => {
         return JSON.stringify({
             start: bud.start_date,
             end: bud.end_date
         });
     }))].map(str => JSON.parse(str));
 
-    // TODO
     return (
         <ScrollView>
             { 
@@ -61,7 +51,7 @@ export const FinishedBudgets: FC<Props> = ({ setLoading, setError }) => {
                         <List.Section key={start + end}>
                             <List.Subheader>{`${start} - ${end}`}</List.Subheader>
                             {
-                                fakeBudgets
+                                budgets
                                     .filter(bud => (bud.start_date === start && bud.end_date === end))
                                     .map(bud => 
                                         <BudgetItem

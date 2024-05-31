@@ -110,6 +110,7 @@ export const FinishedBudgetsContainer: FC<Props> = ({ navigation }) => {
             />
         </List.Section>
         <FinishedBudgets
+            walletId={selectedWalletId}
             setLoading={setLoading}
             setError={setError}
         />
