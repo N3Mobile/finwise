@@ -123,7 +123,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                 onPress={() => setInputAmountVisible(true)}
                 >
                     <Text style={{ fontSize: 40 }}>
-                        {amount ? parseFloat(amount).toLocaleString('en') : '...'}
+                        {amount ? parseFloat(amount.replace(/[^0-9.]/g, '')).toLocaleString('en') : '...'}
                     </Text>
                 </TouchableOpacity>
                 <HelperText type="error" visible style={{ display: zeroAmount || notEnough ? 'flex' : 'none' }}>
