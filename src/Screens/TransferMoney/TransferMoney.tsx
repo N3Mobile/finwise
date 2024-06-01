@@ -98,7 +98,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
             http.post('transaction', {}, {
                 wallet_id: toWalletId,
                 category: Category.INCOMING_TRANSFER,
-                amount: amount,
+                amount: parseFloat(amount.replace(/[^0-9.]/g, '')),
                 is_pay: false,
                 note_info: `Transfer money from ${fromName}`
             })
