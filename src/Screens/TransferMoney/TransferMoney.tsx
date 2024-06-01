@@ -105,9 +105,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
         ]).then(([from, to]) => {
             setLoading(false);
             navigation.goBack();
-        }).catch(([from, to]) => {
-            from ? setError(from): setError(to);
-        });
+        }).catch(error => setError(error.toString()));
     }
 
     return (
