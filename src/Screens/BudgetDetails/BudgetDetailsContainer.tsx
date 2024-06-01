@@ -46,7 +46,8 @@ export const BudgetDetailsContainer: FC<Props> = ({ navigation, route }) => {
             params: { 
                 start: budget.start_date,
                 end: budget.end_date,
-                category: budget.category
+                category: budget.category,
+                wallet_id: budget.wallet_id
             } 
         });
     }
