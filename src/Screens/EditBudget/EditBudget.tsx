@@ -3,7 +3,7 @@ import { SelectCategory } from "@/Components/SelectCategory";
 import { SelectPeriod } from "@/Components/SelectPeriod";
 import { SelectWallet } from "@/Components/SelectWallet";
 import { http } from "@/Hooks/api";
-import { getPeriodType, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
+import { compareDate, getPeriodType, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
 import { useCategoryIcon, useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
 import { StackNavigation } from "@/Navigation";
@@ -40,7 +40,18 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                     http.get('budgets/ranges', { wallet_id: walletId })
                 ]).then(([wal, buds]) => {
                     setWallet(wal);
-                    const total = buds.filter((bud: Budget) => bud.id !== budget.id).reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
+                    const total = buds
+                        .filter((bud: Budget) => {
+
+                            const bud_start = parseDate(bud.start_date);
+                            const bud_end = parseDate(bud.end_date);
+                            return (
+                                bud.id !== budget.id &&
+                                compareDate(bud_start, start) === 0 && 
+                                compareDate(bud_end, end) === 0
+                            )
+                        })
+                        .reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
                     setTotalBudget(total);
                 }).catch(error => setError(error.toString()));
             } else {

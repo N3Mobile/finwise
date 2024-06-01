@@ -5,7 +5,7 @@ import { SelectWallet } from "@/Components/SelectWallet";
 import { Category } from "@/Config/category";
 import { PeriodType } from "@/Config/period";
 import { http } from "@/Hooks/api";
-import { getPeriodType, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
+import { compareDate, getPeriodType, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
 import { useCategoryIcon, useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
 import { StackNavigation } from "@/Navigation";
@@ -52,7 +52,13 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
                     http.get('budgets/ranges', { wallet_id: walletId })
                 ]).then(([wal, buds]) => {
                     setWallet(wal);
-                    const total = buds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
+                    const total = buds
+                        .filter((bud: Budget) => {
+                            const bud_start = parseDate(bud.start_date);
+                            const bud_end = parseDate(bud.end_date);
+                            return compareDate(bud_start, start) === 0 && compareDate(bud_end, end) === 0;
+                        })
+                        .reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
                     setTotalBudget(total);
                 }).catch(error => setError(error.toString()));
             } else {
@@ -66,7 +72,7 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
     const notEnough = parseFloat(amount.replace(/[^0-9.]/g, '')) + totalBudget > wallet.amount;
     const invalid = invalidCategory || invalidAmount || notEnough;
 
-    function onSave() {
+    function onSave() {       
         http.post('budgets', {}, {
             name: "",
             wallet_id: walletId,
