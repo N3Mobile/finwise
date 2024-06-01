@@ -3,6 +3,7 @@ export interface Budget {
     name: string,
     wallet_id: string,
     category: string,
+    initial_amount: number,
     amount: number,
     start_date: string,
     end_date: string

@@ -1,6 +1,6 @@
 import React from "react";
 import { StatusBar } from "react-native";
-import { NativeStackHeaderProps, createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, NavigationProp, NavigatorScreenParams } from "@react-navigation/native";
 import { BottomTabParamList, MainNavigator } from "./Main";
 import { WelcomeContainer } from "@/Screens/Welcome";
@@ -11,6 +11,13 @@ import { SignupContainer } from "@/Screens/Signup";
 import { TestContainer } from "@/Screens/Test";
 import { DefaultAppbar } from "./Appbar/DefaultAppbar";
 import { MainAppbar } from "./Appbar/MainAppbar";
+import { TransferMoneyContainer } from "@/Screens/TransferMoney";
+import { EditWalletContainer } from "@/Screens/EditWallet";
+import { AddWalletContainer } from "@/Screens/AddWallet";
+import { AddBudgetContainer } from "@/Screens/AddBudget";
+import { BudgetDetailsContainer } from "@/Screens/BudgetDetails";
+import { EditBudgetContainer } from "@/Screens/EditBudget";
+import { FinishedBudgetsContainer } from "@/Screens/FinishedBudgets";
 
 export type RootStackParamList = {
   [RootScreens.MAIN]: NavigatorScreenParams<BottomTabParamList>;
@@ -64,6 +71,35 @@ const ApplicationNavigator = () => {
         <RootStack.Screen
           name={RootScreens.SIGNUP}
           component={SignupContainer}
+        />
+        
+        <RootStack.Screen 
+          name={RootScreens.TRANSFER_MONEY}
+          component={TransferMoneyContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.ADD_WALLET}
+          component={AddWalletContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.EDIT_WALLET}
+          component={EditWalletContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.BUDGET_DETAILS}
+          component={BudgetDetailsContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.ADD_BUDGET}
+          component={AddBudgetContainer}
+        />
+        <RootStack.Screen 
+          name={RootScreens.EDIT_BUDGET}
+          component={EditBudgetContainer}
+        />
+        <RootStack.Screen
+          name={RootScreens.FINISHED_BUDGET}
+          component={FinishedBudgetsContainer}
         />
         <RootStack.Screen
           name={RootScreens.TEST}
