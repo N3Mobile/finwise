@@ -96,4 +96,9 @@ export const vi = {
   [LocalizationKey.ADD_NEW_WALLET]: "Thêm ví mới",
 
   [LocalizationKey.ERROR_EMPTY]: "Không thể bỏ trống",
+
+  [LocalizationKey.WALLET_BALANCE]: "Số dư trong ví",
+  [LocalizationKey.TRANSACTION_TYPE]:"Loại giao dịch",
+  [LocalizationKey.UNIT]:"VND",
+  [LocalizationKey.CREATE_TRANSACTION]: "Tạo giao dịch",
 };

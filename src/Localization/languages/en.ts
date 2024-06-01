@@ -95,5 +95,10 @@ export const en = {
   [LocalizationKey.BALANCE]: "Balance",
   [LocalizationKey.ADD_NEW_WALLET]: "Add new wallet",
   
-  [LocalizationKey.ERROR_EMPTY]: "Do not leave this blank"
+  [LocalizationKey.ERROR_EMPTY]: "Do not leave this blank",
+
+  [LocalizationKey.WALLET_BALANCE]:"Wallet balance",
+  [LocalizationKey.TRANSACTION_TYPE]:"Transaction type",
+  [LocalizationKey.UNIT]:"$",
+  [LocalizationKey.CREATE_TRANSACTION]:"Creat transaction",
 };
