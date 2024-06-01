@@ -69,6 +69,7 @@ export const en = {
 
   [LocalizationKey.WALLET_UNSELECTED]: "Please select a wallet",
   [LocalizationKey.CATEGORY_UNSELECTED]: "Please select a category",
+  [LocalizationKey.CATEGORY_EXISTED]: "This category has already been used for your wallet",
   [LocalizationKey.ZERO_AMOUNT]: "Please enter a non-zero amount",
   [LocalizationKey.NOT_ENOUGH_MONEY]: "Not enough money. Please check your wallet.",
   [LocalizationKey.DELETE_CONFIRMATION]: "Are you sure you want to delete this item?",

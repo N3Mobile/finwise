@@ -34,6 +34,7 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
     const [walletId, setWalletId] = useState(initialWalletId);
     const [wallet, setWallet] = useState(DEFAULT_WALLET);
     const [totalBudget, setTotalBudget] = useState(0);
+    const [usedCategory, setUsedCategory] = useState<string[]>([]);
     
     const [catname, caticon, catcolor] = useCategoryIcon(category);
     const [walname, walicon, walcolor] = useWalletIcon(wallet.type);
@@ -60,6 +61,7 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
                         })
                         .reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
                     setTotalBudget(total);
+                    setUsedCategory(buds.map((bud: Budget) => bud.category));
                 }).catch(error => setError(error.toString()));
             } else {
                 console.log("Where wallet id?");
@@ -68,9 +70,10 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
     );
 
     const invalidCategory = !category;
+    const existedCategory = usedCategory.includes(category);
     const invalidAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) === 0;
     const notEnough = parseFloat(amount.replace(/[^0-9.]/g, '')) + totalBudget > wallet.amount;
-    const invalid = invalidCategory || invalidAmount || notEnough;
+    const invalid = invalidCategory || existedCategory || invalidAmount || notEnough;
 
     function onSave() {       
         http.post('budgets', {}, {
@@ -95,8 +98,11 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
                     left={(props) => <List.Icon {...props} icon={caticon} color={catcolor} />}
                     onPress={() => setSelectCategory(true)}
                 />
-                <HelperText type="error" visible={true} style={{ display: invalidCategory ? 'flex' : 'none' }}>
-                    {i18n.t(LocalizationKey.CATEGORY_UNSELECTED)}
+                <HelperText type="error" visible={true} style={{ display: (invalidCategory || existedCategory) ? 'flex' : 'none' }}>
+                    { invalidCategory 
+                    ? i18n.t(LocalizationKey.CATEGORY_UNSELECTED)
+                    : i18n.t(LocalizationKey.CATEGORY_EXISTED)
+                    }
                 </HelperText>
             </List.Section>
             <List.Section>

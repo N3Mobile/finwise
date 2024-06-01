@@ -72,6 +72,7 @@ export enum LocalizationKey {
 
   WALLET_UNSELECTED = "wallet-unselected",
   CATEGORY_UNSELECTED = "category-unselected",
+  CATEGORY_EXISTED = "category-existed",
   ZERO_AMOUNT = "zero-amount",
   NOT_ENOUGH_MONEY = "not-enough-money",
   DELETE_CONFIRMATION = "delete-confirmation",

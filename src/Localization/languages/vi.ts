@@ -69,6 +69,7 @@ export const vi = {
 
   [LocalizationKey.WALLET_UNSELECTED]: "Hãy chọn một ví",
   [LocalizationKey.CATEGORY_UNSELECTED]: "Hãy chọn một nhóm",
+  [LocalizationKey.CATEGORY_EXISTED]: "Nhóm này đã được sử dụng cho ví của bạn",
   [LocalizationKey.ZERO_AMOUNT]: "Hãy nhập một giá trị dương",
   [LocalizationKey.NOT_ENOUGH_MONEY]: "Không đủ tiền trong ví",
   [LocalizationKey.DELETE_CONFIRMATION]: "Bạn có chắc chắn muốn xóa mục này không?",

@@ -31,6 +31,7 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
     const [walletId, setWalletId] = useState(budget.wallet_id);
     const [wallet, setWallet] = useState(DEFAULT_WALLET);
     const [totalBudget, setTotalBudget] = useState(0);
+    const [usedCategory, setUsedCategory] = useState<string[]>([]);
 
     useFocusEffect(
         useCallback(() => {
@@ -53,6 +54,7 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                         })
                         .reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
                     setTotalBudget(total);
+                    setUsedCategory(buds.map((bud: Budget) => bud.category));
                 }).catch(error => setError(error.toString()));
             } else {
                 console.log("Where wallet id?");
@@ -60,9 +62,10 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
         }, [walletId])
     );
 
+    const existedCategory = usedCategory.includes(category);
     const invalidAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) === 0;
     const notEnough = parseFloat(amount.replace(/[^0-9.]/g, '')) + totalBudget > wallet.amount;
-    const invalid = invalidAmount || notEnough;
+    const invalid = existedCategory || invalidAmount || notEnough;
     
     const [catname, caticon, catcolor] = useCategoryIcon(category);
     const [walname, walicon, walcolor] = useWalletIcon(wallet.type);
@@ -104,6 +107,9 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                     left={(props) => <List.Icon {...props} icon={caticon} color={catcolor} />}
                     onPress={() => setSelectCategory(true)}
                 />
+                <HelperText type="error" visible style={{ display: existedCategory ? 'flex' : 'none' }}>
+                    {i18n.t(LocalizationKey.CATEGORY_EXISTED)}
+                </HelperText>
             </List.Section>
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.TOTAL_BUDGET)}</List.Subheader>
