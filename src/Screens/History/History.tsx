@@ -1,7 +1,7 @@
 import { Transaction } from "@/Services";
 import { Text, Button } from "react-native-paper";
 import { View, Image, StyleSheet, TouchableOpacity, Modal, Alert } from "react-native";
-import {  useEffect, useState } from "react";
+import {  useEffect, useState, useCallback } from "react";
 import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
 import { ScrollView } from "native-base";
@@ -10,8 +10,11 @@ import axios from "axios";
 import { Category } from "@/Config/category";
 import { useCategoryIcon } from "@/Hooks/icon";
 import { Icon } from "react-native-paper";
+import { Wallet } from "@/Services/wallets";
+import { useFocusEffect } from "@react-navigation/native";
 
-const TransactionRecord = ({data} : {data : Transaction}) => {
+
+const TransactionRecord = ({data, wallets} : {data : Transaction, wallets : Wallet[]}) => {
 
     const formatAmount = (amount : number) =>{
         let strArr = Array.from(String(amount));
@@ -26,15 +29,24 @@ const TransactionRecord = ({data} : {data : Transaction}) => {
     }
 
     let icon : string [] = useCategoryIcon(data.category);
+    let getWalletName = (id : string) => {
+        if(wallets.length >0 ){
+            let index : number = wallets.findIndex((wallet) => wallet.id == id);
+            return wallets[index].name;
+        }
+        return "Waiting";
+        
+    }
 
     return (
                 <TouchableOpacity style={{flex:1, flexDirection: 'row', width: '100%', height: 100, alignItems:'center'}}>
                     <View style={{flex : 3, justifyContent:'center', alignItems: 'center'}}>
                         <Icon source={icon[1]} size={50} color={icon[2]}/>   
                     </View>
-                    <View style={{flex:6}}>
+                    <View style={{flex:7}}>
                             <Text style={{fontSize: 18, fontWeight: 'bold'}}>{icon[0]}</Text>
                             <Text style={{fontSize: 12, fontWeight: 'light', color:'grey'}}>{data.created_at}</Text>
+                            <Text style={{fontSize: 15, fontWeight: 'medium'}}>Ví: {getWalletName(data.wallet_id)}</Text>
                     </View>
 
                     <View style={{flex:7, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: '3%'}}>
@@ -44,12 +56,12 @@ const TransactionRecord = ({data} : {data : Transaction}) => {
     );
 }
 
-const TransactionList = ({data} : {data : Transaction[]}) => {
+const TransactionList = ({data, wallets} : {data : Transaction[], wallets : Wallet[]}) => {
 
     return (
         <ScrollView style={{marginTop:'2%', width:'100%'}}>
                 {data.map((value, index) => {
-                    return <TransactionRecord data={value} key={index}/>
+                    return <TransactionRecord data={value} wallets={wallets} key={index}/>
                 })}
         </ScrollView>
     );
@@ -57,7 +69,7 @@ const TransactionList = ({data} : {data : Transaction[]}) => {
 
 export const History = ({route} : {route : any}) => {
 
-    const {start, end, category} = route.params;
+    const {start, end, category, walletId} = route.params;
 
     //setup
     const [range, setRange] = useState(3);
@@ -69,6 +81,8 @@ export const History = ({route} : {route : any}) => {
     const [transactions, setTransaction] = useState<Transaction[]>([]);
     const [allTransact, setAllTransact] = useState<Transaction[]>([]);
     const [numTransaction, setNumTransaction] = useState(-1);
+    const [walletID, setWalletID] = useState(!walletId ? 'All' : walletId);
+    const [wallets, setWallets] = useState<Wallet[]>([]);
 
     const getFormattedDate = (date : Date) => {
         let day : string = String(date.getDate());
@@ -93,10 +107,20 @@ export const History = ({route} : {route : any}) => {
     }
 
     let setData = (d : Transaction[]) => {
-        if(transactionCategory == 'all') setTransaction([...d]);
-        else{
+        if(transactionCategory == 'all' && walletID == 'All') setTransaction([...d]);
+        else if(walletID == 'All'){
             let data : Transaction[] = [];
             for(let i = 0; i < allTransact.length; i++) if(allTransact[i].category == transactionCategory) data.push(allTransact[i]);
+            setTransaction(data);
+        }else if(transactionCategory == 'all'){
+            let data : Transaction[] = [];
+            for(let i = 0; i < allTransact.length; i++) if(allTransact[i].wallet_id == walletID) data.push(allTransact[i]);
+            setTransaction(data);
+        }else{
+            let data : Transaction[] = [];
+            for(let i = 0; i < allTransact.length; i++) 
+                if(allTransact[i].category == transactionCategory && allTransact[i].wallet_id == walletID) 
+                    data.push(allTransact[i]);
             setTransaction(data);
         }
     }
@@ -118,7 +142,7 @@ export const History = ({route} : {route : any}) => {
                     end_date : end
                 }
             });
-            console.log(res.data);
+            //console.log(res.data);
             let data : Transaction[] = res.data;
 
             //handle data
@@ -161,16 +185,35 @@ export const History = ({route} : {route : any}) => {
 
     useEffect(() => {
         setData(allTransact);
-    }, [transactionCategory, allTransact]);
+    }, [transactionCategory, allTransact, walletID]);
 
-
+    useFocusEffect(
+        useCallback(() => {
+            const getWallet = async () => {
+                try{
+                    let requestURL : string = `https://be-mobile-n3.onrender.com/wallets/byUsersId`;
+                    let res = await axios.get(requestURL, {
+                        params : {
+                            user_ID : '66237fef97705968270a6dab'
+                        }
+                    })
+                    //console.log(res.data);
+                    if(res.data.length != 0) {
+                        let data : Wallet[] = res.data;
+                        setWallets(data);
+                    }
+                }catch(e){
+                    console.log(e);
+                }
+        
+            }
+            getWallet();
+        }, [])
+    );
+    
     return (   
         <View style={{flex: 1}}>
 
-            {/* screen name */}
-            <Text style={styles.screenName}>
-                Lịch sử giao dịch
-            </Text>
             <View style={styles.defaultRangeContainer}>
                 {/* default date range buttons */}
                 {<>{defaultRange.map((r, index) => {
@@ -240,6 +283,23 @@ export const History = ({route} : {route : any}) => {
                 </View>
             </Modal>
             
+            {/* Drop down walllet */}
+            <View style={{flex : 1, marginBottom: '2%'}}>
+                
+                <View style={styles.categoryPicker}>
+                    <Picker
+                        mode="dropdown"
+                        selectedValue={walletID}
+                        onValueChange={(itemValue, itemIndex) => {setWalletID(itemValue)}}
+                    >
+                        <Picker.Item label={"All"} value={"All"}/>
+                        {Object.values(wallets).map((value, index)=>{
+                            return (<Picker.Item label={value.name} value={value.id} key={value.id}/>)
+                        })}
+                    </Picker>
+                </View>
+            </View>
+
             {/* Drop down category */}
             <View style={{flex : 1}}>
                 
@@ -255,6 +315,7 @@ export const History = ({route} : {route : any}) => {
                     </Picker>
                 </View>
             </View>
+
             
             {/* Search button */}
             <View style={{flex : 1, alignItems : 'center', justifyContent:'center', marginTop:'4%'}}>
@@ -270,22 +331,15 @@ export const History = ({route} : {route : any}) => {
                 {numTransaction == -1 ? (<HStack space={'2xs'} justifyContent="center" alignItems="center" marginBottom="auto" marginTop="auto">
                                             <Spinner accessibilityLabel="Loading posts" size={60} color="black" />
                                         </HStack>) : 
-                <TransactionList data={transactions} />}
+                <TransactionList data={transactions} wallets={wallets}/>}
             </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    screenName : {
-        textAlign : 'center',
-        fontSize : 25,
-        backgroundColor : 'rgb(0, 255, 150)',
-        alignContent:'center',
-        fontWeight: '500'
-    },
     defaultRangeContainer : {
-        marginTop : 10,
+        marginTop : '2%',
         flex : 1,
         flexDirection : 'row',
         alignContent : 'center',
