@@ -15,8 +15,14 @@ interface IReportProps {
 
 export const Report = ({ expenseTransactions }: IReportProps) => {
 
+    console.log(expenseTransactions);
+    
     const formatter = Intl.NumberFormat('en', { notation: 'compact' });
     const [title, start, end, left] = usePeriod(PeriodType.WEEK);
+
+    console.log("TIME?");
+    console.log(start);
+    console.log(end);
 
     const transactions = expenseTransactions.filter(trans => {
         const created = parseDate(trans.created_at);
@@ -32,7 +38,17 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
     }, [start]);
 
     const totalSpent = transactions.reduce((total, trans) => total + trans.amount, 0);
-    const topSpent = ALL_EXPENSE_CATEGORIES.map(cat => { return {
+    console.log(totalSpent);
+    const topSpent = ALL_EXPENSE_CATEGORIES.map(cat => { 
+        if (cat === "outgoing-transfer") {
+            console.log("GO");
+            
+            console.log(transactions.filter(trans => trans.category === cat));
+            console.log(transactions.filter(trans => trans.category === cat).reduce((total, trans) => total + trans.amount, 0));
+            
+            
+        }
+        return {
         category: cat,
         total: transactions.filter(trans => trans.category === cat).reduce((total, trans) => total + trans.amount, 0)
     }}).sort((x, y) => y.total - x.total);
@@ -106,7 +122,7 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
                                 title={name}
                                 description={item.total.toLocaleString('en') + " ₫"}
                                 left={(props) => <List.Icon {...props} icon={icon} color={color} />}
-                                right={(props) => <Text {...props}>{`${Math.round(item.total / totalSpent * 100)}%`}</Text>}
+                                right={(props) => <Text {...props}>{`${totalSpent === 0 ? 0 : Math.round(item.total / totalSpent * 100)}%`}</Text>}
                             />
                         )
                     })
