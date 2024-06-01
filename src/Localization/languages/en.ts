@@ -66,6 +66,8 @@ export const en = {
   [LocalizationKey.OVERSPENT]: "overspent",
   [LocalizationKey.VIEW_FINISHED_BUDGETS]: "View finished budgets",
   [LocalizationKey.VIEW_RUNNING_BUDGETS]: "View running budgets",
+
+  [LocalizationKey.WALLET_UNSELECTED]: "Please select a wallet",
   [LocalizationKey.CATEGORY_UNSELECTED]: "Please select a category",
   [LocalizationKey.ZERO_AMOUNT]: "Please enter a non-zero amount",
   [LocalizationKey.NOT_ENOUGH_MONEY]: "Not enough money. Please check your wallet.",
@@ -79,4 +81,19 @@ export const en = {
   [LocalizationKey.TOP_EXPENSE]: "Top spending by category",
   [LocalizationKey.SPENDING_REPORT]: "Spending Report",
   [LocalizationKey.RECENT_TRANSACTIONS]: "Recent Transactions",
+  [LocalizationKey.EDIT]: "Edit",
+  [LocalizationKey.DELETE]: "Delete",
+  
+  [LocalizationKey.TRANSFER_MONEY]: "Transfer money",
+  [LocalizationKey.FROM]: "From",
+  [LocalizationKey.TO]: "To",
+  [LocalizationKey.NOTE]: "Note",
+  [LocalizationKey.OPTIONS]: "Options",
+  [LocalizationKey.TODAY]: "Today",
+  [LocalizationKey.NAME]: "Name",
+  [LocalizationKey.TYPE]: "Type",
+  [LocalizationKey.BALANCE]: "Balance",
+  [LocalizationKey.ADD_NEW_WALLET]: "Add new wallet",
+  
+  [LocalizationKey.ERROR_EMPTY]: "Do not leave this blank"
 };

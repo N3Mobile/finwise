@@ -66,6 +66,8 @@ export const vi = {
   [LocalizationKey.OVERSPENT]: "bội chi",
   [LocalizationKey.VIEW_FINISHED_BUDGETS]: "Xem ngân sách đã kết thúc",
   [LocalizationKey.VIEW_RUNNING_BUDGETS]: "Xem ngân sách đang áp dụng",
+
+  [LocalizationKey.WALLET_UNSELECTED]: "Hãy chọn một ví",
   [LocalizationKey.CATEGORY_UNSELECTED]: "Hãy chọn một nhóm",
   [LocalizationKey.ZERO_AMOUNT]: "Hãy nhập một giá trị dương",
   [LocalizationKey.NOT_ENOUGH_MONEY]: "Không đủ tiền trong ví",
@@ -79,4 +81,19 @@ export const vi = {
   [LocalizationKey.TOP_EXPENSE]: "Chi tiêu theo nhóm",
   [LocalizationKey.SPENDING_REPORT]: "Báo cáo chi tiêu",
   [LocalizationKey.RECENT_TRANSACTIONS]: "Giao dịch gần đây",
+  [LocalizationKey.EDIT]: "Chỉnh sửa",
+  [LocalizationKey.DELETE]: "Xóa",
+
+  [LocalizationKey.TRANSFER_MONEY]: "Chuyển tiền qua ví khác",
+  [LocalizationKey.FROM]: "Từ",
+  [LocalizationKey.TO]: "Đến",
+  [LocalizationKey.NOTE]: "Ghi chú",
+  [LocalizationKey.OPTIONS]: "Tùy chỉnh",
+  [LocalizationKey.TODAY]: "Hôm nay",
+  [LocalizationKey.NAME]: "Tên",
+  [LocalizationKey.TYPE]: "Loại",
+  [LocalizationKey.BALANCE]: "Số dư",
+  [LocalizationKey.ADD_NEW_WALLET]: "Thêm ví mới",
+
+  [LocalizationKey.ERROR_EMPTY]: "Không thể bỏ trống",
 };

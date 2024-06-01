@@ -4,6 +4,7 @@ export enum RootScreens {
   SETTINGS = "Settings",
   LOGIN = "Login",
   SIGNUP = "Signup",
+
   TRANSFER_MONEY = "Transfer money",
   ADD_WALLET = "Add wallet",
   EDIT_WALLET = "Edit wallet",
