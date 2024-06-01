@@ -1,44 +1,31 @@
-import { i18n, LocalizationKey } from "@/Localization";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { HStack, Spinner, Heading } from "native-base";
-import { User } from "@/Services";
+import { ScrollView } from "react-native";
+import { Figure } from "./Figure";
+import { Wallet } from "@/Services/wallets";
+import { Transaction } from "@/Services/transactions";
+import { Report } from "./Report";
+import { Recent } from "./Recent";
 
 export interface IHomeProps {
-  data: User | undefined;
-  isLoading: boolean;
+	wallets: Wallet[],
+	transactions: Transaction[]
 }
 
-export const Home = (props: IHomeProps) => {
-  const { data, isLoading } = props;
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      {isLoading ? (
-        <HStack space={2} justifyContent="center">
-          <Spinner accessibilityLabel="Loading posts" />
-          <Heading color="primary.500" fontSize="md">
-            {i18n.t(LocalizationKey.LOADING)}
-          </Heading>
-        </HStack>
-      ) : (
-        <>
-          <Text>{i18n.t(LocalizationKey.HOME)}</Text>
-          <Heading color="primary.500" fontSize="md">
-            {data?.username}
-          </Heading>
-        </>
-      )}
-    </View>
-  );
-};
+export const Home = ({ wallets, transactions }: IHomeProps) => {
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+	const balance = wallets.reduce((total, wal) => total + wal.amount, 0);
+	const income = transactions.filter(trans => !trans.is_pay).reduce((total, trans) => total + trans.amount, 0);
+	const expense = transactions.filter(trans => trans.is_pay).reduce((total, trans) => total + trans.amount, 0);
+
+    return (
+      	<ScrollView>
+			<Figure 
+				balance={balance}
+				income={income}
+				expense={expense}
+			/>
+			<Report expenseTransactions={transactions.filter(trans => trans.is_pay)} />
+			{/* <Recent transactions={transactions}/> */}
+      	</ScrollView>
+    )
+};
