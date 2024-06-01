@@ -70,8 +70,36 @@ export enum LocalizationKey {
   VIEW_FINISHED_BUDGETS = "view-finished-budgets",
   VIEW_RUNNING_BUDGETS = "view-running-budgets",
 
+  WALLET_UNSELECTED = "wallet-unselected",
   CATEGORY_UNSELECTED = "category-unselected",
   ZERO_AMOUNT = "zero-amount",
   NOT_ENOUGH_MONEY = "not-enough-money",
   DELETE_CONFIRMATION = "delete-confirmation",
+
+  // home
+  CURRENT_BALANCE = "current-balance",
+  TOTAL_INCOME = "total-income",
+  TOTAL_EXPENSE = "total-expensse",
+  SPENDING_REPORT = "spending-report",
+  WEEK_EXPENSE = "week-expense",
+  MONTH_EXPENSE = "month-expense",
+  TOP_EXPENSE = "top-expense",
+  RECENT_TRANSACTIONS = "recent-transaction",
+  EDIT = "edit",
+  DELETE = "delete",
+
+  // wallet-related
+  TRANSFER_MONEY = "transfer-money",
+  FROM = "from",
+  TO = "to",
+  NOTE = "note",
+  OPTIONS = "options",
+  TODAY = "today",
+  NAME = "name",
+  TYPE = "type",
+  BALANCE = "balance",
+  ADD_NEW_WALLET = "add-new-wallet",
+
+  // error messages
+  ERROR_EMPTY = "error-empty",
 }
