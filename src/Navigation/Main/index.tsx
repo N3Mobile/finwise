@@ -15,7 +15,7 @@ import { NavigationProp } from "@react-navigation/native";
 const Tab = createMaterialBottomTabNavigator();
 export type BottomTabParamList = {
   [TabScreens.HOME]: undefined,
-  [TabScreens.TRANSACTIONS]: { start: string, end: string, category: string },
+  [TabScreens.TRANSACTIONS]: { start: string, end: string, category: string, wallet_id: string },
   [TabScreens.ADD]: undefined,
   [TabScreens.WALLETS]: undefined,
   [TabScreens.BUDGETS]: undefined
