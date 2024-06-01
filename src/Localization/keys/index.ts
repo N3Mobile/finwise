@@ -74,4 +74,14 @@ export enum LocalizationKey {
   ZERO_AMOUNT = "zero-amount",
   NOT_ENOUGH_MONEY = "not-enough-money",
   DELETE_CONFIRMATION = "delete-confirmation",
+
+  // home
+  CURRENT_BALANCE = "current-balance",
+  TOTAL_INCOME = "total-income",
+  TOTAL_EXPENSE = "total-expensse",
+  SPENDING_REPORT = "spending-report",
+  WEEK_EXPENSE = "week-expense",
+  MONTH_EXPENSE = "month-expense",
+  TOP_EXPENSE = "top-expense",
+  RECENT_TRANSACTIONS = "recent-transaction",
 }
