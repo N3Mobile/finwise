@@ -12,7 +12,8 @@ import { useCategoryIcon } from "@/Hooks/icon";
 import { Icon } from "react-native-paper";
 import { Wallet } from "@/Services/wallets";
 import { useFocusEffect } from "@react-navigation/native";
-
+import { Colors } from "@/Theme";
+import { LocalizationKey, i18n } from "@/Localization";
 
 const TransactionRecord = ({data, wallets} : {data : Transaction, wallets : Wallet[]}) => {
 
@@ -221,8 +222,8 @@ export const History = ({route} : {route : any}) => {
                 {<>{defaultRange.map((r, index) => {
                     return (
                     <TouchableOpacity activeOpacity={0.5} style={styles.defaultRangeBtn} key={r}>
-                        <Button mode="contained" buttonColor={range == r ? "cyan" : "grey"} onPress={() => changeDefaultRange(r)}>
-                            {r} ngày
+                        <Button mode="contained" buttonColor={range == r ? Colors.PRIMARY : Colors.INVERSE_PRIMARY} onPress={() => changeDefaultRange(r)}>
+                           <Text style={{height:'50%', color:'white'}}> {r} ngày</Text>
                         </Button>
                     </TouchableOpacity>
                     )
@@ -294,7 +295,7 @@ export const History = ({route} : {route : any}) => {
                         selectedValue={walletID}
                         onValueChange={(itemValue, itemIndex) => {setWalletID(itemValue)}}
                     >
-                        <Picker.Item label={"All"} value={"All"}/>
+                        <Picker.Item label={i18n.t(LocalizationKey.ALL)} value={"All"}/>
                         {Object.values(wallets).map((value, index)=>{
                             return (<Picker.Item label={value.name} value={value.id} key={value.id}/>)
                         })}
@@ -322,7 +323,7 @@ export const History = ({route} : {route : any}) => {
             {/* Search button */}
             <View style={{flex : 1, alignItems : 'center', justifyContent:'center', marginTop:'4%'}}>
                 <TouchableOpacity>
-                    <Button mode="contained" buttonColor="cyan" onPress={() => fetchWithCond()}>
+                    <Button mode="contained" buttonColor={Colors.PRIMARY} onPress={() => fetchWithCond()}>
                         Tìm kiếm
                     </Button>
                 </TouchableOpacity>
@@ -341,7 +342,6 @@ export const History = ({route} : {route : any}) => {
 
 const styles = StyleSheet.create({
     defaultRangeContainer : {
-        marginTop : '2%',
         flex : 1,
         flexDirection : 'row',
         alignContent : 'center',
