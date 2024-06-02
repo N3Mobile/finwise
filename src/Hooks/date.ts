@@ -55,7 +55,7 @@ export const usePeriod = (type: string) => {
     switch (type) {
         case PeriodType.WEEK:
             start = new Date(today);
-            start.setDate(today.getDate() - today.getDay() + 1);
+            start.setDate(today.getDate() - (today.getDay() === 0 ? 7 : today.getDay()) + 1);
             end = new Date(start);
             end.setDate(start.getDate() + 6);
             title = i18n.t(LocalizationKey.THIS_WEEK);
