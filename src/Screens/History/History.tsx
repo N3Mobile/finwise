@@ -47,7 +47,7 @@ const TransactionRecord = ({data, wallets} : {data : Transaction, wallets : Wall
                     <View style={{flex:7}}>
                             <Text style={{fontSize: 18, fontWeight: 'bold'}}>{icon[0]}</Text>
                             <Text style={{fontSize: 12, fontWeight: 'light', color:'grey'}}>{data.created_at}</Text>
-                            <Text style={{fontSize: 15, fontWeight: 'medium'}}>Ví: {getWalletName(data.wallet_id)}</Text>
+                            <Text style={{fontSize: 15, fontWeight: 'medium'}}>{getWalletName(data.wallet_id)}</Text>
                     </View>
 
                     <View style={{flex:7, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: '3%'}}>
@@ -222,8 +222,8 @@ export const History = ({route} : {route : any}) => {
                 {<>{defaultRange.map((r, index) => {
                     return (
                     <TouchableOpacity activeOpacity={0.5} style={styles.defaultRangeBtn} key={r}>
-                        <Button mode="contained" buttonColor={range == r ? Colors.PRIMARY : Colors.INVERSE_PRIMARY} onPress={() => changeDefaultRange(r)}>
-                           <Text style={{height:'50%', color:'white'}}> {r} ngày</Text>
+                        <Button mode="outlined" textColor={range == r ? "white" : 'black'} buttonColor={range == r ? "#FF5722" : "#FFFFFF"} onPress={() => changeDefaultRange(r)}>
+                           {r} ngày
                         </Button>
                     </TouchableOpacity>
                     )
@@ -323,7 +323,7 @@ export const History = ({route} : {route : any}) => {
             {/* Search button */}
             <View style={{flex : 1, alignItems : 'center', justifyContent:'center', marginTop:'4%'}}>
                 <TouchableOpacity>
-                    <Button mode="contained" buttonColor={Colors.PRIMARY} onPress={() => fetchWithCond()}>
+                    <Button mode="contained" buttonColor="#FF5722" onPress={() => fetchWithCond()}>
                         Tìm kiếm
                     </Button>
                 </TouchableOpacity>
