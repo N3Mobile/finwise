@@ -83,6 +83,7 @@ export const History = ({route} : {route : any}) => {
     const [numTransaction, setNumTransaction] = useState(-1);
     const [walletID, setWalletID] = useState(!walletId ? 'All' : walletId);
     const [wallets, setWallets] = useState<Wallet[]>([]);
+    const [firstLoad, setFirstLoad] = useState(true);
 
     const getFormattedDate = (date : Date) => {
         let day : string = String(date.getDate());
@@ -148,8 +149,6 @@ export const History = ({route} : {route : any}) => {
             //handle data
             setAllTransact(data);
             setNumTransaction(data.length);
-            
-            
         }catch(e){
             console.log(e)
         }
@@ -181,6 +180,7 @@ export const History = ({route} : {route : any}) => {
 
     useEffect(() => {
         changeDefaultRange(3);
+        setFirstLoad(false);
     }, []);
 
     useEffect(() => {
@@ -189,6 +189,7 @@ export const History = ({route} : {route : any}) => {
 
     useFocusEffect(
         useCallback(() => {
+
             const getWallet = async () => {
                 try{
                     let requestURL : string = `https://be-mobile-n3.onrender.com/wallets/byUsersId`;
@@ -208,6 +209,7 @@ export const History = ({route} : {route : any}) => {
         
             }
             getWallet();
+            if(!firstLoad) fetchData(startDate, endDate);
         }, [])
     );
     
