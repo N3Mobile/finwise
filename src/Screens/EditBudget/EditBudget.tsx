@@ -13,7 +13,7 @@ import { Colors } from "@/Theme";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Button, HelperText, List, Portal } from "react-native-paper";
+import { Button, HelperText, List, Portal } from "react-native-paper";
 
 interface Props {
     budget: Budget,
@@ -41,7 +41,8 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                     http.get('budgets/ranges', { wallet_id: walletId })
                 ]).then(([wal, buds]) => {
                     setWallet(wal);
-                    const total = buds
+
+                    const runningBuds = buds
                         .filter((bud: Budget) => {
 
                             const bud_start = parseDate(bud.start_date);
@@ -51,10 +52,9 @@ export const EditBudget: FC<Props> = ({ budget, wallets, setLoading, setError })
                                 compareDate(bud_start, start) === 0 && 
                                 compareDate(bud_end, end) === 0
                             )
-                        })
-                        .reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
-                    setTotalBudget(total);
-                    setUsedCategory(buds.map((bud: Budget) => bud.category));
+                        });
+                    setTotalBudget(runningBuds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0));
+                    setUsedCategory(runningBuds.map((bud: Budget) => bud.category));
                 }).catch(error => setError(error.toString()));
             } else {
                 console.log("Where wallet id?");

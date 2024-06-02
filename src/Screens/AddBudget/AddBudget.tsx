@@ -2,10 +2,9 @@ import { InputAmount } from "@/Components/InputAmount";
 import { SelectCategory } from "@/Components/SelectCategory";
 import { SelectPeriod } from "@/Components/SelectPeriod";
 import { SelectWallet } from "@/Components/SelectWallet";
-import { Category } from "@/Config/category";
 import { PeriodType } from "@/Config/period";
 import { http } from "@/Hooks/api";
-import { compareDate, getPeriodType, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
+import { compareDate, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
 import { useCategoryIcon, useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
 import { StackNavigation } from "@/Navigation";
@@ -15,7 +14,7 @@ import { Colors } from "@/Theme";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Button, HelperText, List, Portal } from "react-native-paper";
+import { Button, HelperText, List, Portal } from "react-native-paper";
 
 interface Props {
     initialWalletId: string,
@@ -53,15 +52,15 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
                     http.get('budgets/ranges', { wallet_id: walletId })
                 ]).then(([wal, buds]) => {
                     setWallet(wal);
-                    const total = buds
+
+                    const runningBuds = buds
                         .filter((bud: Budget) => {
                             const bud_start = parseDate(bud.start_date);
                             const bud_end = parseDate(bud.end_date);
                             return compareDate(bud_start, start) === 0 && compareDate(bud_end, end) === 0;
-                        })
-                        .reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
-                    setTotalBudget(total);
-                    setUsedCategory(buds.map((bud: Budget) => bud.category));
+                        });
+                    setTotalBudget(runningBuds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0));
+                    setUsedCategory(runningBuds.map((bud: Budget) => bud.category));
                 }).catch(error => setError(error.toString()));
             } else {
                 console.log("Where wallet id?");
