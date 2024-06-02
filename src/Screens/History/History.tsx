@@ -86,6 +86,7 @@ export const History = ({route} : {route : any}) => {
     const [wallets, setWallets] = useState<Wallet[]>([]);
     const [firstLoad, setFirstLoad] = useState(true);
 
+
     const getFormattedDate = (date : Date) => {
         let day : string = String(date.getDate());
         let month : string = String(date.getMonth() + 1);
@@ -163,7 +164,10 @@ export const History = ({route} : {route : any}) => {
         }
         else 
         {
-            setRange(endDate.getDate() - startDate.getDate());
+            const diffTime = Math.abs(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) 
+                                        - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()) );
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+            setRange(diffDays);
             fetchData(startDate, endDate);
         }
     }
@@ -173,10 +177,10 @@ export const History = ({route} : {route : any}) => {
         setRange(r);
         let end : Date = new Date();
         let start : Date = new Date();
-        start.setDate(start.getDate() - r);
+        start.setDate(start.getDate() - r + 1);
         setStartDate(start);
         setEndDate(end);
-        fetchData(start, end);
+        fetchData(start, end);  
     }
 
     useEffect(() => {
@@ -190,7 +194,7 @@ export const History = ({route} : {route : any}) => {
 
     useFocusEffect(
         useCallback(() => {
-
+            //console.log(route.params)
             const getWallet = async () => {
                 try{
                     let requestURL : string = `https://be-mobile-n3.onrender.com/wallets/byUsersId`;
