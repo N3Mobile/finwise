@@ -1,6 +1,40 @@
 import { LocalizationKey } from "../keys";
 
 export const vi = {
+  //onboarding
+  [LocalizationKey.ONBOARDING_TITLE_1]: "Quản lý mọi thứ ở một nơi",
+  [LocalizationKey.ONBOARDING_SUBTITLE_1]: "Theo dõi chi tiêu và phân loại theo nhu cầu",
+  [LocalizationKey.ONBOARDING_TITLE_2]: "Phân tích tài chính chi tiết",
+  [LocalizationKey.ONBOARDING_SUBTITLE_2]: "Xem báo cáo chi tiêu để hiểu rõ hơn về thói quen tài chính của bạn",
+  [LocalizationKey.ONBOARDING_TITLE_3]: "Đạt mục tiêu tài chính dễ dàng",
+  [LocalizationKey.ONBOARDING_SUBTITLE_3]: "Tiết kiệm nhiều hơn cho những thứ quan trọng hơn",
+  
+  //login
+  [LocalizationKey.LOGIN_PASSWORD_PLACEHOLDER]: "Mật khẩu",
+  [LocalizationKey.LOGIN_FORGOT_PASSWORD]: "Đổi mật khẩu",
+  [LocalizationKey.LOGIN_BUTTON]: "Đăng nhập",
+  [LocalizationKey.LOGIN_NO_ACCOUNT]: "Bạn chưa có tài khoản?",
+  [LocalizationKey.LOGIN_SIGNUP_LINK]: "Đăng ký",
+  [LocalizationKey.LOGIN_EMAIL_EMPTY]: "Email không được để trống.",
+  [LocalizationKey.LOGIN_PASSWORD_EMPTY]: "Mật khẩu phải có ít nhất 5 ký tự.",
+  [LocalizationKey.LOGIN_INVALID_CREDENTIALS]: "Email hoặc mật khẩu chưa hợp lệ",
+  [LocalizationKey.LOGIN_TRY_AGAIN]: "Hãy thử lại sau.",
+  [LocalizationKey.PASSWORD_MISMATCH]: "Mật khẩu không khớp.",
+  [LocalizationKey.PASSWORD_CHANGE_SUCCESS]: "Đổi mật khẩu thành công.",
+  [LocalizationKey.CURRENT_PASSWORD]: "Mật khẩu hiện tại",
+  [LocalizationKey.NEW_PASSWORD]: "Mật khẩu mới",
+  [LocalizationKey.CONFIRM_NEW_PASSWORD]: "Nhập lại mật khẩu",
+  [LocalizationKey.WANT_TO_GO_BACK]: "Bạn muốn quay lại?",
+  [LocalizationKey.GO_BACK]: "Trở về",
+  [LocalizationKey.SUCCESS]: "Thành công",
+  [LocalizationKey.NAME_REQUIRED]: "Tên không được để trống.",
+  [LocalizationKey.REGISTRATION_SUCCESS]: "Đăng ký thành công.",
+  [LocalizationKey.AGREEMENT_REQUIRED]: "Bạn phải đồng ý với Điều khoản sử dụng và Chính sách bảo mật.",
+  [LocalizationKey.REGISTRATION_TERMS]: "Với việc đăng ký, bạn đã đồng ý với Điều khoản sử dụng và chính sách bảo mật của chúng tôi.",
+  [LocalizationKey.SIGN_UP]: "Đăng ký",
+  [LocalizationKey.ALREADY_HAVE_ACCOUNT]: "Bạn đã có tài khoản?",
+  [LocalizationKey.NOTIFY]: "Thông báo",
+
   [LocalizationKey.WELCOME]: "Xin chào",
   [LocalizationKey.HOME]: "Trang chủ",
   [LocalizationKey.START]: "Bắt đầu",
