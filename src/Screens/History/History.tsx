@@ -7,7 +7,7 @@ import { Picker } from "@react-native-picker/picker";
 import { ScrollView } from "native-base";
 import { HStack, Spinner } from "native-base";
 import axios from "axios";
-import { Category } from "@/Config/category";
+import { Category, ExpenseCategory, IncomeCategory } from "@/Config/category";
 import { useCategoryIcon } from "@/Hooks/icon";
 import { Icon } from "react-native-paper";
 import { Wallet } from "@/Services/wallets";
@@ -54,7 +54,7 @@ const TransactionRecord = ({data, wallets, setModTransactID} : {data : Transacti
                     </View>
 
                     <View style={{flex:7, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: '3%'}}>
-                            <Text style={{fontSize:20, fontWeight:'bold'}}>{data.is_pay ? '-' : '+'} {formatAmount(data.amount)} đ</Text>
+                            <Text style={{fontSize:19, fontWeight:'bold'}}>{data.is_pay ? '-' : '+'} {formatAmount(data.amount)} đ</Text>
                     </View>
                 </TouchableOpacity>
     );
@@ -103,9 +103,9 @@ const WalletList = ({setter, selectedValue, wallets, includeAll} : {setter : any
     )
 }
 
-const CategoryList = ({setter, selectedValue, includeAll} : {setter : any, selectedValue : string, includeAll : boolean}) =>{
-    let categories = Object.values(Category).reverse();
-    if(!includeAll) categories.splice(0, 1);
+const CategoryList = ({setter, selectedValue, type} : {setter : any, selectedValue : string, type : string}) =>{
+    let categories = (type == 'ALL' ? Object.values(Category).reverse() : 
+                        (type == 'in' ? Object.values(IncomeCategory) : Object.values(ExpenseCategory)))
     return (
         <View style={{flex : 1}}>
                 
@@ -141,7 +141,6 @@ export const History = ({route} : {route : any}) => {
     const [wallets, setWallets] = useState<Wallet[]>([]);
     const [firstLoad, setFirstLoad] = useState(true);
     const [modTransactID, setModTransactID] = useState('');
-    const [modTransactPopup, setModTransactPopup] = useState(false);
     const [modRequestRes, setModRequestRes] = useState('');
     const [modTransactWallet, setModTransactWallet] = useState('');
     const [modTransactCategory, setModTransactCategory] = useState('');
@@ -330,7 +329,6 @@ export const History = ({route} : {route : any}) => {
 
     const clearModPopup = () => {
         setModTransactID('');
-        setModTransactPopup(false);
     }
 
     
@@ -406,38 +404,13 @@ export const History = ({route} : {route : any}) => {
                 </View>
             </Modal>
             
-            {/* choose to delete or modify transact */}
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={(modTransactID != '' && wallets.length > 0)}
-                onRequestClose={() => {
-                    setModTransactID('')
-                }}>
-                <View style={[styles.modal, {alignItems:'center'}]}>
-                    <View style={{flex:3, width:'100%'}} onTouchStart={() => clearModPopup()}></View>
-                    <View style={{flex:1, borderWidth:1, backgroundColor:'rgba(200, 255, 255, 1)', borderRadius:5, width:'90%'}}>
-                        <TouchableOpacity onPress={()=>{setModTransactPopup(true)}} activeOpacity={0.5} style={styles.modChooseModal}>
-                            <Text style={{fontSize:20}}>
-                                Chỉnh sửa
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => deleteTransact()} activeOpacity={0.5} style={[styles.modChooseModal, {borderBottomWidth:0}]}>
-                            <Text style={{fontSize:20, color:'#FF0000', fontWeight:'bold'}}>
-                                Xóa
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{flex:3, width:'100%'}} onTouchStart={() => clearModPopup()}></View>
-                </View>
-            </Modal>
             
             {/* Modify transaction */}
             <Modal
                 animationType="fade"
                 statusBarTranslucent={true}
                 transparent={true}
-                visible={modTransactPopup}
+                visible={(modTransactID != '' && wallets.length > 0)}
                 onRequestClose={() => {
                     setModTransactID('')
                 }}>
@@ -469,7 +442,9 @@ export const History = ({route} : {route : any}) => {
                             </View>
                             <View style={{flex:5, justifyContent:'center'}}>
                                 <View style={{flex:1, justifyContent:'center'}}>
-                                    <CategoryList setter={setModTransactCategory} selectedValue={modTransactCategory} includeAll={false}/>
+                                    <CategoryList setter={setModTransactCategory} 
+                                                  selectedValue={modTransactCategory} 
+                                                  type={(modTransactType ? 'out' : 'in')}/>
                                 </View>
                             </View>
                         </View>
@@ -510,12 +485,23 @@ export const History = ({route} : {route : any}) => {
                         <View style={{flex:1.5, flexDirection:'row'}}>
                             <View style={{flex : 1, justifyContent:'center', alignItems:'center'}}>
                                 <TouchableOpacity activeOpacity={0.5}>
-                                    <Button onPress={()=>clearModPopup()} buttonColor="#2596a1" style={{width:110}} mode="contained">Hủy</Button>
+                                    <Button onPress={()=>deleteTransact()} 
+                                    buttonColor="#dc3545" 
+                                    labelStyle={{fontSize:15}}
+                                    style={{width:120}} 
+                                    mode="contained">
+                                        Xóa
+                                    </Button>
                                 </TouchableOpacity>
                             </View>
                             <View style={{flex : 1, justifyContent:'center', alignItems:'center'}}>
                                 <TouchableOpacity>
-                                    <Button onPress={()=>modifyTransact()} style={{width:110}} mode="contained">Xác nhận</Button>
+                                    <Button onPress={()=>modifyTransact()} 
+                                    style={{width:120}} 
+                                    labelStyle={{fontSize:15}}
+                                    mode="contained">
+                                        Chỉnh sửa
+                                    </Button>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -531,7 +517,7 @@ export const History = ({route} : {route : any}) => {
             <View style={{marginBottom:'2%'}}></View>
 
             {/* Drop down category */}
-            <CategoryList setter={setTransactionCategory} selectedValue={transactionCategory} includeAll={true}/>
+            <CategoryList setter={setTransactionCategory} selectedValue={transactionCategory} type="ALL"/>
 
             
             {/* Search button */}
