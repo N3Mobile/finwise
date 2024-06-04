@@ -17,8 +17,7 @@ interface Props {
 
 export const SelectCategory: FC<Props> = ({ visible, setVisible, all, income, expense, setCategory }) => {
 
-    function onSelect(categoryKey: string) {
-        const category = i18n.t(LocalizationKey[categoryKey.replace(/-/g, '_').toUpperCase() as keyof typeof LocalizationKey]);
+    function onSelect(category: string) {
         setCategory(category);
         setVisible(false);
     }
