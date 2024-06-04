@@ -77,19 +77,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: 300,
-    height: 300,
   },
   lottie: {
-    width: 400,
-    height: 400,
+    width: 300,
+    height: 300,
+    
   },
   title: {
-    fontSize: 30,
+    
     fontWeight: "bold",
     color: "#120068",
     textAlign: "center",
@@ -99,7 +94,7 @@ const styles = StyleSheet.create({
   subTitle: {
     marginRight: 50,
     marginLeft: 50,
-    fontSize: 15,
+  
     color: "#120068",
     textAlign: "center",
     margin: 30,
