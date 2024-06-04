@@ -47,7 +47,7 @@ export const MainNavigator = () => {
 
         name={TabScreens.TRANSACTIONS}
         component={History}
-        initialParams={{ start: (new Date(-8640000000000000)).toDateString(), end: new Date().toDateString(), category: "all", walletId: '' }}
+        initialParams={{ start: (new Date(-1)).toDateString(), end: new Date().toDateString(), category: "all", walletId: '' }}
 
         options={{
           tabBarLabel: i18n.t(LocalizationKey.TRANSACTIONS),

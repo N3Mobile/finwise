@@ -1,5 +1,5 @@
 export interface Transaction {
-    id: number,
+    id: string,
     wallet_id: string,
     category: string,
     amount: number,
