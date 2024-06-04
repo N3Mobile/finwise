@@ -24,7 +24,7 @@ export const vi = {
   [LocalizationKey.CURRENT_PASSWORD]: "Mật khẩu hiện tại",
   [LocalizationKey.NEW_PASSWORD]: "Mật khẩu mới",
   [LocalizationKey.CONFIRM_NEW_PASSWORD]: "Nhập lại mật khẩu",
-  [LocalizationKey.WANT_TO_GO_BACK]: "Bạn muốn quay lại?",
+  [LocalizationKey.WANT_TO_GO_BACK]: "Bạn muốn quay lại? ",
   [LocalizationKey.GO_BACK]: "Trở về",
   [LocalizationKey.SUCCESS]: "Thành công",
   [LocalizationKey.NAME_REQUIRED]: "Tên không được để trống.",

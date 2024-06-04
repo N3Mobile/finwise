@@ -90,10 +90,16 @@ const ApplicationNavigator = () => {
           <RootStack.Screen
             name={RootScreens.LOGIN}
             component={LoginContainer}
+            options={{
+              headerShown: false,
+            }}
           />
           <RootStack.Screen
             name={RootScreens.SIGNUP}
             component={SignupContainer}
+            options={{
+              headerShown:false,
+            }}
           />
           
           <RootStack.Screen 
@@ -127,6 +133,9 @@ const ApplicationNavigator = () => {
           <RootStack.Screen
         name={RootScreens.PASSWORDCHANGE}
         component={PasswordChangeContainer}
+        options={{
+          headerShown:false,
+        }}
       />
           <RootStack.Screen
             name={RootScreens.TEST}
@@ -167,10 +176,16 @@ const ApplicationNavigator = () => {
           <RootStack.Screen
             name={RootScreens.LOGIN}
             component={LoginContainer}
+            options={{
+              headerShown:false,
+            }}
           />
           <RootStack.Screen
             name={RootScreens.SIGNUP}
             component={SignupContainer}
+            options={{
+              headerShown:false,
+            }}
           />
           
           <RootStack.Screen 
@@ -204,6 +219,9 @@ const ApplicationNavigator = () => {
           <RootStack.Screen
         name={RootScreens.PASSWORDCHANGE}
         component={PasswordChangeContainer}
+        options={{
+          headerShown:false,
+        }}
       />
           <RootStack.Screen
             name={RootScreens.TEST}

@@ -11,10 +11,10 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import { Logo } from "@/Components"; // Assuming you've correctly imported and defined the Logo component
+import { Logo } from "@/Components";
 import { RootScreens } from "@/Screens";
 import { Colors } from "@/Theme";
-import { Button, TextInput, Checkbox } from "react-native-paper";
+import { Button, TextInput, Checkbox, Appbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
@@ -60,7 +60,8 @@ export const SignupContainer = () => {
 
   const passwordValidator = (password: string): string => {
     // if (!password) return "Mật khẩu không được để trống.";
-    if (password.length < 5) return i18n.t(LocalizationKey.LOGIN_PASSWORD_EMPTY);
+    if (password.length < 5)
+      return i18n.t(LocalizationKey.LOGIN_PASSWORD_EMPTY);
     return "";
   };
 
@@ -87,7 +88,9 @@ export const SignupContainer = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
     const confirmPasswordError =
-      confirmPassword.value !== password.value ? i18n.t(LocalizationKey.PASSWORD_MISMATCH) : "";
+      confirmPassword.value !== password.value
+        ? i18n.t(LocalizationKey.PASSWORD_MISMATCH)
+        : "";
 
     setName({ ...name, error: nameError });
     setEmail({ ...email, error: emailError });
@@ -110,15 +113,24 @@ export const SignupContainer = () => {
             password: password.value,
           }
         );
-        
-        Alert.alert(i18n.t(LocalizationKey.SUCCESS),i18n.t(LocalizationKey.REGISTRATION_SUCCESS))
+
+        Alert.alert(
+          i18n.t(LocalizationKey.SUCCESS),
+          i18n.t(LocalizationKey.REGISTRATION_SUCCESS)
+        );
         navigation.navigate(RootScreens.MAIN);
       } catch (error) {
         console.error(error);
-        setPassword({ ...password, error: i18n.t(LocalizationKey.LOGIN_TRY_AGAIN) });
+        setPassword({
+          ...password,
+          error: i18n.t(LocalizationKey.LOGIN_TRY_AGAIN),
+        });
       }
     } else if (!checked) {
-      Alert.alert(i18n.t(LocalizationKey.NOTIFY),i18n.t(LocalizationKey.AGREEMENT_REQUIRED));
+      Alert.alert(
+        i18n.t(LocalizationKey.NOTIFY),
+        i18n.t(LocalizationKey.AGREEMENT_REQUIRED)
+      );
     }
   };
 
@@ -131,6 +143,10 @@ export const SignupContainer = () => {
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title={i18n.t(LocalizationKey.SIGN_UP)} />
+      </Appbar.Header>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
@@ -206,14 +222,14 @@ export const SignupContainer = () => {
 
             <View style={styles.checkboxContainer}>
               <View style={styles.backgroundcheckbox}>
-              <Checkbox
-                status={checked ? "checked" : "unchecked"}
-                onPress={() => setChecked(!checked)}
-                color={Colors.SUFACE_TINT_COLOR}
-                uncheckedColor={Colors.SUFACE_TINT_COLOR}
-              />
+                <Checkbox
+                  status={checked ? "checked" : "unchecked"}
+                  onPress={() => setChecked(!checked)}
+                  color={Colors.SUFACE_TINT_COLOR}
+                  uncheckedColor={Colors.SUFACE_TINT_COLOR}
+                />
               </View>
-             
+
               <Text style={styles.checkboxText}>
                 {/* Với việc đăng ký, bạn đã đồng ý với{" "}
                 <Text style={styles.linkText}>Điều khoản sử dụng</Text> và{" "}
@@ -237,7 +253,9 @@ export const SignupContainer = () => {
             <View style={styles.row}>
               <Text>{i18n.t(LocalizationKey.ALREADY_HAVE_ACCOUNT)} </Text>
               <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Text style={styles.link}>{i18n.t(LocalizationKey.LOGIN_BUTTON)}</Text>
+                <Text style={styles.link}>
+                  {i18n.t(LocalizationKey.LOGIN_BUTTON)}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -327,10 +345,10 @@ const styles = StyleSheet.create({
   linkText: {
     color: Colors.PRIMARY,
   },
-  backgroundcheckbox:{
-    backgroundColor: 'lightgray',
-    borderRadius:16,
-  }
+  backgroundcheckbox: {
+    backgroundColor: "lightgray",
+    borderRadius: 16,
+  },
 });
 
 export default SignupContainer;

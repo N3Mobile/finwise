@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Keyboard, TouchableWithoutFeedback, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { Logo } from '@/Components';
-import { RootScreens } from '@/Screens';
-import { Colors } from '@/Theme';
-import { Button, TextInput } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import axios from 'axios';
-import { useUser } from '@/Components/UserContext';
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Keyboard,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { Logo } from "@/Components";
+import { RootScreens } from "@/Screens";
+import { Colors } from "@/Theme";
+import { Button, TextInput, Appbar } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import axios from "axios";
+import { useUser } from "@/Components/UserContext";
 import { LocalizationKey, i18n } from "@/Localization";
 interface State {
   value: string;
@@ -24,56 +34,62 @@ export type RootStackParamList = {
 };
 
 export const LoginContainer = () => {
-  const [email, setEmail] = useState<State>({ value: '', error: '' });
-  const [password, setPassword] = useState<State>({ value: '', error: '' });
-  const [submitted, setSubmitted] = useState(false); 
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [email, setEmail] = useState<State>({ value: "", error: "" });
+  const [password, setPassword] = useState<State>({ value: "", error: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { setUserId } = useUser();
   const emailValidator = (email: string): string => {
     const re = /\S+@\S+\.\S+/;
     if (!email) return i18n.t(LocalizationKey.LOGIN_EMAIL_EMPTY);
     // if (!re.test(email)) return 'Địa chỉ email chưa hợp lệ.';
-    return '';
+    return "";
   };
   const passwordValidator = (password: string): string => {
-    if (password.length < 5) return i18n.t(LocalizationKey.LOGIN_PASSWORD_EMPTY);
-    return '';
+    if (password.length < 5)
+      return i18n.t(LocalizationKey.LOGIN_PASSWORD_EMPTY);
+    return "";
   };
 
   const handleEmailChange = (email: string) => {
-    setEmail({ value: email, error: '' });
+    setEmail({ value: email, error: "" });
   };
 
   const handlePasswordChange = (password: string) => {
-    setPassword({ value: password, error: '' });
+    setPassword({ value: password, error: "" });
   };
 
   const onLoginPressed = async () => {
-  setSubmitted(true); 
+    setSubmitted(true);
 
-  const emailError = emailValidator(email.value);
-  const passwordError = passwordValidator(password.value);
+    const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
 
-  setEmail({ ...email, error: emailError });
-  setPassword({ ...password, error: passwordError });
+    setEmail({ ...email, error: emailError });
+    setPassword({ ...password, error: passwordError });
 
-  if (emailError || passwordError) return;
+    if (emailError || passwordError) return;
 
-  const url = `https://be-mobile-n3.onrender.com/Users/login?email=${encodeURIComponent(email.value)}&password=${encodeURIComponent(password.value)}`;
+    const url = `https://be-mobile-n3.onrender.com/Users/login?email=${encodeURIComponent(
+      email.value
+    )}&password=${encodeURIComponent(password.value)}`;
 
-  try {
-    const response = await axios.get(url);
-    const user = response.data;
+    try {
+      const response = await axios.get(url);
+      const user = response.data;
 
-    if (user && user.id) {
-      setUserId(user.id);
-      navigation.navigate(RootScreens.MAIN);
-    } 
-  } catch (error) {
-    setPassword({ ...password, error: i18n.t(LocalizationKey.LOGIN_INVALID_CREDENTIALS)})
-  }
-};
-  
+      if (user && user.id) {
+        setUserId(user.id);
+        navigation.navigate(RootScreens.MAIN);
+      }
+    } catch (error) {
+      setPassword({
+        ...password,
+        error: i18n.t(LocalizationKey.LOGIN_INVALID_CREDENTIALS),
+      });
+    }
+  };
 
   const handlePressOutside = () => {
     Keyboard.dismiss();
@@ -82,9 +98,15 @@ export const LoginContainer = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+      <Appbar.Header>
+        <Appbar.Content title={i18n.t(LocalizationKey.LOGIN_BUTTON)} />
+      </Appbar.Header>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <TouchableWithoutFeedback onPress={handlePressOutside}>
           <View style={styles.container}>
             <Logo style={styles.image} />
@@ -100,9 +122,11 @@ export const LoginContainer = () => {
               keyboardType="email-address"
               style={[styles.input, password.error ? styles.inputError : null]}
               contentStyle={styles.content}
-              activeUnderlineColor='gray'
+              activeUnderlineColor="gray"
             />
-            {submitted && email.error ? <Text style={styles.errorText}>{email.error}</Text> : null}
+            {submitted && email.error ? (
+              <Text style={styles.errorText}>{email.error}</Text>
+            ) : null}
             <TextInput
               placeholder={i18n.t(LocalizationKey.LOGIN_PASSWORD_PLACEHOLDER)}
               returnKeyType="done"
@@ -113,14 +137,18 @@ export const LoginContainer = () => {
               secureTextEntry
               style={[styles.input, password.error ? styles.inputError : null]}
               contentStyle={styles.content}
-              activeUnderlineColor='gray'
+              activeUnderlineColor="gray"
             />
-            {submitted && password.error ? <Text style={styles.errorText}>{password.error}</Text> : null}
+            {submitted && password.error ? (
+              <Text style={styles.errorText}>{password.error}</Text>
+            ) : null}
             <View style={styles.forgotPassword}>
               <TouchableOpacity
                 onPress={() => navigation.navigate(RootScreens.PASSWORDCHANGE)}
               >
-                <Text style={styles.forgot}>{i18n.t(LocalizationKey.LOGIN_FORGOT_PASSWORD)}</Text>
+                <Text style={styles.forgot}>
+                  {i18n.t(LocalizationKey.LOGIN_FORGOT_PASSWORD)}
+                </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.login} onPress={onLoginPressed}>
@@ -139,7 +167,9 @@ export const LoginContainer = () => {
               <TouchableOpacity
                 onPress={() => navigation.navigate(RootScreens.SIGNUP)}
               >
-                <Text style={styles.link}>{i18n.t(LocalizationKey.LOGIN_SIGNUP_LINK)}</Text>
+                <Text style={styles.link}>
+                  {i18n.t(LocalizationKey.LOGIN_SIGNUP_LINK)}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -151,25 +181,25 @@ export const LoginContainer = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 24,
   },
   input: {
     height: 40,
-    width: '80%',
-    borderColor: 'gray',
+    width: "80%",
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 8,
     padding: 8,
     marginVertical: 12,
-    backgroundColor:Colors.NEUTRAL99,
+    backgroundColor: Colors.NEUTRAL99,
   },
   content: {
     fontSize: 18,
@@ -187,32 +217,32 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   button: {
-    width: '80%',
+    width: "80%",
     padding: 6,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 4,
-    marginBottom:40,
+    marginBottom: 40,
   },
   link: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   login: {
     marginTop: 60,
     marginBottom: 12,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   forgotPassword: {
-    width: '80%',
-    alignItems: 'flex-end',
+    width: "80%",
+    alignItems: "flex-end",
     marginBottom: 24,
   },
 
   forgot: {
     fontSize: 13,
-    color: '#bbbbbb',
+    color: "#bbbbbb",
   },
 });
