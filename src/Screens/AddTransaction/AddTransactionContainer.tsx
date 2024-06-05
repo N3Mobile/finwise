@@ -18,6 +18,7 @@ import { SelectWallet } from "@/Components/SelectWallet";
 import axios from "axios";
 import { ScreenWrapper } from "@/Components";
 import { useCategoryIcon } from "@/Hooks/icon";
+import { useUser } from "@/Components/UserContext";
 const CurrencyDisplay = () => (
   <View style={styles.currencyContainer}>
     <Text style={styles.currencyText}>{i18n.t(LocalizationKey.UNIT)}</Text>
@@ -44,6 +45,7 @@ export const AddTransactionContainer = () => {
   const [loadingWalletId, setLoadingWalletId] = useState(true);
   const [error, setError] = useState("");
   const [name, icon, color] = useCategoryIcon(selectedCategory);
+  const { userId } = useUser();
   const handleAmountChange = (value: string) => {
     let numericValue = value.replace(/[^0-9.]/g, "");
     if (
@@ -89,9 +91,9 @@ export const AddTransactionContainer = () => {
     setLoadingWallets(true);
     setError("");
 
-    try {
+     try {
       const response = await axios.get(
-        `https://be-mobile-n3.onrender.com/wallets/byUsersId?user_ID=66237fef97705968270a6dab`
+        `https://be-mobile-n3.onrender.com/wallets/byUsersId?user_ID=${userId}`
       );
       const wallet = response.data;
       setWallets(wallet);
