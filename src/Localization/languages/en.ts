@@ -117,6 +117,16 @@ export const en = {
   [LocalizationKey.RECENT_TRANSACTIONS]: "Recent Transactions",
   [LocalizationKey.EDIT]: "Edit",
   [LocalizationKey.DELETE]: "Delete",
+
+  [LocalizationKey.ACCOUNT]: "Account",
+  [LocalizationKey.LANGUAGE]: "Language",
+  [LocalizationKey.ENGLISH]: "English",
+  [LocalizationKey.VIETNAMESE]: "Vietnamese",
+  [LocalizationKey.CHANGE_LANGUAGE_EN]: "Change language to English?",
+  [LocalizationKey.CHANGE_LANGUAGE_VI]: "Change language to Vietnamese?",
+  [LocalizationKey.CHANGE_PASSWORD]: "Change password",
+  [LocalizationKey.DELETE_ACCOUNT]: "Delete account",
+  [LocalizationKey.DELETE_ACCOUNT_CONFIRM]: "Are you sure you want to delete your account (all records will be lost and cannot be restored)?",
   
   [LocalizationKey.TRANSFER_MONEY]: "Transfer money",
   [LocalizationKey.FROM]: "From",
@@ -135,4 +145,8 @@ export const en = {
   [LocalizationKey.TRANSACTION_TYPE]:"Transaction type",
   [LocalizationKey.UNIT]:"$",
   [LocalizationKey.CREATE_TRANSACTION]:"Creat transaction",
+
+  [LocalizationKey.START_DATE]: "Start date",
+  [LocalizationKey.END_DATE]: "End date",
+  [LocalizationKey.TRANSACTION_DETAILS]: "Transaction details",
 };

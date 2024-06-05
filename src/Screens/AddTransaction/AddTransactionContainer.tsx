@@ -19,6 +19,7 @@ import axios from "axios";
 import { ScreenWrapper } from "@/Components";
 import { useCategoryIcon } from "@/Hooks/icon";
 import { useUser } from "@/Components/UserContext";
+import { newDataComing } from "../History/newTransactComing";
 const CurrencyDisplay = () => (
   <View style={styles.currencyContainer}>
     <Text style={styles.currencyText}>{i18n.t(LocalizationKey.UNIT)}</Text>
@@ -160,6 +161,7 @@ export const AddTransactionContainer = () => {
         Alert.alert("Thành công", "Giao dịch đã được lưu");
         fetchWallets();
         fetchWalletId();
+        newDataComing.newTransact = true;
       } else {
         Alert.alert("Lỗi", "Không thể lưu giao dịch");
       }

@@ -10,6 +10,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Icon, List, Portal, TextInput } from "react-native-paper";
+import { newDataComing } from "../History/newTransactComing";
 
 interface Props {
     walletId: string,
@@ -66,6 +67,7 @@ export const EditWallet: FC<Props> = ({ walletId, setLoading, setError }) => {
                     })
                         .then(data => {
                             console.log("fulfilled", data);
+                            newDataComing.newWallet = true;
                             setLoading(false);
                             navigation.goBack();
                         })

@@ -13,10 +13,12 @@ import { Colors } from "@/Theme";
 import { EmptyIllustration } from "@/Components/EmptyIllustration";
 import { Language, LocalizationKey, i18n } from "@/Localization";
 import { StackNavigation } from "@/Navigation";
+import { useUser } from "@/Components/UserContext";
 
 export const BudgetsContainer = () => {
     const navigation = useNavigation<TabNavigation>();
     const stackNavigation = useNavigation<StackNavigation>();
+    const { userId } = useUser();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -28,7 +30,7 @@ export const BudgetsContainer = () => {
     useFocusEffect(
         useCallback(() => {
             setError("");
-            http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" })
+            http.get('wallets/byUsersId', { user_ID: userId })
                 .then(data => {
                     setWallets(data);
                 })

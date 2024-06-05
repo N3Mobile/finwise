@@ -13,6 +13,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { http } from "@/Hooks/api";
 import { Category } from "@/Config/category";
 import { StackNavigation } from "@/Navigation";
+import { newDataComing } from "../History/newTransactComing";
 
 interface Props {
     wallets: Wallet[],
@@ -103,6 +104,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                 note_info: `Transfer money from ${fromName}`
             })
         ]).then(([from, to]) => {
+            newDataComing.newTransact = true;
             setLoading(false);
             navigation.goBack();
         }).catch(error => setError(error.toString()));

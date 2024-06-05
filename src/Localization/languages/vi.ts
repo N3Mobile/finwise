@@ -119,6 +119,16 @@ export const vi = {
   [LocalizationKey.EDIT]: "Chỉnh sửa",
   [LocalizationKey.DELETE]: "Xóa",
 
+  [LocalizationKey.ACCOUNT]: "Tài khoản",
+  [LocalizationKey.LANGUAGE]: "Ngôn ngữ",
+  [LocalizationKey.ENGLISH]: "Tiếng Anh",
+  [LocalizationKey.VIETNAMESE]: "Tiếng Việt",
+  [LocalizationKey.CHANGE_LANGUAGE_EN]: "Đổi ngôn ngữ sang tiếng Anh?",
+  [LocalizationKey.CHANGE_LANGUAGE_VI]: "Đổi ngôn ngữ sang tiếng Việt?",
+  [LocalizationKey.CHANGE_PASSWORD]: "Đổi mật khẩu",
+  [LocalizationKey.DELETE_ACCOUNT]: "Xóa tài khoản",
+  [LocalizationKey.DELETE_ACCOUNT_CONFIRM]: "Bạn có chắc chắn muốn xóa tài khoản (toàn bộ thông tin sẽ bị xóa và không thể khôi phục)?",
+
   [LocalizationKey.TRANSFER_MONEY]: "Chuyển tiền qua ví khác",
   [LocalizationKey.FROM]: "Từ",
   [LocalizationKey.TO]: "Đến",
@@ -136,4 +146,8 @@ export const vi = {
   [LocalizationKey.TRANSACTION_TYPE]:"Loại giao dịch",
   [LocalizationKey.UNIT]:"VND",
   [LocalizationKey.CREATE_TRANSACTION]: "Tạo giao dịch",
+
+  [LocalizationKey.START_DATE]: "Ngày bắt đầu",
+  [LocalizationKey.END_DATE]: "Ngày kết thúc",
+  [LocalizationKey.TRANSACTION_DETAILS]: "Thông tin giao dịch",
 };
