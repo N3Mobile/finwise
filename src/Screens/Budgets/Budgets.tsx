@@ -44,8 +44,9 @@ export const Budgets: FC<Props> = ({ selectedWalletId, setSelectedWalletId, wall
     return (
         <FlatList
             data={budgets.filter(bud => {
-                const today = new Date();
-                return compareDate(today, start) >= 0 && compareDate(today, end) <= 0;
+                const bud_start = parseDate(bud.start_date);
+                const bud_end = parseDate(bud.end_date);
+                return compareDate(bud_start, start) === 0 && compareDate(bud_end, end) === 0;
             })}
             renderItem={({ item }) =>
                 <BudgetItem

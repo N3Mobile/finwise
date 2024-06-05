@@ -98,16 +98,14 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
             http.post('transaction', {}, {
                 wallet_id: toWalletId,
                 category: Category.INCOMING_TRANSFER,
-                amount: amount,
+                amount: parseFloat(amount.replace(/[^0-9.]/g, '')),
                 is_pay: false,
                 note_info: `Transfer money from ${fromName}`
             })
         ]).then(([from, to]) => {
             setLoading(false);
             navigation.goBack();
-        }).catch(([from, to]) => {
-            from ? setError(from): setError(to);
-        });
+        }).catch(error => setError(error.toString()));
     }
 
     return (
@@ -123,7 +121,7 @@ export const TransferMoney: FC<Props> = ({ wallets, walletId, setLoading, setErr
                 onPress={() => setInputAmountVisible(true)}
                 >
                     <Text style={{ fontSize: 40 }}>
-                        {amount ? parseFloat(amount).toLocaleString('en') : '...'}
+                        {amount ? parseFloat(amount.replace(/[^0-9.]/g, '')).toLocaleString('en') : '...'}
                     </Text>
                 </TouchableOpacity>
                 <HelperText type="error" visible style={{ display: zeroAmount || notEnough ? 'flex' : 'none' }}>
