@@ -206,24 +206,6 @@ export const AddTransactionContainer = () => {
                 descriptionStyle={styles.description}
                 onPress={() => setIsWalletListVisible(!isWalletListVisible)}
               />
-              {/* <List.Item
-              title={i18n.t(LocalizationKey.WALLET_BALANCE)}
-              description={balance.toString()}
-              left={() => (
-                <List.Icon
-                  color={
-                    transactionType === "Thu"
-                      ? Colors.SUFACE_TINT_COLOR
-                      : Colors.ERROR60
-                  }
-                  icon="cash"
-                />
-              )}
-              right={() => <CurrencyDisplay />}
-              style={styles.listItem}
-              titleStyle={styles.title}
-              descriptionStyle={styles.description}
-            /> */}
               <List.Item
                 title={i18n.translate(LocalizationKey.TRANSACTION_TYPE)}
                 titleStyle={styles.description}
@@ -312,6 +294,33 @@ export const AddTransactionContainer = () => {
                 right={() => <CurrencyDisplay />}
                 style={styles.listItem}
               />
+               <List.Item
+                title={i18n.t(LocalizationKey.NOTE)}
+                titleStyle={styles.title}
+                descriptionStyle={styles.description}
+                description={() => (
+                  <TextInput
+                    style={styles.description}
+                    maxLength={30}
+                    autoFocus={false}
+                    value={note}
+                    onChangeText={setNote}
+                    editable={true}
+                    defaultValue={i18n.t(LocalizationKey.NOTE)}
+                  />
+                )}
+                left={() => (
+                  <List.Icon
+                    color={
+                      transactionType === "Thu"
+                        ? Colors.SUFACE_TINT_COLOR
+                        : Colors.ERROR60
+                    }
+                    icon="note-edit-outline"
+                  />
+                )}
+                style={styles.listItem}
+              />
               <List.Item
                 title={i18n.t(LocalizationKey.CATEGORY)}
                 titleStyle={styles.title}
@@ -357,47 +366,21 @@ export const AddTransactionContainer = () => {
                     icon="calendar"
                   />
                 )}
-                right={() => (
-                  <List.Icon
-                    color={
-                      transactionType === "Thu"
-                        ? Colors.SUFACE_TINT_COLOR
-                        : Colors.ERROR60
-                    }
-                    icon="chevron-right"
-                  />
-                )}
+                // right={() => (
+                //   <List.Icon
+                //     color={
+                //       transactionType === "Thu"
+                //         ? Colors.SUFACE_TINT_COLOR
+                //         : Colors.ERROR60
+                //     }
+                //     icon="chevron-right"
+                //   />
+                // )}
                 style={styles.listItem}
-                onPress={() => setIsCalendarVisible(true)}
+                // onPress={() => setIsCalendarVisible(true)}
               />
 
-              <List.Item
-                title={i18n.t(LocalizationKey.NOTE)}
-                titleStyle={styles.title}
-                descriptionStyle={styles.description}
-                description={() => (
-                  <TextInput
-                    style={styles.description}
-                    maxLength={30}
-                    autoFocus={false}
-                    value={note}
-                    onChangeText={setNote}
-                    editable={true}
-                    defaultValue={i18n.t(LocalizationKey.NOTE)}
-                  />
-                )}
-                left={() => (
-                  <List.Icon
-                    color={
-                      transactionType === "Thu"
-                        ? Colors.SUFACE_TINT_COLOR
-                        : Colors.ERROR60
-                    }
-                    icon="note-edit-outline"
-                  />
-                )}
-                style={styles.listItem}
-              />
+             
               <Modal
                 animationType="fade"
                 transparent={true}
