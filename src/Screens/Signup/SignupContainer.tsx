@@ -118,7 +118,7 @@ export const SignupContainer = () => {
           i18n.t(LocalizationKey.SUCCESS),
           i18n.t(LocalizationKey.REGISTRATION_SUCCESS)
         );
-        navigation.navigate(RootScreens.MAIN);
+        navigation.goBack();
       } catch (error) {
         console.error(error);
         setPassword({
