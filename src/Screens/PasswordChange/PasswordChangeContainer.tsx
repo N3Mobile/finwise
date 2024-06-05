@@ -119,7 +119,7 @@ export const PasswordChangeContainer = () => {
           i18n.t(LocalizationKey.SUCCESS),
           i18n.t(LocalizationKey.PASSWORD_CHANGE_SUCCESS)
         );
-        navigation.navigate(RootScreens.MAIN);
+        navigation.goBack();
       } catch (error) {
         console.error(error);
         setNewPassword({
