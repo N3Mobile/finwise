@@ -19,6 +19,7 @@ import axios from "axios";
 import { ScreenWrapper } from "@/Components";
 import { useCategoryIcon } from "@/Hooks/icon";
 import { useUser } from "@/Components/UserContext";
+import { newDataComing } from "../History/newTransactComing";
 import { useFocusEffect } from "@react-navigation/native";
 const CurrencyDisplay = () => (
   <View style={styles.currencyContainer}>
@@ -165,6 +166,7 @@ export const AddTransactionContainer = () => {
       if (response.ok) {
         Alert.alert("Thành công", "Giao dịch đã được lưu");
         fetchWallets();
+        newDataComing.newTransact = true;
         setSelectedWallet( i18n.t(LocalizationKey.SELECT_WALLET))
         setBalance(0)
         setAmount("0");
