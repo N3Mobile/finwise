@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Icon, List, Portal, TextInput } from "react-native-paper";
+import { newDataComing } from "../History/newTransactComing";
 
 interface Props {
     setLoading: Dispatch<SetStateAction<boolean>>,
@@ -42,6 +43,7 @@ export const AddWallet: FC<Props> = ({ setLoading, setError }) => {
         })
             .then(data => {
                 console.log("fulfilled", data);
+                newDataComing.newWallet = true;
                 setLoading(false);
                 navigation.goBack();
             })
