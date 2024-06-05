@@ -227,8 +227,8 @@ export const History = ({route} : {route : any}) => {
             setAllTransact(data);
             setNumTransaction(data.length);
         }catch(e){
-            Alert.alert('Error', 'Cannot get transactions, retrying', [{text: 'OK'}])
-            fetchData(startDate, endDate);
+            Alert.alert('Error', 'Cannot get transactions, retrying in 5 seconds', [{text: 'OK'}])
+            setTimeout(() => {fetchData(startDate, endDate);}, 5000);
             console.log(e);
         }
        
@@ -316,6 +316,7 @@ export const History = ({route} : {route : any}) => {
                 Alert.alert('Error', e.response?.data.message, [{text : 'OK'}]);
             }else{
                 Alert.alert('Error', 'Unknow error', [{text : 'OK'}]);
+
             }
         }
         
@@ -335,8 +336,8 @@ export const History = ({route} : {route : any}) => {
                 setWallets(data);
             }
         }catch(e){
-            Alert.alert('Error', 'Cannot get wallets, retrying', [{text: 'OK'}])
-            getWallet();
+            Alert.alert('Error', 'Cannot get wallets, retrying in 5 seconds', [{text: 'OK'}])
+            setTimeout(() => {getWallet();}, 5000);
             console.log(e);
         }
 
