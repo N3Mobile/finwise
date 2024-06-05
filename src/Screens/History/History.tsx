@@ -568,7 +568,7 @@ export const History = ({route} : {route : any}) => {
                             </View>
                             <View style={{flex:5, justifyContent:'center', marginLeft:'2%', marginRight:'2%'}}>
                                 <TextInput style={{backgroundColor:'white', borderRadius:3, height:40}} 
-                                    editable={modRequestRes != 'waiting'}
+                                    editable={false}
                                     value={formatAmount(modTransactAmount)} 
                                     keyboardType="numeric" onChangeText={(value)=>setModTransactAmount(Number(value.replaceAll('.','')))}></TextInput>
                             </View>
@@ -653,7 +653,7 @@ export const History = ({route} : {route : any}) => {
                                 </View>
                                 <View style={{flex : 1, alignItems:'center', justifyContent:'center'}}>
                                     <RadioButton value={'false'} 
-                                                disabled={modRequestRes == 'waiting'}
+                                                disabled={true}
                                                 status={modTransactType == false ? 'checked' : "unchecked"}
                                                 onPress={()=>{setModifying(true); setModTransactType(false)}}/>
                                 </View>
@@ -664,7 +664,7 @@ export const History = ({route} : {route : any}) => {
                                 </View>
                                 <View style={{flex : 1, alignItems:'center'}}>
                                     <RadioButton value={'true'} 
-                                                disabled={modRequestRes == 'waiting'}
+                                                disabled={true}
                                                 status={modTransactType == true ? 'checked' : "unchecked"}
                                                 onPress={()=>{setModifying(true); setModTransactType(true)}}/>
                                 </View>
