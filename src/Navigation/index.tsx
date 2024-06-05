@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, NavigationProp, NavigatorScreenParams } from "@react-navigation/native";
@@ -18,7 +18,9 @@ import { AddBudgetContainer } from "@/Screens/AddBudget";
 import { BudgetDetailsContainer } from "@/Screens/BudgetDetails";
 import { EditBudgetContainer } from "@/Screens/EditBudget";
 import { FinishedBudgetsContainer } from "@/Screens/FinishedBudgets";
-
+import { PasswordChangeContainer } from "@/Screens/PasswordChange";
+import { getItem } from "utils/asyncStorage";
+import { UserProvider } from "@/Components/UserContext";
 export type RootStackParamList = {
   [RootScreens.MAIN]: NavigatorScreenParams<BottomTabParamList>;
   [RootScreens.WELCOME]: undefined;
@@ -33,6 +35,7 @@ export type RootStackParamList = {
   [RootScreens.ADD_BUDGET]: { walletId: string };
   [RootScreens.EDIT_BUDGET]: { budgetId: string },
   [RootScreens.FINISHED_BUDGET]: { walletId: string };
+  [RootScreens.PASSWORDCHANGE]: undefined;
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
@@ -40,74 +43,196 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 // @refresh reset
 const ApplicationNavigator = () => {
-  return (
-    <NavigationContainer>
-      <StatusBar />
-      <RootStack.Navigator screenOptions={{ 
-        header: (props) => <DefaultAppbar {...props} />,
-      }}>
-        <RootStack.Screen
-          name={RootScreens.WELCOME}
-          component={WelcomeContainer}
-          options={{
-            headerShown: false
-          }}
-        />
-        <RootStack.Screen
-          name={RootScreens.MAIN}
-          component={MainNavigator}
-          options={{
-            header: (props) => <MainAppbar {...props} />
-          }}
-        />
-        <RootStack.Screen
-          name={RootScreens.SETTINGS}
-          component={SettingsContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.LOGIN}
-          component={LoginContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.SIGNUP}
-          component={SignupContainer}
-        />
-        
-        <RootStack.Screen 
-          name={RootScreens.TRANSFER_MONEY}
-          component={TransferMoneyContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.ADD_WALLET}
-          component={AddWalletContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.EDIT_WALLET}
-          component={EditWalletContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.BUDGET_DETAILS}
-          component={BudgetDetailsContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.ADD_BUDGET}
-          component={AddBudgetContainer}
-        />
-        <RootStack.Screen 
-          name={RootScreens.EDIT_BUDGET}
-          component={EditBudgetContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.FINISHED_BUDGET}
-          component={FinishedBudgetsContainer}
-        />
-        <RootStack.Screen
-          name={RootScreens.TEST}
-          component={TestContainer}
-        />
-      </RootStack.Navigator>
-    </NavigationContainer>
-  );
+  const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    checkIfAlreadyOnboarded();
+  }, []);
+  const checkIfAlreadyOnboarded = async () => {
+    let onboarding = await getItem('onboarding');
+    if (onboarding ==='1') {
+      // hide onboarding
+      setShowOnboarding(false);
+    } else {
+      // show onboarding
+      setShowOnboarding(true);
+    }
+  };
+  if (showOnboarding===null) return null;
+  if (showOnboarding){
+    return (
+      <UserProvider>
+      <NavigationContainer>
+        <StatusBar />
+        <RootStack.Navigator 
+        initialRouteName={RootScreens.WELCOME}
+        screenOptions={{ 
+          header: (props) => <DefaultAppbar {...props} />,
+        }}>
+          <RootStack.Screen
+            name={RootScreens.WELCOME}
+            component={WelcomeContainer}
+            options={{
+              headerShown: false
+            }}
+          />
+          <RootStack.Screen
+            name={RootScreens.MAIN}
+            component={MainNavigator}
+            options={{
+              header: (props) => <MainAppbar {...props} />
+            }}
+          />
+          <RootStack.Screen
+            name={RootScreens.SETTINGS}
+            component={SettingsContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.LOGIN}
+            component={LoginContainer}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <RootStack.Screen
+            name={RootScreens.SIGNUP}
+            component={SignupContainer}
+            options={{
+              headerShown:false,
+            }}
+          />
+          
+          <RootStack.Screen 
+            name={RootScreens.TRANSFER_MONEY}
+            component={TransferMoneyContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.ADD_WALLET}
+            component={AddWalletContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.EDIT_WALLET}
+            component={EditWalletContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.BUDGET_DETAILS}
+            component={BudgetDetailsContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.ADD_BUDGET}
+            component={AddBudgetContainer}
+          />
+          <RootStack.Screen 
+            name={RootScreens.EDIT_BUDGET}
+            component={EditBudgetContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.FINISHED_BUDGET}
+            component={FinishedBudgetsContainer}
+          />
+          <RootStack.Screen
+        name={RootScreens.PASSWORDCHANGE}
+        component={PasswordChangeContainer}
+        options={{
+          headerShown:false,
+        }}
+      />
+          <RootStack.Screen
+            name={RootScreens.TEST}
+            component={TestContainer}
+          />
+        </RootStack.Navigator>
+      </NavigationContainer>
+      </UserProvider>
+    );
+  }else{
+    return (
+      <UserProvider>
+      <NavigationContainer>
+        <StatusBar />
+        <RootStack.Navigator 
+        initialRouteName={RootScreens.LOGIN}
+        screenOptions={{ 
+          header: (props) => <DefaultAppbar {...props} />,
+        }}>
+          <RootStack.Screen
+            name={RootScreens.WELCOME}
+            component={WelcomeContainer}
+            options={{
+              headerShown: false
+            }}
+          />
+          <RootStack.Screen
+            name={RootScreens.MAIN}
+            component={MainNavigator}
+            options={{
+              header: (props) => <MainAppbar {...props} />
+            }}
+          />
+          <RootStack.Screen
+            name={RootScreens.SETTINGS}
+            component={SettingsContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.LOGIN}
+            component={LoginContainer}
+            options={{
+              headerShown:false,
+            }}
+          />
+          <RootStack.Screen
+            name={RootScreens.SIGNUP}
+            component={SignupContainer}
+            options={{
+              headerShown:false,
+            }}
+          />
+          
+          <RootStack.Screen 
+            name={RootScreens.TRANSFER_MONEY}
+            component={TransferMoneyContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.ADD_WALLET}
+            component={AddWalletContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.EDIT_WALLET}
+            component={EditWalletContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.BUDGET_DETAILS}
+            component={BudgetDetailsContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.ADD_BUDGET}
+            component={AddBudgetContainer}
+          />
+          <RootStack.Screen 
+            name={RootScreens.EDIT_BUDGET}
+            component={EditBudgetContainer}
+          />
+          <RootStack.Screen
+            name={RootScreens.FINISHED_BUDGET}
+            component={FinishedBudgetsContainer}
+          />
+          <RootStack.Screen
+        name={RootScreens.PASSWORDCHANGE}
+        component={PasswordChangeContainer}
+        options={{
+          headerShown:false,
+        }}
+      />
+          <RootStack.Screen
+            name={RootScreens.TEST}
+            component={TestContainer}
+          />
+        </RootStack.Navigator>
+      </NavigationContainer>
+      </UserProvider>
+    );
+  }
+  
 };
 
 export { ApplicationNavigator };
