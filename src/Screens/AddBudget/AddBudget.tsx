@@ -2,10 +2,9 @@ import { InputAmount } from "@/Components/InputAmount";
 import { SelectCategory } from "@/Components/SelectCategory";
 import { SelectPeriod } from "@/Components/SelectPeriod";
 import { SelectWallet } from "@/Components/SelectWallet";
-import { Category } from "@/Config/category";
 import { PeriodType } from "@/Config/period";
 import { http } from "@/Hooks/api";
-import { getPeriodType, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
+import { compareDate, parseDate, useFormattedDate, usePeriod } from "@/Hooks/date";
 import { useCategoryIcon, useWalletIcon } from "@/Hooks/icon";
 import { LocalizationKey, i18n } from "@/Localization";
 import { StackNavigation } from "@/Navigation";
@@ -15,7 +14,7 @@ import { Colors } from "@/Theme";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { Dispatch, FC, SetStateAction, useCallback, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Button, HelperText, List, Portal } from "react-native-paper";
+import { Button, HelperText, List, Portal } from "react-native-paper";
 
 interface Props {
     initialWalletId: string,
@@ -34,6 +33,7 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
     const [walletId, setWalletId] = useState(initialWalletId);
     const [wallet, setWallet] = useState(DEFAULT_WALLET);
     const [totalBudget, setTotalBudget] = useState(0);
+    const [usedCategory, setUsedCategory] = useState<string[]>([]);
     
     const [catname, caticon, catcolor] = useCategoryIcon(category);
     const [walname, walicon, walcolor] = useWalletIcon(wallet.type);
@@ -52,8 +52,15 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
                     http.get('budgets/ranges', { wallet_id: walletId })
                 ]).then(([wal, buds]) => {
                     setWallet(wal);
-                    const total = buds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0);
-                    setTotalBudget(total);
+
+                    const runningBuds = buds
+                        .filter((bud: Budget) => {
+                            const bud_start = parseDate(bud.start_date);
+                            const bud_end = parseDate(bud.end_date);
+                            return compareDate(bud_start, start) === 0 && compareDate(bud_end, end) === 0;
+                        });
+                    setTotalBudget(runningBuds.reduce((total: number, bud: Budget) => total + bud.initial_amount, 0));
+                    setUsedCategory(runningBuds.map((bud: Budget) => bud.category));
                 }).catch(error => setError(error.toString()));
             } else {
                 console.log("Where wallet id?");
@@ -62,11 +69,12 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
     );
 
     const invalidCategory = !category;
+    const existedCategory = usedCategory.includes(category);
     const invalidAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) === 0;
     const notEnough = parseFloat(amount.replace(/[^0-9.]/g, '')) + totalBudget > wallet.amount;
-    const invalid = invalidCategory || invalidAmount || notEnough;
+    const invalid = invalidCategory || existedCategory || invalidAmount || notEnough;
 
-    function onSave() {
+    function onSave() {       
         http.post('budgets', {}, {
             name: "",
             wallet_id: walletId,
@@ -89,8 +97,11 @@ export const AddBudget: FC<Props> = ({ initialWalletId, wallets, setLoading, set
                     left={(props) => <List.Icon {...props} icon={caticon} color={catcolor} />}
                     onPress={() => setSelectCategory(true)}
                 />
-                <HelperText type="error" visible={true} style={{ display: invalidCategory ? 'flex' : 'none' }}>
-                    {i18n.t(LocalizationKey.CATEGORY_UNSELECTED)}
+                <HelperText type="error" visible={true} style={{ display: (invalidCategory || existedCategory) ? 'flex' : 'none' }}>
+                    { invalidCategory 
+                    ? i18n.t(LocalizationKey.CATEGORY_UNSELECTED)
+                    : i18n.t(LocalizationKey.CATEGORY_EXISTED)
+                    }
                 </HelperText>
             </List.Section>
             <List.Section>

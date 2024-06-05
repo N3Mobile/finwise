@@ -6,16 +6,20 @@ import { AddTransactionContainer } from "@/Screens/AddTransaction";
 import { WalletsContainer } from "@/Screens/Wallets";
 import { BudgetsContainer } from "@/Screens/Budgets";
 import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
+
+import { History } from "@/Screens/History/History";
+
 import { LocalizationKey, i18n } from "@/Localization";
 import { Icon } from "react-native-paper";
 import { Icons } from "@/Theme";
 import { TabScreens } from "@/Screens";
 import { NavigationProp } from "@react-navigation/native";
 
+
 const Tab = createMaterialBottomTabNavigator();
 export type BottomTabParamList = {
   [TabScreens.HOME]: undefined,
-  [TabScreens.TRANSACTIONS]: { start: string, end: string, category: string },
+  [TabScreens.TRANSACTIONS]: { start: string, end: string, category: string, wallet_id: string },
   [TabScreens.ADD]: undefined,
   [TabScreens.WALLETS]: undefined,
   [TabScreens.BUDGETS]: undefined
@@ -40,15 +44,18 @@ export const MainNavigator = () => {
         }}
       />
       <Tab.Screen 
+
         name={TabScreens.TRANSACTIONS}
-        component={TransactionsContainer}
-        initialParams={{ start: (new Date(-8640000000000000)).toDateString(), end: new Date().toDateString(), category: "all" }}
+        component={History}
+        initialParams={{ start: (new Date(-1)).toDateString(), end: new Date().toDateString(), category: "all", walletId: '' }}
+
         options={{
           tabBarLabel: i18n.t(LocalizationKey.TRANSACTIONS),
           tabBarIcon: ({ color }) => (
             <Icon source={Icons.HISTORY} size={26} color={color}/>
           ),
         }}
+
       />
       <Tab.Screen
         name={TabScreens.ADD}

@@ -1,9 +1,9 @@
 export interface Transaction {
-    // id: number,
+    id: string,
     wallet_id: string,
     category: string,
     amount: number,
     created_at: string,
     is_pay: boolean,
-    note_info: string,
+    note_info : string
 }

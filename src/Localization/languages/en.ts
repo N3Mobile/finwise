@@ -1,6 +1,39 @@
 import { LocalizationKey } from "../keys";
 
 export const en = {
+   // onboarding
+   [LocalizationKey.ONBOARDING_TITLE_1]: "Manage everything in one place",
+   [LocalizationKey.ONBOARDING_SUBTITLE_1]: "Track expenses and categorize according to needs",
+   [LocalizationKey.ONBOARDING_TITLE_2]: "Detailed financial analysis",
+   [LocalizationKey.ONBOARDING_SUBTITLE_2]: "View spending reports to better understand your financial habits",
+   [LocalizationKey.ONBOARDING_TITLE_3]: "Achieve financial goals easily",
+   [LocalizationKey.ONBOARDING_SUBTITLE_3]: "Save more for the things that matter most",
+   //login
+   [LocalizationKey.LOGIN_PASSWORD_PLACEHOLDER]: "Password",
+   [LocalizationKey.LOGIN_FORGOT_PASSWORD]: "Change Password",
+   [LocalizationKey.LOGIN_BUTTON]: "Login",
+   [LocalizationKey.LOGIN_NO_ACCOUNT]: "Don't have an account?",
+   [LocalizationKey.LOGIN_SIGNUP_LINK]: "Sign Up",
+   [LocalizationKey.LOGIN_EMAIL_EMPTY]: "Email cannot be empty.",
+   [LocalizationKey.LOGIN_PASSWORD_EMPTY]: "Password cannot be empty.",
+   [LocalizationKey.LOGIN_INVALID_CREDENTIALS]: "Invalid email or password.",
+   [LocalizationKey.LOGIN_TRY_AGAIN]: "Please try again later.",
+   [LocalizationKey.PASSWORD_MISMATCH]: "Passwords do not match.",
+   [LocalizationKey.PASSWORD_CHANGE_SUCCESS]: "Password changed successfully.",
+   [LocalizationKey.CURRENT_PASSWORD]: "Current Password",
+   [LocalizationKey.NEW_PASSWORD]: "New Password",
+   [LocalizationKey.CONFIRM_NEW_PASSWORD]: "Confirm Password",
+   [LocalizationKey.WANT_TO_GO_BACK]: "Do you want to go back?",
+   [LocalizationKey.GO_BACK]: "Go Back",
+   [LocalizationKey.SUCCESS]: "Success",
+   [LocalizationKey.NAME_REQUIRED]: "Name cannot be empty.",
+   [LocalizationKey.REGISTRATION_SUCCESS]: "Registration successful.",
+   [LocalizationKey.AGREEMENT_REQUIRED]: "You must agree to the Terms of Use and Privacy Policy.",
+   [LocalizationKey.REGISTRATION_TERMS]: "By registering, you agree to our Terms of Use and Privacy Policy.",
+   [LocalizationKey.SIGN_UP]: "Sign Up",
+   [LocalizationKey.ALREADY_HAVE_ACCOUNT]: "Already have an account?",
+   [LocalizationKey.NOTIFY]: "Notification",
+
   [LocalizationKey.WELCOME]: "Welcome",
   [LocalizationKey.HOME]: "Home",
   [LocalizationKey.START]: "Start",
@@ -69,6 +102,7 @@ export const en = {
 
   [LocalizationKey.WALLET_UNSELECTED]: "Please select a wallet",
   [LocalizationKey.CATEGORY_UNSELECTED]: "Please select a category",
+  [LocalizationKey.CATEGORY_EXISTED]: "This category has already been used for your wallet",
   [LocalizationKey.ZERO_AMOUNT]: "Please enter a non-zero amount",
   [LocalizationKey.NOT_ENOUGH_MONEY]: "Not enough money. Please check your wallet.",
   [LocalizationKey.DELETE_CONFIRMATION]: "Are you sure you want to delete this item?",
