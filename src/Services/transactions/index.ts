@@ -4,5 +4,6 @@ export interface Transaction {
     category: string,
     amount: number,
     created_at: string,
-    is_pay: boolean
+    is_pay: boolean,
+    note_info : string
 }

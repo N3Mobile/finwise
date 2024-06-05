@@ -6,7 +6,7 @@ import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
 import { ScrollView } from "native-base";
 import { HStack, Spinner } from "native-base";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Category, ExpenseCategory, IncomeCategory } from "@/Config/category";
 import { useCategoryIcon } from "@/Hooks/icon";
 import { Icon } from "react-native-paper";
@@ -15,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { LocalizationKey, i18n } from "@/Localization";
 import { newDataComing } from "./newTransactComing";
 
+const baseURL = 'https://be-mobile-n3.onrender.com';
 
 const formatAmount = (amount : number) =>{
     let strArr = Array.from(String(amount));
@@ -30,9 +31,8 @@ const formatAmount = (amount : number) =>{
 
 const TransactionRecord = ({data, wallets, setModTransactID} : {data : Transaction, wallets : Wallet[], setModTransactID : any}) => {
 
-
-
     let icon : string [] = useCategoryIcon(data.category);
+    //console.log(icon[0], data.category);
     let getWalletName = (id : string) => {
         if(wallets.length >0 ){
             let index : number = wallets.findIndex((wallet) => wallet.id == id);
@@ -103,7 +103,7 @@ const WalletList = ({setter, selectedValue, wallets, includeAll} : {setter : any
     )
 }
 
-const CategoryList = ({setter, selectedValue, type} : {setter : any, selectedValue : string, type : string}) =>{
+const CategoryList = ({setter, selectedValue, type, enable} : {setter : any, selectedValue : string, type : string, enable : boolean}) =>{
     let categories = (type == 'ALL' ? Object.values(Category).reverse() : 
                         (type == 'in' ? Object.values(IncomeCategory) : Object.values(ExpenseCategory)))
     return (
@@ -112,6 +112,7 @@ const CategoryList = ({setter, selectedValue, type} : {setter : any, selectedVal
                 <View style={styles.categoryPicker}>
                     <Picker
                         mode="dropdown"
+                        enabled={enable}
                         selectedValue={selectedValue}
                         onValueChange={(itemValue, itemIndex) => setter(itemValue)
                     }>
@@ -142,14 +143,17 @@ export const History = ({route} : {route : any}) => {
     const [firstLoad, setFirstLoad] = useState(true);
     const [modTransactID, setModTransactID] = useState('');
     const [modRequestRes, setModRequestRes] = useState('');
-    const [modTransactWallet, setModTransactWallet] = useState('');
     const [modTransactCategory, setModTransactCategory] = useState('');
     const [modTransactType, setModTransactType] = useState(false);
     const [modTransactAmount, setModTransactAmount] = useState(0);
-
+    const [modTransactDay, setModeTransactDay] = useState('');
+    const [modTransactMonth, setModeTransactMonth] = useState('');
+    const [modTransactYear, setModeTransactYear] = useState('');
+    const [modTransactNote, setModTransactNote] = useState('');
+    const [modifying, setModifying] = useState(false);
 
     const windowHeight = useWindowDimensions().height;
-    //console.log(windowHeight)
+   // console.log(useWindowDimensions().width)
 
     const getFormattedDate = (date : Date) => {
         let day : string = String(date.getDate());
@@ -201,8 +205,7 @@ export const History = ({route} : {route : any}) => {
 
         //call api here
         try{
-            let requestURL : string = `https://be-mobile-n3.onrender.com/transaction/histories/all`;
-            let res = await axios.get(requestURL, {
+            let res = await axios.get(baseURL + '/transaction/histories/all', {
                 params : {
                     user_ID : '66237fef97705968270a6dab',
                     start_date : start,
@@ -237,16 +240,59 @@ export const History = ({route} : {route : any}) => {
         }
     }
 
-    const deleteTransact = () => {
-        clearModPopup();
-
+    const deleteTransact = async () => {
+        setModRequestRes('waiting');
         //delete
+        try {
+            let res = await axios.delete(baseURL + '/transaction', {
+                params : {
+                    _id : modTransactID
+                }
+            });
+
+            let data : Transaction[] = [...allTransact];
+            let index : number = data.findIndex((transact) => transact.id == modTransactID);
+            data.splice(index, 1);
+            setAllTransact([...data]);
+            setNumTransaction(data.length);
+            Alert.alert('', 'Xóa thành công', [{text : 'OK'}]);
+        }catch(e){
+            if (axios.isAxiosError<AxiosError, Record<string, unknown>>(e)) {
+                Alert.alert('Error', e.response?.data.message, [{text : 'OK'}]);
+            }else{
+                Alert.alert('Error', 'Unknow error', [{text : 'OK'}]);
+            }
+        }
+        setModRequestRes('');
     }
 
-    const modifyTransact = () => {
-        clearModPopup();
-        console.log(modTransactID, modTransactCategory, modTransactType, modTransactAmount, modTransactWallet);
+    const modifyTransact = async () => {
+        setModRequestRes('waiting');
+
+        //modifying
+        //clearModPopup();
+        const date = modTransactDay + '/' + modTransactMonth + '/' + modTransactYear;
+        console.log(modTransactID, modTransactCategory, modTransactType, modTransactAmount, date, modTransactNote);
         
+    }
+
+    const getWallet = async () => {
+        try{
+            let res = await axios.get(baseURL + '/wallets/byUsersId', {
+                params : {
+                    user_ID : '66237fef97705968270a6dab'
+                }
+            })
+            //console.log(res.data);
+            if(res.data.length != 0) {
+                let data : Wallet[] = res.data;
+                setWallets(data);
+            }
+        }catch(e){
+            Alert.alert('Error', 'Cannot get wallets', [{text: 'OK'}])
+            console.log(e);
+        }
+
     }
 
     //events
@@ -263,8 +309,10 @@ export const History = ({route} : {route : any}) => {
     useEffect(() => {
         if(startDate.toDateString() != (new Date(-1)).toDateString()) fetchWithCond();
         else changeDefaultRange(3);
+        getWallet();
         setFirstLoad(false);
         newDataComing.newTransact = false;
+        newDataComing.newWallet = false;
     }, []);
 
     useEffect(() => {
@@ -275,26 +323,8 @@ export const History = ({route} : {route : any}) => {
         useCallback(() => {
             //console.log(route.params)
             //console.log(newDataComing.newTransact);
-            const getWallet = async () => {
-                try{
-                    let requestURL : string = `https://be-mobile-n3.onrender.com/wallets/byUsersId`;
-                    let res = await axios.get(requestURL, {
-                        params : {
-                            user_ID : '66237fef97705968270a6dab'
-                        }
-                    })
-                    //console.log(res.data);
-                    if(res.data.length != 0) {
-                        let data : Wallet[] = res.data;
-                        setWallets(data);
-                    }
-                }catch(e){
-                    Alert.alert('Error', 'Cannot get wallets', [{text: 'OK'}])
-                    console.log(e);
-                }
-        
-            }
-            if(newDataComing.newWallet) {
+
+            if(!firstLoad && newDataComing.newWallet) {
                 getWallet();
                 newDataComing.newWallet = false;
             }
@@ -308,9 +338,21 @@ export const History = ({route} : {route : any}) => {
     useEffect(() => {}, [modTransactID])
 
     useEffect(() => {
+        if(modifying){
+            if(modTransactType) setModTransactCategory(ExpenseCategory.BILL);
+            else setModTransactCategory(IncomeCategory.COLLECT_INTEREST);
+            //console.log(modifying);
+        }
+
+    }, [modTransactType])
+
+    useEffect(() => {
         getModTransactInfo();
     }, [modTransactID])
 
+    useEffect(() => {
+        if(modRequestRes == '') clearModPopup();
+    }, [modRequestRes]);
 
     const getModTransactInfo = () => {
         if(modTransactID=='' || wallets.length == 0) {
@@ -319,19 +361,54 @@ export const History = ({route} : {route : any}) => {
         }
         const transact_index : number = allTransact.findIndex((transact) => transact.id == modTransactID);
         const transact : Transaction = allTransact[transact_index];
-        const wallet_index : number = wallets.findIndex((wallet) => wallet.id == transact.wallet_id);
-        const wl = wallets[wallet_index];
+        const date : string [] = transact.created_at.split('/');
         setModTransactCategory(transact.category);
         setModTransactType(transact.is_pay);
-        setModTransactWallet(wl.id);
         setModTransactAmount(transact.amount);
+        setModeTransactDay(date[0]);
+        setModeTransactMonth(date[1]);
+        setModeTransactYear(date[2]);
+        setModTransactNote(transact.note_info);
+        setModRequestRes('pending');
     }
 
     const clearModPopup = () => {
+        if(modRequestRes == 'waiting') return;
         setModTransactID('');
+        setModifying(false);
     }
 
+    const getDay = (month : string, year : number) => {
+        const day = [];
+        const isLeap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+        let range : number = 0;
+        if(month == '04' || month == '06' || month == '09' || month == '11') range = 30;
+        else if(month == '02'){
+            if(isLeap) range = 29;
+            else range = 28
+        }
+        else range = 31;
+        for(let i = 1; i <= range; i++) 
+            if(i < 10) day.push('0' + String(i));
+            else day.push(String(i));
+        if(Number(modTransactDay) > range) setModeTransactDay(String(range));
+        return day;
+    }
     
+    const getMonth = () => {
+        const month = [];
+        for(let i = 1; i <= 12; i++) 
+            if(i < 10) month.push('0' + String(i));
+            else month.push(String(i));
+        return month;
+    }
+
+    const getYear = () => {
+        const year = [];
+        for(let i = 2000; i < 2100; i++) year.push(String(i));
+        return year
+    }
+
     return (   
         <View style={{flex: 1, minHeight:Math.round(windowHeight)}}>
             
@@ -414,25 +491,13 @@ export const History = ({route} : {route : any}) => {
                 onRequestClose={() => {
                     setModTransactID('')
                 }}>
-                <View style={[styles.modal, {alignItems:'center'}]} onTouchStart={() => Keyboard.dismiss()}>
-                    <View style={{flex:2, width:'100%'}} onTouchStart={() => clearModPopup()}></View>
-                    <View style={{flex:3, borderWidth:3, backgroundColor:'rgba(200, 255, 255, 1)', borderRadius:5, width:'90%'}}>
+                <View style={[{flex:1, alignItems:'center'}]} onTouchStart={() => Keyboard.dismiss()}>
+                    <View style={{flex:1.5, width:'100%'}} onTouchStart={() => clearModPopup()}></View>
+                    <View style={{flex:3, borderWidth:3, backgroundColor:'rgba(255, 255, 255, 1)', borderRadius:5, width:'95%'}}>
                         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                             <Text style={{fontSize:22, fontWeight:'bold'}}>
-                                Chỉnh sửa thông tin giao dịch
+                                Thông tin giao dịch
                             </Text>
-                        </View>
-                        <View style={{flex:1, flexDirection:'row', marginBottom:'2%'}}>
-                            <View style={{flex:1}}>
-                                <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-                                    <Text style={{fontSize:20, fontWeight:'500'}}>Ví</Text>
-                                </View>
-                            </View>
-                            <View style={{flex:5, justifyContent:'center'}}>
-                                <View style={{flex:1, justifyContent:'center'}}>
-                                    <WalletList setter={setModTransactWallet} selectedValue={modTransactWallet} wallets={wallets} includeAll={false}/>
-                                </View>
-                            </View>
                         </View>
                         <View style={{flex:1, flexDirection:'row', marginBottom:'2%'}}>
                             <View style={{flex:1}}>
@@ -444,7 +509,8 @@ export const History = ({route} : {route : any}) => {
                                 <View style={{flex:1, justifyContent:'center'}}>
                                     <CategoryList setter={setModTransactCategory} 
                                                   selectedValue={modTransactCategory} 
-                                                  type={(modTransactType ? 'out' : 'in')}/>
+                                                  type={(modTransactType ? 'out' : 'in')}
+                                                  enable={modRequestRes != 'waiting'}/>
                                 </View>
                             </View>
                         </View>
@@ -456,10 +522,84 @@ export const History = ({route} : {route : any}) => {
                             </View>
                             <View style={{flex:5, justifyContent:'center', marginLeft:'2%', marginRight:'2%'}}>
                                 <TextInput style={{backgroundColor:'white', borderRadius:3, height:40}} 
+                                    editable={modRequestRes != 'waiting'}
                                     value={formatAmount(modTransactAmount)} 
                                     keyboardType="numeric" onChangeText={(value)=>setModTransactAmount(Number(value.replaceAll('.','')))}></TextInput>
                             </View>
                         </View>
+                        <View style={{flex:1, flexDirection:'row', marginBottom:'2%', marginTop:'5%'}}>
+                            <View style={{flex:1, flexDirection:'row'}}>
+                                <View style={{flex:0.1}}></View>
+                                <View style={[styles.categoryPicker]}>
+                                    <Picker
+                                        mode="dropdown"
+                                        enabled={modRequestRes != 'waiting'}
+                                        style={{width:'110%', alignItems:'flex-end'}}
+                                        selectedValue={modTransactDay}
+                                        onValueChange={(itemValue, itemIndex) => setModeTransactDay(itemValue)
+                                    }>
+                                        {getDay(modTransactMonth, Number(modTransactYear)).map((day, index) => {
+                                            return (<Picker.Item label={day} value={day} key={day} />)
+                                        })}
+                                    </Picker>
+                                </View>
+                            </View>
+                            
+                            <View style={{flex:1, flexDirection:'row'}}>
+                                <View style={{flex:0.05}}></View>
+                                <View style={[styles.categoryPicker]}>
+                                    <Picker
+                                        mode="dropdown"
+                                        style={{width:'110%'}}
+                                        enabled={modRequestRes != 'waiting'}
+                                        selectedValue={modTransactMonth}
+                                        onValueChange={(itemValue, itemIndex) => setModeTransactMonth(itemValue)
+                                    }>
+                                        {getMonth().map((month, index) => {
+                                            return (<Picker.Item label={month} value={month} key={month} />)
+                                        })}
+                                    </Picker>
+                                </View>
+                                <View style={{flex:0.05}}></View>
+                            </View>
+
+                            <View style={{flex:1.1, flexDirection:'row'}}>
+                                <View style={[styles.categoryPicker]}>
+                                    <Picker
+                                        mode="dropdown"
+                                        style={{width:'110%'}}
+                                        enabled={modRequestRes != 'waiting'}
+                                        selectedValue={modTransactYear}
+                                        onValueChange={(itemValue, itemIndex) => setModeTransactYear(itemValue)
+                                    }>
+                                        {getYear().map((year, index) => {
+                                            return (<Picker.Item label={year} value={year} key={year} />)
+                                        })}
+                                    </Picker>
+                                </View>
+                                <View style={{flex:0.1}}></View>
+                            </View>
+                        </View>
+                        <View style={{flex:2, justifyContent:'center'}}>
+                            <View style={{flex:1}}>
+                                <View style={{flex:1, justifyContent:'center', alignItems:'center'}}> 
+                                    <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
+                                        <View style={{flex:1}}>
+                                            <View style={{flex:1.5, justifyContent:'center', alignItems:'center'}}>
+                                                <Text style={{fontSize:20, fontWeight:'500'}}>Ghi chú</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{flex:3, justifyContent:'center', marginLeft:'2%', marginRight:'2%'}}></View>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={{flex:1, justifyContent:'center', marginLeft:'2%', marginRight:'2%'}}>
+                                <TextInput style={{backgroundColor:'white', borderRadius:3, height:40}} 
+                                    value={modTransactNote} 
+                                    editable={modRequestRes != 'waiting'}
+                                    onChangeText={(value)=>setModTransactNote(value)}></TextInput>
+                            </View>
+                        </View> 
                         <View style={{flex:1, flexDirection:'row', alignItems:'center'}}>
                             <View style={{flex:1, flexDirection:'row'}}>
                                 <View style={{flex : 1, alignItems:'flex-end', justifyContent:'center'}}>
@@ -467,8 +607,9 @@ export const History = ({route} : {route : any}) => {
                                 </View>
                                 <View style={{flex : 1, alignItems:'center', justifyContent:'center'}}>
                                     <RadioButton value={'false'} 
+                                                disabled={modRequestRes == 'waiting'}
                                                 status={modTransactType == false ? 'checked' : "unchecked"}
-                                                onPress={()=>setModTransactType(false)}/>
+                                                onPress={()=>{setModifying(true); setModTransactType(false)}}/>
                                 </View>
                             </View>
                             <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
@@ -477,8 +618,9 @@ export const History = ({route} : {route : any}) => {
                                 </View>
                                 <View style={{flex : 1, alignItems:'center'}}>
                                     <RadioButton value={'true'} 
+                                                disabled={modRequestRes == 'waiting'}
                                                 status={modTransactType == true ? 'checked' : "unchecked"}
-                                                onPress={()=>setModTransactType(true)}/>
+                                                onPress={()=>{setModifying(true); setModTransactType(true)}}/>
                                 </View>
                             </View>
                         </View>
@@ -489,6 +631,7 @@ export const History = ({route} : {route : any}) => {
                                     buttonColor="#dc3545" 
                                     labelStyle={{fontSize:15}}
                                     style={{width:120}} 
+                                    disabled={modRequestRes == 'waiting'}
                                     mode="contained">
                                         Xóa
                                     </Button>
@@ -499,12 +642,16 @@ export const History = ({route} : {route : any}) => {
                                     <Button onPress={()=>modifyTransact()} 
                                     style={{width:120}} 
                                     labelStyle={{fontSize:15}}
+                                    disabled={modRequestRes == 'waiting'}
                                     mode="contained">
                                         Chỉnh sửa
                                     </Button>
                                 </TouchableOpacity>
                             </View>
                         </View>
+                        {modRequestRes == 'waiting' ? <HStack space={'2xs'} style={{position:'absolute', width:'100%', height:'100%'}} justifyContent="center" alignItems="center" marginBottom="auto" marginTop="auto">
+                                <Spinner accessibilityLabel="Loading posts" size={70} color="black" />
+                         </HStack> : ''}
                     </View>
                     <View style={{flex:2, width:'100%'}} onTouchStart={() => clearModPopup()}></View>
                 </View>
@@ -517,7 +664,7 @@ export const History = ({route} : {route : any}) => {
             <View style={{marginBottom:'2%'}}></View>
 
             {/* Drop down category */}
-            <CategoryList setter={setTransactionCategory} selectedValue={transactionCategory} type="ALL"/>
+            <CategoryList setter={setTransactionCategory} selectedValue={transactionCategory} type="ALL" enable={true}/>
 
             
             {/* Search button */}
