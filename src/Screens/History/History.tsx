@@ -214,7 +214,14 @@ export const History = ({route} : {route : any}) => {
             });
             //console.log(res.data);
             let data : Transaction[] = res.data;
-
+            data.sort((a, b) => {
+                let date1 = a.created_at.split('/');
+                let date2 = b.created_at.split('/');
+                let date1_formatted = date1.reverse().join('/');
+                let date2_formatted = date2.reverse().join('/');
+                return date1_formatted.localeCompare(date2_formatted);
+            });
+            data.reverse();
             //handle data
             setAllTransact(data);
             setNumTransaction(data.length);
