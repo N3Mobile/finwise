@@ -136,4 +136,11 @@ export enum LocalizationKey {
 
   // error messages
   ERROR_EMPTY = "error-empty",
+
+  //creat transactions
+  WALLET_BALANCE = "wallet-balance",
+  TRANSACTION_TYPE = "transaction-type",
+  UNIT = "unit",
+  CREATE_TRANSACTION = "create-transaction",
+ 
 }
