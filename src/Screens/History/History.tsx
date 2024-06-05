@@ -289,7 +289,7 @@ export const History = ({route} : {route : any}) => {
             if(modTransactCategory != modTransact?.category) Object.assign(req_data, {category : modTransactCategory});
             if(modTransactAmount != modTransact?.amount) Object.assign(req_data, {amount : modTransactAmount});
             if(modTransactType != modTransact?.is_pay) Object.assign(req_data, {is_pay : modTransactType});
-            if(date != modTransact?.created_at) Object.assign(req_data, {create_at : date});
+            if(date != modTransact?.created_at) Object.assign(req_data, {created_at : date});
             if(modTransactNote != modTransact?.note_info) Object.assign(req_data, {note_info : modTransactNote});
             console.log(req_data);
 
