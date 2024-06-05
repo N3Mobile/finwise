@@ -145,4 +145,8 @@ export const en = {
   [LocalizationKey.TRANSACTION_TYPE]:"Transaction type",
   [LocalizationKey.UNIT]:"$",
   [LocalizationKey.CREATE_TRANSACTION]:"Creat transaction",
+
+  [LocalizationKey.START_DATE]: "Start date",
+  [LocalizationKey.END_DATE]: "End date",
+  [LocalizationKey.TRANSACTION_DETAILS]: "Transaction details",
 };

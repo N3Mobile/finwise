@@ -146,4 +146,8 @@ export const vi = {
   [LocalizationKey.TRANSACTION_TYPE]:"Loại giao dịch",
   [LocalizationKey.UNIT]:"VND",
   [LocalizationKey.CREATE_TRANSACTION]: "Tạo giao dịch",
+
+  [LocalizationKey.START_DATE]: "Ngày bắt đầu",
+  [LocalizationKey.END_DATE]: "Ngày kết thúc",
+  [LocalizationKey.TRANSACTION_DETAILS]: "Thông tin giao dịch",
 };

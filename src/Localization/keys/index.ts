@@ -153,5 +153,9 @@ export enum LocalizationKey {
   TRANSACTION_TYPE = "transaction-type",
   UNIT = "unit",
   CREATE_TRANSACTION = "create-transaction",
- 
+
+  // history
+  START_DATE = "start-date",
+  END_DATE = "end-date",
+  TRANSACTION_DETAILS = "transaction-details",
 }
