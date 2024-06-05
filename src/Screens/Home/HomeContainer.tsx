@@ -7,9 +7,11 @@ import { ScreenWrapper } from "@/Components";
 import { TabNavigation } from "@/Navigation/Main";
 import { TabScreens } from "..";
 import { Transaction } from "@/Services/transactions";
+import { useUser } from "@/Components/UserContext";
 
 export const HomeContainer = () => {
   
+	const { userId } = useUser();
 	const navigation = useNavigation<TabNavigation>();
   	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
@@ -21,8 +23,8 @@ export const HomeContainer = () => {
 		useCallback(() => {
 			setError("");
 			Promise.all([
-				http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" }),
-				http.get('transaction/histories/all', { user_ID: "66237fef97705968270a6dab" })
+				http.get('wallets/byUsersId', { user_ID: userId }),
+				http.get('transaction/histories/all', { user_ID: userId })
 			]).then(([wals, trans]) => {
 					setWallets(wals);
 					setTransactions(trans);

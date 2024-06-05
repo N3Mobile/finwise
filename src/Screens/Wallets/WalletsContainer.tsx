@@ -6,9 +6,11 @@ import { Wallet } from "@/Services/wallets";
 import { ScreenWrapper } from "@/Components";
 import { TabNavigation } from "@/Navigation/Main";
 import { TabScreens } from "..";
+import { useUser } from "@/Components/UserContext";
 
 export const WalletsContainer = () => {
     
+    const { userId } = useUser();
     const navigation = useNavigation<TabNavigation>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -17,7 +19,7 @@ export const WalletsContainer = () => {
     useFocusEffect(
         useCallback(() => {
             setError("");
-            http.get("wallets/byUsersId", { user_ID: "66237fef97705968270a6dab" })
+            http.get("wallets/byUsersId", { user_ID: userId })
                 .then(data => {
                     setWallets(data);
                     setLoading(false);

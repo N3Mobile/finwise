@@ -7,6 +7,7 @@ import { ScreenWrapper } from "@/Components";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { http } from "@/Hooks/api";
 import { Wallet } from "@/Services/wallets";
+import { useUser } from "@/Components/UserContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, RootScreens.TRANSFER_MONEY>;
 
@@ -18,6 +19,7 @@ export const TransferMoneyContainer: FC<Props> = ({ route }) => {
         logerror(...args);
     };
 
+    const { userId } = useUser();
     const navigation = useNavigation<StackNavigation>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -26,7 +28,7 @@ export const TransferMoneyContainer: FC<Props> = ({ route }) => {
 
     useFocusEffect(
         useCallback(() => {
-            http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" })
+            http.get('wallets/byUsersId', { user_ID: userId })
                 .then(data => {
                     setWallets(data);
                     setLoading(false);

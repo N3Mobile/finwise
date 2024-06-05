@@ -1,5 +1,6 @@
 import { InputAmount } from "@/Components/InputAmount";
 import { SelectWalletType } from "@/Components/SelectWalletType";
+import { useUser } from "@/Components/UserContext";
 import { WalletType } from "@/Config/wallet";
 import { http } from "@/Hooks/api";
 import { useWalletIcon } from "@/Hooks/icon";
@@ -18,6 +19,7 @@ interface Props {
 
 export const AddWallet: FC<Props> = ({ setLoading, setError }) => {
 
+    const { userId } = useUser();
     const navigation = useNavigation<StackNavigation>();
     const [name, setName] = useState('');
     const [type, setType] = useState(WalletType.CASH);
@@ -33,7 +35,7 @@ export const AddWallet: FC<Props> = ({ setLoading, setError }) => {
 
         setLoading(true);
         http.post('wallets', {}, {
-            user_ID: "66237fef97705968270a6dab",
+            user_ID: userId,
             name: name,
             type: type,
             amount: amount
