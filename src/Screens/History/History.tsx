@@ -151,6 +151,7 @@ export const History = ({route} : {route : any}) => {
     const [modTransactYear, setModeTransactYear] = useState('');
     const [modTransactNote, setModTransactNote] = useState('');
     const [modifying, setModifying] = useState(false);
+    const [modTransact, setModTransact] = useState<Transaction>();
 
     const windowHeight = useWindowDimensions().height;
    // console.log(useWindowDimensions().width)
@@ -277,10 +278,47 @@ export const History = ({route} : {route : any}) => {
         setModRequestRes('waiting');
 
         //modifying
-        //clearModPopup();
-        const date = modTransactDay + '/' + modTransactMonth + '/' + modTransactYear;
-        console.log(modTransactID, modTransactCategory, modTransactType, modTransactAmount, date, modTransactNote);
+        try {
+            const date = modTransactDay + '/' + modTransactMonth + '/' + modTransactYear;
+            
+
+            const req_data = {
+                _id : modTransactID,
+            }
+            console.log(modTransact?.created_at == date);
+            if(modTransactCategory != modTransact?.category) Object.assign(req_data, {category : modTransactCategory});
+            if(modTransactAmount != modTransact?.amount) Object.assign(req_data, {amount : modTransactAmount});
+            if(modTransactType != modTransact?.is_pay) Object.assign(req_data, {is_pay : modTransactType});
+            if(date != modTransact?.created_at) Object.assign(req_data, {create_at : date});
+            if(modTransactNote != modTransact?.note_info) Object.assign(req_data, {note_info : modTransactNote});
+            console.log(req_data);
+
+            let res = await axios.patch(baseURL + '/transaction', req_data);
+
+            let data : Transaction[] = [...allTransact];
+            let index : number = data.findIndex((transact) => transact.id == modTransactID);
+            data[index] = {
+                id : data[index].id,
+                category : modTransactCategory,
+                wallet_id : data[index].wallet_id,
+                is_pay : modTransactType,
+                amount : modTransactAmount,
+                note_info : modTransactNote,
+                created_at : date
+            }
+            setAllTransact([...data]);
+            setNumTransaction(data.length);
+            Alert.alert('', 'Chỉnh sửa thành công', [{text : 'OK'}]);
+        }catch(e){
+            if (axios.isAxiosError<AxiosError, Record<string, unknown>>(e)) {
+                console.log(e.response?.data)
+                Alert.alert('Error', e.response?.data.message, [{text : 'OK'}]);
+            }else{
+                Alert.alert('Error', 'Unknow error', [{text : 'OK'}]);
+            }
+        }
         
+        setModRequestRes('');
     }
 
     const getWallet = async () => {
@@ -369,6 +407,7 @@ export const History = ({route} : {route : any}) => {
         const transact_index : number = allTransact.findIndex((transact) => transact.id == modTransactID);
         const transact : Transaction = allTransact[transact_index];
         const date : string [] = transact.created_at.split('/');
+        setModTransact(transact);
         setModTransactCategory(transact.category);
         setModTransactType(transact.is_pay);
         setModTransactAmount(transact.amount);
