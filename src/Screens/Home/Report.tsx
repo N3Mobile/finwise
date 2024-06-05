@@ -31,7 +31,9 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
         return cur;
     }, [start]);
 
-    const totalSpent = transactions.reduce((total, trans) => total + trans.amount, 0);
+    const totalSpent = transactions
+        .filter(trans => trans.category !== Category.OUTGOING_TRANSFER)
+        .reduce((total, trans) => total + trans.amount, 0);
     const topSpent = ALL_EXPENSE_CATEGORIES
         .filter(cat => cat !== Category.OUTGOING_TRANSFER)
         .map(cat => { return {
