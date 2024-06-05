@@ -1,4 +1,4 @@
-import { ALL_EXPENSE_CATEGORIES } from "@/Config/category";
+import { ALL_EXPENSE_CATEGORIES, Category } from "@/Config/category";
 import { PeriodType } from "@/Config/period";
 import { compareDate, parseDate, usePeriod } from "@/Hooks/date";
 import { useCategoryIcon } from "@/Hooks/icon";
@@ -32,7 +32,9 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
     }, [start]);
 
     const totalSpent = transactions.reduce((total, trans) => total + trans.amount, 0);
-    const topSpent = ALL_EXPENSE_CATEGORIES.map(cat => { return {
+    const topSpent = ALL_EXPENSE_CATEGORIES
+        .filter(cat => cat !== Category.OUTGOING_TRANSFER)
+        .map(cat => { return {
         category: cat,
         total: transactions.filter(trans => trans.category === cat).reduce((total, trans) => total + trans.amount, 0)
     }}).sort((x, y) => y.total - x.total);
