@@ -14,6 +14,7 @@ import { Wallet } from "@/Services/wallets";
 import { useFocusEffect } from "@react-navigation/native";
 import { LocalizationKey, i18n } from "@/Localization";
 import { newDataComing } from "./newTransactComing";
+import { useUser } from "@/Components/UserContext";
 
 const baseURL = 'https://be-mobile-n3.onrender.com';
 
@@ -155,6 +156,8 @@ export const History = ({route} : {route : any}) => {
 
     const windowHeight = useWindowDimensions().height;
    // console.log(useWindowDimensions().width)
+    const userID = useUser();
+    console.log(userID.userId);
 
     const getFormattedDate = (date : Date) => {
         let day : string = String(date.getDate());
@@ -208,7 +211,7 @@ export const History = ({route} : {route : any}) => {
         try{
             let res = await axios.get(baseURL + '/transaction/histories/all', {
                 params : {
-                    user_ID : '66237fef97705968270a6dab',
+                    user_ID : (userID.userId ? userID.userId : '66237fef97705968270a6dab'),
                     start_date : start,
                     end_date : end
                 }
@@ -327,7 +330,7 @@ export const History = ({route} : {route : any}) => {
         try{
             let res = await axios.get(baseURL + '/wallets/byUsersId', {
                 params : {
-                    user_ID : '66237fef97705968270a6dab'
+                    user_ID : (userID.userId ? userID.userId : '66237fef97705968270a6dab')
                 }
             })
             //console.log(res.data);
