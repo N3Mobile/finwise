@@ -14,7 +14,7 @@ interface IReportProps {
 }
 
 export const Report = ({ expenseTransactions }: IReportProps) => {
-
+    
     const formatter = Intl.NumberFormat('en', { notation: 'compact' });
     const [title, start, end, left] = usePeriod(PeriodType.WEEK);
 
@@ -106,7 +106,7 @@ export const Report = ({ expenseTransactions }: IReportProps) => {
                                 title={name}
                                 description={item.total.toLocaleString('en') + " ₫"}
                                 left={(props) => <List.Icon {...props} icon={icon} color={color} />}
-                                right={(props) => <Text {...props}>{`${Math.round(item.total / totalSpent * 100)}%`}</Text>}
+                                right={(props) => <Text {...props}>{`${totalSpent === 0 ? 0 : Math.round(item.total / totalSpent * 100)}%`}</Text>}
                             />
                         )
                     })

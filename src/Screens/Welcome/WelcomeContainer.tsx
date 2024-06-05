@@ -13,8 +13,8 @@ export const WelcomeContainer = ({
   navigation,
 }: WelcomeScreenNavigatorProps) => {
   const onNavigate = (screen: RootScreens) => {
-    navigation.navigate(screen);
-  };
+  navigation.navigate(RootScreens.LOGIN);
+};
 
   return <Welcome onNavigate={onNavigate} />;
 };
