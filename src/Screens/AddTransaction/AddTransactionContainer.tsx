@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import {
   View,
   StyleSheet,
@@ -19,6 +19,7 @@ import axios from "axios";
 import { ScreenWrapper } from "@/Components";
 import { useCategoryIcon } from "@/Hooks/icon";
 import { useUser } from "@/Components/UserContext";
+import { useFocusEffect } from "@react-navigation/native";
 const CurrencyDisplay = () => (
   <View style={styles.currencyContainer}>
     <Text style={styles.currencyText}>{i18n.t(LocalizationKey.UNIT)}</Text>
@@ -132,7 +133,12 @@ export const AddTransactionContainer = () => {
   useEffect(() => {
     fetchWalletId();
   }, [walletId]);
-
+  useFocusEffect(
+    useCallback(() => {
+      fetchWallets();
+      fetchWalletId();
+    }, [walletId])
+  );
   const handleSaveTransaction = async () => {
     const amountWithoutCommas = amount.replace(/,/g, "");
     const transaction = {
@@ -159,7 +165,11 @@ export const AddTransactionContainer = () => {
       if (response.ok) {
         Alert.alert("Thành công", "Giao dịch đã được lưu");
         fetchWallets();
-        fetchWalletId();
+        setSelectedWallet( i18n.t(LocalizationKey.SELECT_WALLET))
+        setBalance(0)
+        setAmount("0");
+        setNote("");
+        setSelectedCategory(""); 
       } else {
         Alert.alert("Lỗi", "Không thể lưu giao dịch");
       }
@@ -418,7 +428,8 @@ export const AddTransactionContainer = () => {
                 disabled={
                   parseFloat(amount) <= 0 ||
                   amount === "" ||
-                  selectedWallet === i18n.t(LocalizationKey.SELECT_WALLET)
+                  selectedWallet === i18n.t(LocalizationKey.SELECT_WALLET) ||
+                  selectedCategory === ""
                 }
               >
                 {i18n.t(LocalizationKey.SAVE)}
