@@ -218,14 +218,9 @@ export const History = ({route} : {route : any}) => {
             });
             //console.log(res.data);
             let data : Transaction[] = res.data;
-            data.sort((a, b) => {
-                let date1 = a.created_at.split('/');
-                let date2 = b.created_at.split('/');
-                let date1_formatted = date1.reverse().join('/');
-                let date2_formatted = date2.reverse().join('/');
-                return date1_formatted.localeCompare(date2_formatted);
-            });
             data.reverse();
+
+            //data.reverse();
             //handle data
             setAllTransact(data);
             setNumTransaction(data.length);
@@ -358,22 +353,23 @@ export const History = ({route} : {route : any}) => {
     }
 
     useEffect(() => {
-        if(startDate.toDateString() != (new Date(-1)).toDateString()) fetchWithCond();
-        else changeDefaultRange(3);
-        getWallet();
-        setFirstLoad(false);
-        newDataComing.newTransact = false;
-        newDataComing.newWallet = false;
-    }, []);
-
-    useEffect(() => {
         setData(allTransact);
     }, [transactionCategory, allTransact, walletID]);
 
     useFocusEffect(   
         useCallback(() => {
             //console.log(route.params)
-            //console.log(newDataComing.newTransact);
+            
+
+            if(firstLoad){
+                if(startDate.toDateString() != (new Date(-1)).toDateString()) fetchWithCond();
+                else changeDefaultRange(3);
+                getWallet();
+                setFirstLoad(false);
+                newDataComing.newTransact = false;
+                newDataComing.newWallet = false;
+
+            }
 
             if(!firstLoad && newDataComing.newWallet) {
                 getWallet();
@@ -381,6 +377,7 @@ export const History = ({route} : {route : any}) => {
             }
             if(!firstLoad && newDataComing.newTransact) {
                 fetchData(startDate, endDate);
+                console.log(newDataComing.newTransact);
                 newDataComing.newTransact = false;
             }
         }, [])
