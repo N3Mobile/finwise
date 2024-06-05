@@ -57,6 +57,7 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
                 <List.Item
                     title={i18n.t(LocalizationKey.DELETE_ACCOUNT)}
                     left={(props) => <List.Icon {...props} icon="account-remove" />}
+                    onPress={onDeleteAccount}
                 />
             </List.Section>
             <List.Section>
