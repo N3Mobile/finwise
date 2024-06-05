@@ -227,7 +227,8 @@ export const History = ({route} : {route : any}) => {
             setAllTransact(data);
             setNumTransaction(data.length);
         }catch(e){
-            Alert.alert('Error', 'Cannot get transactions', [{text: 'OK'}])
+            Alert.alert('Error', 'Cannot get transactions, retrying', [{text: 'OK'}])
+            fetchData(startDate, endDate);
             console.log(e);
         }
        
@@ -334,7 +335,8 @@ export const History = ({route} : {route : any}) => {
                 setWallets(data);
             }
         }catch(e){
-            Alert.alert('Error', 'Cannot get wallets', [{text: 'OK'}])
+            Alert.alert('Error', 'Cannot get wallets, retrying', [{text: 'OK'}])
+            getWallet();
             console.log(e);
         }
 
