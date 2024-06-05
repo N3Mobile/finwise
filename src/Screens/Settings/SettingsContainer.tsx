@@ -14,8 +14,7 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
     const [confirmDelete, setConfirmDelete] = useState(false);
 
     function onChangePassword() {
-        // TODO: navigate to change password screen
-        // navigation.navigate()
+        navigation.navigate(RootScreens.PASSWORDCHANGE);
     }
 
     function onDeleteAccount() {
@@ -35,6 +34,7 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
                 <List.Item 
                     title={i18n.t(LocalizationKey.CHANGE_PASSWORD)} 
                     left={(props) => <List.Icon {...props} icon="account-convert" />}
+                    onPress={onChangePassword}
                 />
                 <List.Item
                     title={i18n.t(LocalizationKey.DELETE_ACCOUNT)}
