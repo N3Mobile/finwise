@@ -5,11 +5,18 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { FC, useState } from "react";
 import { View } from "react-native";
 import { Button, Dialog, List, Portal, Switch, Text } from "react-native-paper";
-import { RootScreens } from "..";
+import { RootScreens, TabScreens } from "..";
+import { http } from "@/Hooks/api";
+import { useUser } from "@/Components/UserContext";
+import { err } from "react-native-svg";
+import { ScreenWrapper } from "@/Components";
 
 type Props = NativeStackScreenProps<RootStackParamList, RootScreens.SETTINGS>;
 export const SettingsContainer: FC<Props> = ({ navigation }) => {
     
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const { userId } = useUser();
     const [language, setLanguage] = useState(i18n.locale);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -18,7 +25,15 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
     }
 
     function onDeleteAccount() {
-        // TODO: delete account
+        http.delete('Users', { user_ID: userId }, {})
+            .then(data => {
+                console.log("Account deleted successfully");
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: RootScreens.LOGIN }]                    
+                });
+            })
+            .catch(error => setError(error.toString()));
     }
 
     function onChangeLanguage() {
@@ -28,7 +43,10 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
     }
 
     return (
-        <View>
+        <ScreenWrapper 
+            loading={loading} 
+            error={error} 
+            backToHome={() => { navigation.navigate(RootScreens.MAIN, { screen: TabScreens.HOME }); }}>
             <List.Section>
                 <List.Subheader>{i18n.t(LocalizationKey.ACCOUNT)}</List.Subheader>
                 <List.Item 
@@ -73,6 +91,6 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
-        </View>
+        </ScreenWrapper>
     )
 }
