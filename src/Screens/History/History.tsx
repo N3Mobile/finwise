@@ -726,13 +726,13 @@ export const History = ({route} : {route : any}) => {
             </View>
 
             {/* Transactions */}
-            <View style={{flex : 10.8, alignItems : 'center'}}>
+            <View style={{flex : 7.9, alignItems : 'center'}}>
                 {(numTransaction == -1)? (<HStack space={'2xs'} justifyContent="center" alignItems="center" marginBottom="auto" marginTop="auto">
                                             <Spinner accessibilityLabel="Loading posts" size={60} color="black" />
                                         </HStack>) : 
                 <TransactionList data={transactions} wallets={wallets} setModTransactID={setModTransactID}/>}
             </View>
-            <View style={{flex:1.2}}></View>
+            <View style={{flex:3.1}}></View>
         </View>
     )
 }
