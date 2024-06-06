@@ -12,7 +12,7 @@ import * as Sentry from '@sentry/react-native';
 Sentry.init({
   dsn: 'https://83fec534abaf0714e57be552097873a7@o4507197215801344.ingest.us.sentry.io/4507197221896192',
   debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
-  environment: 'development'
+  environment: 'production'
 });
 
 
