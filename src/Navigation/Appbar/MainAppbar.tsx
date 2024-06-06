@@ -9,7 +9,7 @@ export const MainAppbar: FC<NativeStackHeaderProps> = ({ navigation, route, opti
         <Appbar.Header>
             <Appbar.Content title="Finwise" />
 
-            <Appbar.Action icon="alpha-t-box" onPress={() => { navigation.navigate(RootScreens.TEST); }} />
+            {/* <Appbar.Action icon="alpha-t-box" onPress={() => { navigation.navigate(RootScreens.TEST); }} /> */}
             <Appbar.Action icon="logout" onPress={() => {
                 // TODO: logout (clear user info and disable back action)
                 navigation.navigate(RootScreens.LOGIN);
