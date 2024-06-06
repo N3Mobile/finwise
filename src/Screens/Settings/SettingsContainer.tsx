@@ -25,7 +25,7 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
     }
 
     function onDeleteAccount() {
-        http.delete('Users', { user_ID: userId }, {})
+        http.delete('Users', { _id: userId }, {})
             .then(data => {
                 console.log("Account deleted successfully");
                 navigation.reset({
