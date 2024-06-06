@@ -218,14 +218,9 @@ export const History = ({route} : {route : any}) => {
             });
             //console.log(res.data);
             let data : Transaction[] = res.data;
-            data.sort((a, b) => {
-                let date1 = a.created_at.split('/');
-                let date2 = b.created_at.split('/');
-                let date1_formatted = date1.reverse().join('/');
-                let date2_formatted = date2.reverse().join('/');
-                return date1_formatted.localeCompare(date2_formatted);
-            });
             data.reverse();
+
+            //data.reverse();
             //handle data
             setAllTransact(data);
             setNumTransaction(data.length);
@@ -358,22 +353,23 @@ export const History = ({route} : {route : any}) => {
     }
 
     useEffect(() => {
-        if(startDate.toDateString() != (new Date(-1)).toDateString()) fetchWithCond();
-        else changeDefaultRange(3);
-        getWallet();
-        setFirstLoad(false);
-        newDataComing.newTransact = false;
-        newDataComing.newWallet = false;
-    }, []);
-
-    useEffect(() => {
         setData(allTransact);
     }, [transactionCategory, allTransact, walletID]);
 
     useFocusEffect(   
         useCallback(() => {
             //console.log(route.params)
-            //console.log(newDataComing.newTransact);
+            
+
+            if(firstLoad){
+                if(startDate.toDateString() != (new Date(-1)).toDateString()) fetchWithCond();
+                else changeDefaultRange(3);
+                getWallet();
+                setFirstLoad(false);
+                newDataComing.newTransact = false;
+                newDataComing.newWallet = false;
+
+            }
 
             if(!firstLoad && newDataComing.newWallet) {
                 getWallet();
@@ -381,6 +377,7 @@ export const History = ({route} : {route : any}) => {
             }
             if(!firstLoad && newDataComing.newTransact) {
                 fetchData(startDate, endDate);
+                console.log(newDataComing.newTransact);
                 newDataComing.newTransact = false;
             }
         }, [])
@@ -470,7 +467,7 @@ export const History = ({route} : {route : any}) => {
                     return (
                     <TouchableOpacity activeOpacity={0.5} style={styles.defaultRangeBtn} key={r}>
                         <Button mode="outlined" labelStyle={{height:'50%'}} textColor={range == r ? "white" : 'black'} buttonColor={range == r ? "#FF5722" : "#FFFFFF"} onPress={() => changeDefaultRange(r)}>
-                           {r} ngày
+                           {r + " " + i18n.t(LocalizationKey.DAYS)}
                         </Button>
                     </TouchableOpacity>
                     )
@@ -491,10 +488,10 @@ export const History = ({route} : {route : any}) => {
             </View>
             <View style={styles.datePickerContainer}>
                 <View style={{flex : 1, alignItems : 'center'}}>
-                    <Text style={{fontSize : 15, fontWeight: '500'}}>Ngày bắt đầu</Text>
+                    <Text style={{fontSize : 15, fontWeight: '500'}}>{i18n.t(LocalizationKey.START_DATE)}</Text>
                 </View>
                 <View style={{flex : 1, alignItems : 'center'}}>
-                    <Text style={{fontSize : 15, fontWeight: '500'}}>Ngày kết thúc</Text>
+                    <Text style={{fontSize : 15, fontWeight: '500'}}>{i18n.t(LocalizationKey.END_DATE)}</Text>
                 </View>
             </View>
             
@@ -548,13 +545,13 @@ export const History = ({route} : {route : any}) => {
                     <View style={{flex:3, borderWidth:3, backgroundColor:'rgba(255, 255, 255, 1)', borderRadius:5, width:'95%'}}>
                         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                             <Text style={{fontSize:22, fontWeight:'bold'}}>
-                                Thông tin giao dịch
+                                {i18n.t(LocalizationKey.TRANSACTION_DETAILS)}
                             </Text>
                         </View>
                         <View style={{flex:1, flexDirection:'row', marginBottom:'2%'}}>
                             <View style={{flex:1}}>
                                 <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-                                    <Text style={{fontSize:20, fontWeight:'500'}}>Loại</Text>
+                                    <Text style={{fontSize:20, fontWeight:'500'}}>{i18n.t(LocalizationKey.TYPE)}</Text>
                                 </View>
                             </View>
                             <View style={{flex:5, justifyContent:'center'}}>
@@ -569,7 +566,7 @@ export const History = ({route} : {route : any}) => {
                         <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
                             <View style={{flex:1}}>
                                 <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-                                    <Text style={{fontSize:20, fontWeight:'500'}}>Tiền</Text>
+                                    <Text style={{fontSize:20, fontWeight:'500'}}>{i18n.t(LocalizationKey.AMOUNT)}</Text>
                                 </View>
                             </View>
                             <View style={{flex:5, justifyContent:'center', marginLeft:'2%', marginRight:'2%'}}>
@@ -638,7 +635,7 @@ export const History = ({route} : {route : any}) => {
                                     <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
                                         <View style={{flex:1}}>
                                             <View style={{flex:1.5, justifyContent:'center', alignItems:'center'}}>
-                                                <Text style={{fontSize:20, fontWeight:'500'}}>Ghi chú</Text>
+                                                <Text style={{fontSize:20, fontWeight:'500'}}>{i18n.t(LocalizationKey.NOTE)}</Text>
                                             </View>
                                         </View>
                                         <View style={{flex:3, justifyContent:'center', marginLeft:'2%', marginRight:'2%'}}></View>
@@ -655,7 +652,7 @@ export const History = ({route} : {route : any}) => {
                         <View style={{flex:1, flexDirection:'row', alignItems:'center'}}>
                             <View style={{flex:1, flexDirection:'row'}}>
                                 <View style={{flex : 1, alignItems:'flex-end', justifyContent:'center'}}>
-                                    <Text style={{fontSize:20}}>Thu</Text>
+                                    <Text style={{fontSize:20}}>{i18n.t(LocalizationKey.TOTAL_INCOME)}</Text>
                                 </View>
                                 <View style={{flex : 1, alignItems:'center', justifyContent:'center'}}>
                                     <RadioButton value={'false'} 
@@ -666,7 +663,7 @@ export const History = ({route} : {route : any}) => {
                             </View>
                             <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
                                 <View style={{flex : 1, alignItems:'flex-end',justifyContent:'center'}}>
-                                    <Text style={{fontSize:20}}>Chi</Text>
+                                    <Text style={{fontSize:20}}>{i18n.t(LocalizationKey.TOTAL_EXPENSE)}</Text>
                                 </View>
                                 <View style={{flex : 1, alignItems:'center'}}>
                                     <RadioButton value={'true'} 
@@ -729,13 +726,13 @@ export const History = ({route} : {route : any}) => {
             </View>
 
             {/* Transactions */}
-            <View style={{flex : 10.8, alignItems : 'center'}}>
+            <View style={{flex : 7.9, alignItems : 'center'}}>
                 {(numTransaction == -1)? (<HStack space={'2xs'} justifyContent="center" alignItems="center" marginBottom="auto" marginTop="auto">
                                             <Spinner accessibilityLabel="Loading posts" size={60} color="black" />
                                         </HStack>) : 
                 <TransactionList data={transactions} wallets={wallets} setModTransactID={setModTransactID}/>}
             </View>
-            <View style={{flex:1.2}}></View>
+            <View style={{flex:3.1}}></View>
         </View>
     )
 }

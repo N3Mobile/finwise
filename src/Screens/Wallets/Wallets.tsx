@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigation } from "@/Navigation";
 import { RootScreens } from "..";
 import { http } from "@/Hooks/api";
+import { newDataComing } from "../History/newTransactComing";
 
 interface Props {
     wallets: Wallet[],
@@ -40,6 +41,7 @@ export const Wallets: FC<Props> = ({ wallets, setWallets, setLoading, setError }
                 setDeleteVisible(false);
                 setPendingId("");
                 setWallets(wallets.filter(wallet => wallet.id !== id));
+                newDataComing.newWallet = true;
                 setLoading(false);
             })
             .catch(error => setError(error.toString()));

@@ -122,6 +122,17 @@ export enum LocalizationKey {
   EDIT = "edit",
   DELETE = "delete",
 
+  // settings
+  ACCOUNT = "account",
+  LANGUAGE = "language",
+  ENGLISH = "english",
+  VIETNAMESE = "vietnamese",
+  CHANGE_LANGUAGE_EN = "change-language-en",
+  CHANGE_LANGUAGE_VI = "change-language-vi",
+  CHANGE_PASSWORD = "change-password",
+  DELETE_ACCOUNT = "delete-account",
+  DELETE_ACCOUNT_CONFIRM = "delete-account-confirm",
+
   // wallet-related
   TRANSFER_MONEY = "transfer-money",
   FROM = "from",
@@ -142,5 +153,9 @@ export enum LocalizationKey {
   TRANSACTION_TYPE = "transaction-type",
   UNIT = "unit",
   CREATE_TRANSACTION = "create-transaction",
- 
+
+  // history
+  START_DATE = "start-date",
+  END_DATE = "end-date",
+  TRANSACTION_DETAILS = "transaction-details",
 }

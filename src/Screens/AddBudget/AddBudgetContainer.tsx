@@ -7,6 +7,7 @@ import { RootScreens, TabScreens } from "..";
 import { Wallet } from "@/Services/wallets";
 import { http } from "@/Hooks/api";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useUser } from "@/Components/UserContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, RootScreens.ADD_BUDGET>;
 
@@ -15,12 +16,13 @@ export const AddBudgetContainer: FC<Props> = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const { userId } = useUser();
     const [wallets, setWallets] = useState<Wallet[]>([]);
 
     useFocusEffect(
         useCallback(() => {
             setError("");
-            http.get('wallets/byUsersId', { user_ID: "66237fef97705968270a6dab" })
+            http.get('wallets/byUsersId', { user_ID: userId })
                 .then(data => {
                     setWallets(data);
                     setLoading(false);
