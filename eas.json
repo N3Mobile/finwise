@@ -8,7 +8,8 @@
       "distribution": "internal",
       "ios": {
         "resourceClass": "m-medium"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
@@ -19,12 +20,14 @@
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
       },
-      "developmentClient": true
+      "developmentClient": true,
+      "channel": "preview"
     },
     "production": {
       "ios": {
         "resourceClass": "m-medium"
-      }
+      },
+      "channel": "production"
     }
   },
   "submit": {
