@@ -6,7 +6,7 @@ import { store, persistor } from "@/Store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { ApplicationNavigator } from "./Navigation";
-import { PaperProvider } from "react-native-paper";
+import { MD3LightTheme, PaperProvider } from "react-native-paper";
 import * as Sentry from '@sentry/react-native';
 
 Sentry.init({
@@ -25,7 +25,7 @@ function App() {
     <NativeBaseProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <PaperProvider>
+          <PaperProvider theme={MD3LightTheme}>
             <ApplicationNavigator />
           </PaperProvider>
         </PersistGate>
