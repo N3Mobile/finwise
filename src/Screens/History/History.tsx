@@ -37,7 +37,7 @@ const TransactionRecord = ({data, wallets, setModTransactID} : {data : Transacti
     let getWalletName = (id : string) => {
         if(wallets.length >0 ){
             let index : number = wallets.findIndex((wallet) => wallet.id == id);
-            return wallets[index].name;
+            return wallets[index] ? wallets[index].name : 'deleted wallet';
         }
         return "Waiting";
         
@@ -359,23 +359,14 @@ export const History = ({route} : {route : any}) => {
     useFocusEffect(   
         useCallback(() => {
             //console.log(route.params)
-            
-
-            if(firstLoad){
+            console.log(newDataComing.newTransact, newDataComing.newWallet, firstLoad);
+            if(newDataComing.newWallet) {
+                getWallet();
+                newDataComing.newWallet = false;
+            }
+            if(newDataComing.newTransact) {
                 if(startDate.toDateString() != (new Date(-1)).toDateString()) fetchWithCond();
                 else changeDefaultRange(3);
-                getWallet();
-                setFirstLoad(false);
-                newDataComing.newTransact = false;
-                newDataComing.newWallet = false;
-
-            }
-
-            if(!firstLoad && newDataComing.newWallet) {
-                getWallet();
-                newDataComing.newWallet = false;
-            }
-            if(!firstLoad && newDataComing.newTransact) {
                 fetchData(startDate, endDate);
                 console.log(newDataComing.newTransact);
                 newDataComing.newTransact = false;
