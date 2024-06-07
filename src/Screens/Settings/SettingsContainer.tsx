@@ -25,7 +25,7 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
     }
 
     function onDeleteAccount() {
-        http.delete('Users', { user_ID: userId }, {})
+        http.delete('Users', { _id: userId }, {})
             .then(data => {
                 console.log("Account deleted successfully");
                 navigation.reset({
@@ -57,7 +57,7 @@ export const SettingsContainer: FC<Props> = ({ navigation }) => {
                 <List.Item
                     title={i18n.t(LocalizationKey.DELETE_ACCOUNT)}
                     left={(props) => <List.Icon {...props} icon="account-remove" />}
-                    onPress={onDeleteAccount}
+                    onPress={() => setConfirmDelete(true)}
                 />
             </List.Section>
             <List.Section>
