@@ -19,6 +19,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 import { useUser } from "@/Components/UserContext";
 import { LocalizationKey, i18n } from "@/Localization";
+import { newDataComing } from "../History/newTransactComing";
+
 interface State {
   value: string;
   error: string;
@@ -81,6 +83,8 @@ export const LoginContainer = () => {
 
       if (user && user.id) {
         setUserId(user.id);
+        newDataComing.newTransact = true;
+        newDataComing.newWallet = true;
         navigation.navigate(RootScreens.MAIN);
       }
     } catch (error) {
